@@ -7,7 +7,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <unordered_map>
 #include <string>
-#include <iostream>
+#include "log.hpp"
 
 class ResourceManager {
 public:

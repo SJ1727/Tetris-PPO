@@ -2,7 +2,6 @@
 #define LABEL_H
 
 #include <string>
-#include <iostream>
 #include "app/SdlHelper.hpp"
 #include "app/WindowComponents/Component.hpp"
 
@@ -21,7 +20,7 @@ public:
   ~Label() = default;
   void render(SDL_Renderer* renderer) override;
   void handleEvents(SDL_Event* event) override;
-  void updateText(std::string text);
+  inline void updateText(std::string text) { m_text = text; }
 
 protected:
   int m_x, m_y;

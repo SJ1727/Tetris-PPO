@@ -213,8 +213,6 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   Mix_PlayMusic(music, -1);
 }
 
-
-
 /*
  *  --- Volume Settings Screen ---  
  */

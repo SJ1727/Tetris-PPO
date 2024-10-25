@@ -2,7 +2,6 @@
 #define SLIDER_H
 
 #include <string>
-#include <iostream>
 #include <algorithm>
 #include <functional>
 #include "app/SdlHelper.hpp"
@@ -23,9 +22,9 @@ class Slider : public Component {
 public:
   Slider(int x, int y, int width, int height, SliderSettings settings);
   ~Slider() = default;
-  void bind(std::function<void(float)> on_value_change);
   void render(SDL_Renderer* renderer) override;
   void handleEvents(SDL_Event* event) override;
+  void bind(std::function<void(float)> on_value_change);
 
 private:
   float getValue();

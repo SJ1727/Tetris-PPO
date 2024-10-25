@@ -1,12 +1,5 @@
 #include "app/SdlHelper.hpp"
 
-TTF_Font* loadFont(std::string path, int font_size) {
-  TTF_Font* font = TTF_OpenFont(path.c_str(), font_size);
-  if (!font) {
-    std::cout << "Failed to load font" << std::endl;
-  }
-  return font;
-}
 SDL_Texture* createTextTexture(SDL_Renderer* renderer, std::string text, TTF_Font* font, SDL_Color textColor) {
   SDL_Texture* text_texture;
   SDL_Surface* text_surface = TTF_RenderText_Shaded(font, text.c_str(), text.length(), textColor, textColor);
@@ -16,7 +9,7 @@ SDL_Texture* createTextTexture(SDL_Renderer* renderer, std::string text, TTF_Fon
     SDL_DestroySurface(text_surface);
   } else {
     text_texture = nullptr;
-    std::cout << "Could not create surface from text" << std::endl;
+    APP_ERROR("Could not create text surface with text {}", text);
   }
 
   return text_texture;

@@ -24,10 +24,6 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings) {
   m_text_color.a = 0;
 }
 
-void Button::bind(std::function<void()> on_click) {
-  m_on_click = on_click;
-}
-
 void Button::handleEvents(SDL_Event* event) {
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     float mouse_x, mouse_y;

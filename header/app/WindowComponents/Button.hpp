@@ -23,8 +23,8 @@ class Button : public Label {
 public:
   Button(int x, int y, int width, int height, ButtonSettings settings);
   ~Button() = default;
-  void bind(std::function<void()> on_click);
   void handleEvents(SDL_Event* event) override;
+  inline void bind(std::function<void()> on_click) { m_on_click = on_click; }
 
 private:
   SDL_Color m_background_default_color;

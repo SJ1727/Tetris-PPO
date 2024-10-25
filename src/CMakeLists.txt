@@ -6,6 +6,7 @@ file(GLOB_RECURSE APP_SOURCES "app/*.cpp")
 
 set(SOURCES
   main.cpp
+  log.cpp
   ${ENGINE_SOURCES}
   ${APP_SOURCES}
 )

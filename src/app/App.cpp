@@ -2,16 +2,18 @@
 
 App::App(int width, int height)
   : m_width(width), m_height(height) {
+  APP_TRACE("--- Starting Application ---");
+
   if (!SDL_Init(SDL_INIT_VIDEO)) {
-    std::cout << "Error initlizing SDL" << std::endl;
+    APP_ERROR("Init Fail: Could not initlise SDL");
   }
   
   if (!TTF_Init()) {
-    std::cout << "Error initlizing SDL TTF" << std::endl;
+    APP_ERROR("Init Fail: Could not initlise SDL TTF");
   }
 
   if (!IMG_Init(IMG_INIT_PNG)) {
-    std::cout << "Error initlizing SDL Image" << std::endl;
+    APP_ERROR("Init Fail: Could not initlise SDL image");
   }
 
   SDL_AudioSpec spec;
@@ -20,7 +22,7 @@ App::App(int width, int height)
   spec.channels = 1;
 
   if (!Mix_OpenAudio(0, &spec)) {
-  std::cout << "Error initlizing SDL Mixer" << std::endl;
+    APP_ERROR("Init Fail: Could not initlise SDL mixer");
   }
 
   m_window = SDL_CreateWindow("Tetris", m_width, m_height, 0);

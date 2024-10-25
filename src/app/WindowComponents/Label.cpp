@@ -12,10 +12,6 @@ Label::Label(int x, int y, int width, int height, LabelSettings settings)
   m_text_color.a = 0;
 }
 
-void Label::updateText(std::string text) {
-  m_text = text;
-}
-
 void Label::render(SDL_Renderer* renderer) {
   int text_x, text_y, text_width, text_height;
   SDL_FRect label_rectangle = createFRect(m_x, m_y, m_width, m_height);

@@ -5,10 +5,9 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
-#include <ostream>
-#include <iostream>
 #include "app/Screen.hpp"
 #include "app/AppContext.hpp"
+#include "log.hpp"
 
 class App {
 public:
