@@ -1,0 +1,11 @@
+Makefile
+CMakeFiles
+CMakeCache.txt
+build
+_deps
+tetris
+
+vendor/SDL
+vendor/SDL_image
+vendor/SDL_mixer
+vendor/SDL_ttf
