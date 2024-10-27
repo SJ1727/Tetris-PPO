@@ -32,7 +32,6 @@ bool ResourceManager::loadFont(std::string path, int font_size, std::string alia
     return false;
   } 
 
-  APP_TRACE("Successfully loaded font from \"{}\" with alias \"{}\"", path, alias);
   m_font_map[alias] = font;
   return true;
 }
@@ -61,7 +60,6 @@ bool ResourceManager::loadMusic(std::string path, std::string alias) {
     return false;
   } 
 
-  APP_TRACE("Successfully loaded music from \"{}\" with alias \"{}\"", path, alias);
   m_music_map[alias] = music;
   return true;
 }
@@ -89,7 +87,6 @@ bool ResourceManager::loadImage(std::string path, std::string alias) {
     return false;
   } 
 
-  APP_TRACE("Successfully loaded image from \"{}\" with alias \"{}\"", path, alias);
   m_image_map[alias] = image;
   return true;
 }

@@ -27,6 +27,9 @@ App::App(int width, int height)
 
   m_window = SDL_CreateWindow("Tetris", m_width, m_height, 0);
   m_renderer = SDL_CreateRenderer(m_window, NULL);
+
+  // Allows for text input to window
+  SDL_StartTextInput(m_window);
   
   // Allows for use of the alpha color channel
   SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);

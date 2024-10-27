@@ -13,6 +13,7 @@ class Component {
 public:
   virtual void handleEvents(SDL_Event* event) = 0;
   virtual void render(SDL_Renderer* renderer) = 0;
+  virtual void update() {}
 };
 
 #endif // !COMPONENTS_H

@@ -18,6 +18,7 @@ enum ScreenType {
   MAIN_MENU,
   SETTINGS,
   VOLUME_SETTINGS,
+  AI_SETTINGS,
   SINGLE_PLAYER_GAME
 };
 
@@ -86,6 +87,15 @@ protected:
 class VolumeSettingsScreen : public Screen {
 public:
   VolumeSettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
+  void init(ScreenManager* screen_manager);
+
+protected:
+  void loadResources() override;
+};
+
+class AISettingsScreen : public Screen {
+public:
+  AISettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
   void init(ScreenManager* screen_manager);
 
 protected:
