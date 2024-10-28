@@ -21,6 +21,8 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
   m_image_default_surface = settings.image_default_surface;
   // If clicked image is not provided use the default
   m_image_clicked_surface = (settings.image_clicked_surface == nullptr) ? settings.image_default_surface : settings.image_clicked_surface;
+
+  m_on_click_sound = settings.on_click_sound;
 }
 
 void Button::handleEvents(SDL_Event* event) {
@@ -30,16 +32,25 @@ void Button::handleEvents(SDL_Event* event) {
 
     bool mouse_over_button = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
     if (mouse_over_button) {
+      m_clicked = true;
       m_on_click();
+
+      // Change the button appearance
       m_background_color = m_background_clicked_color;
       m_image_surface = m_image_clicked_surface;
-      m_clicked = true;
+
+      // Plays clicked sounded effect
+      if (m_on_click_sound != nullptr) {
+        Mix_PlayChannel(-1, m_on_click_sound, 0);
+      }
     }
   }
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
+    m_clicked = false;
+    
+    // Change the button appearance
     m_background_color = m_background_default_color;
     m_image_surface = m_image_default_surface;
-    m_clicked = false;
   }
 }

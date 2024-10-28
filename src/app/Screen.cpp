@@ -26,6 +26,9 @@ void ScreenManager::setScreen(ScreenType screen_type) {
 }
 
 void ScreenManager::switchScreen() {
+  // Waits for any sound effects to finish playing
+  while (Mix_Playing(-1)) { }
+
   if (m_next_screen != nullptr) {
     m_current_screen = std::move(m_next_screen);
     m_current_screen->init(this);
@@ -109,6 +112,7 @@ void MainMenuScreen::loadResources() {
   m_resource_manager.loadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
   m_resource_manager.loadImage("resources/images/Logo.png", "Title");
   m_resource_manager.loadImage("resources/images/settings_icon.png", "Settings Icon");
+  m_resource_manager.loadSoundEffect("resources/sound/Click1.wav", "Button Click");
 }
 
 void MainMenuScreen::init(ScreenManager* screen_manager) {
@@ -119,6 +123,7 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   TTF_Font* title_font = m_resource_manager.getFont("Default font 50");
   SDL_Surface* title = m_resource_manager.getImage("Title");
   SDL_Surface* settings_icon = m_resource_manager.getImage("Settings Icon");
+  Mix_Chunk* button_click = m_resource_manager.getSoundEffect("Button Click");
   m_background_surface = createSingleColorSurface(m_width, m_height, BACKGROUND_COLOR);
 
   /* Defining components settings */
@@ -139,6 +144,7 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
 
   ButtonSettings settings_button_settings;
   settings_button_settings.image_default_surface = settings_icon;
+  settings_button_settings.on_click_sound = button_click;
 
   /* Create components */
   Button* start_button = new Button(320, 250, 50, 50, start_settings); 
@@ -157,15 +163,16 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   */
 
   /* Linking the components to the screen */
-  m_components.emplace_back(start_button);
-  m_components.emplace_back(settings_button);
-  m_components.emplace_back(title_text);
-  m_components.emplace_back(title_image);
+  link(start_button);
+  link(settings_button);
+  link(title_text);
+  link(title_image);
 
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
   Mix_PlayMusic(music, -1);
 }
+
 /*
  *  --- Volume Settings Screen ---  
  */
@@ -212,9 +219,9 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   ai_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, AI_SETTINGS));
   
   /* Linking the components to the screen */
-  m_components.emplace_back(return_button);
-  m_components.emplace_back(volume_button);
-  m_components.emplace_back(ai_button);
+  link(return_button);
+  link(volume_button);
+  link(ai_button);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
@@ -270,9 +277,9 @@ void VolumeSettingsScreen::init(ScreenManager* screen_manager) {
     }, m_context, std::placeholders::_1));
  
   /* Linking the components to the screen */
-  m_components.emplace_back(return_button);
-  m_components.emplace_back(volume_slider);
-  m_components.emplace_back(volume_label);
+  link(return_button);
+  link(volume_slider);
+  link(volume_label);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
@@ -321,9 +328,9 @@ void AISettingsScreen::init(ScreenManager* screen_manager) {
   return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
   
   /* Linking the components to the screen */
-  m_components.emplace_back(return_button);
-  m_components.emplace_back(model_path_label);
-  m_components.emplace_back(model_path_field);
+  link(return_button);
+  link(model_path_label);
+  link(model_path_field);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
@@ -366,8 +373,8 @@ void SinglePlayerGameScreen::init(ScreenManager* screen_manager) {
   quit_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
   
   /* Linking the components to the screen */
-  m_components.emplace_back(test_label);
-  m_components.emplace_back(quit_button);
+  link(test_label);
+  link(quit_button);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Game Music");

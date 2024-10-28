@@ -1,5 +1,7 @@
 #include "app/App.hpp"
 
+const int FRAME_DELAY = 1000 / 60;
+
 App::App(int width, int height)
   : m_width(width), m_height(height) {
   APP_TRACE("--- Starting Application ---");
@@ -54,6 +56,8 @@ App::~App() {
 
 void App::run() {
   bool running = true;
+  int frame_start;
+  int frame_length;
 
   m_screen_manager->setScreen(MAIN_MENU);
 

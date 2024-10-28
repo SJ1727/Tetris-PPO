@@ -53,6 +53,7 @@ public:
   void update();
   void render(SDL_Renderer* renderer);
   void handleEvents(SDL_Event* event);
+  inline void link(Component* component) { m_components.emplace_back(component); }
 
 protected:
   virtual void loadResources() = 0;

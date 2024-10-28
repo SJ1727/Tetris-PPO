@@ -11,7 +11,7 @@
 
 class ResourceManager {
 public:
-  ResourceManager();
+  ResourceManager() = default;
   ~ResourceManager();
 
   bool loadFont(std::string path, int font_size, std::string alias);
@@ -20,12 +20,16 @@ public:
   bool loadMusic(std::string path, std::string alias);
   Mix_Music* getMusic(std::string alias);
 
+  bool loadSoundEffect(std::string path, std::string alias);
+  Mix_Chunk* getSoundEffect(std::string alias);
+
   bool loadImage(std::string path, std::string alias);
   SDL_Surface* getImage(std::string alias);
 
 private:
   std::unordered_map<std::string, TTF_Font*> m_font_map;
   std::unordered_map<std::string, Mix_Music*> m_music_map;
+  std::unordered_map<std::string, Mix_Chunk*> m_sound_effect_map;
   std::unordered_map<std::string, SDL_Surface*> m_image_map;
 };
 

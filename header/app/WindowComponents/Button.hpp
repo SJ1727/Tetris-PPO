@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <string>
 #include <iostream>
 #include <functional>
@@ -22,6 +23,8 @@ typedef struct {
   bool text_centered_y = true;
   int text_buffer_x = 5;
   int text_buffer_y = 5;
+
+  Mix_Chunk *on_click_sound = nullptr;
 } ButtonSettings; 
 
 class Button : public Label {
@@ -38,6 +41,7 @@ private:
   SDL_Surface* m_image_clicked_surface;
   bool m_clicked;
   std::function<void()> m_on_click;
+  Mix_Chunk* m_on_click_sound;
 };
 
 #endif //!BUTTON_H

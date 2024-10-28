@@ -1,9 +1,5 @@
 #include "app/ResourceManager.hpp"
 
-ResourceManager::ResourceManager() {
-
-}
-
 ResourceManager::~ResourceManager() {
   for (auto& pair : m_font_map) {
     TTF_CloseFont(pair.second);
@@ -11,6 +7,10 @@ ResourceManager::~ResourceManager() {
 
   for (auto& pair : m_music_map) {
     Mix_FreeMusic(pair.second);
+  }
+  
+  for (auto& pair : m_sound_effect_map) {
+    Mix_FreeChunk(pair.second);
   }
 
   for (auto& pair : m_image_map) {
@@ -54,7 +54,7 @@ bool ResourceManager::loadMusic(std::string path, std::string alias) {
   }
 
   Mix_Music* music = Mix_LoadMUS(path.c_str());
-  // Check if the font has been loaded
+  // Check if the music has been loaded
   if (!music) {
     APP_WARN("Failed to load music from \"{}\"", path);
     return false;
@@ -70,6 +70,34 @@ Mix_Music* ResourceManager::getMusic(std::string alias) {
   
   APP_WARN("Music with alias \"{}\" has not been loaded", alias);
   // Return nullptr if music object with alias does not exist
+  return nullptr;
+}
+
+bool ResourceManager::loadSoundEffect(std::string path, std::string alias) {
+  // Check if there already exist a loaded sound effect with same alias
+  if (m_sound_effect_map.find(alias) != m_sound_effect_map.end()) {
+    APP_WARN("Cannot load two sound effects with the same alias of \"{}\"", alias);
+    return false;
+  }
+
+  Mix_Chunk* sound_effect = Mix_LoadWAV(path.c_str());
+  // Check if the sound effect has been loaded
+  if (!sound_effect) {
+    APP_WARN("Failed to load sound effect from \"{}\"", path);
+    return false;
+  } 
+
+  m_sound_effect_map[alias] = sound_effect;
+  return true;
+}
+
+Mix_Chunk* ResourceManager::getSoundEffect(std::string alias) {
+  if (m_sound_effect_map.find(alias) != m_sound_effect_map.end()) {
+    return m_sound_effect_map[alias];
+  }
+  
+  APP_WARN("Sound effect with alias \"{}\" has not been loaded", alias);
+  // Return nullptr if sound effect object with alias does not exist
   return nullptr;
 }
 
