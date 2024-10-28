@@ -3,7 +3,7 @@
 
 #include <string>
 #include "app/SdlHelper.hpp"
-#include "app/WindowComponents/Component.hpp"
+#include "app/WindowComponents/Label.hpp"
 
 typedef struct {
   std::string initial_text = "";
@@ -19,10 +19,9 @@ typedef struct {
   int cursor_blink_milliseconds = 500;
 } TextFieldSettings;
 
-class TextField : public Component {
+class TextField : public Label {
 public:
   TextField(int x, int y, int width, int height, TextFieldSettings settings);
-  void render(SDL_Renderer* renderer) override;
   void handleEvents(SDL_Event* event) override;
   void update() override;
   inline void updateText(std::string text) { m_text = text; }
@@ -32,18 +31,8 @@ private:
   std::string getDisplayText();
 
 private:
-  int m_x, m_y;
-  int m_width, m_height;
-  
   std::string m_text;
-  TTF_Font* m_font;
-  SDL_Color m_text_color;
-  SDL_Color m_background_color;
-  bool m_text_centered_x;
-  bool m_text_centered_y;
-  int m_text_buffer_x;
-  int m_text_buffer_y;
-
+  
   bool m_show_cursor;
   int m_last_cursor_blink_milliseconds;
   int m_cursor_blink_milliseconds;

@@ -17,6 +17,11 @@ typedef struct {
   SDL_Color background_clicked_color = TRANSPARENT;
   SDL_Surface* image_default_surface = nullptr;
   SDL_Surface* image_clicked_surface = nullptr;
+  
+  bool text_centered_x = true;
+  bool text_centered_y = true;
+  int text_buffer_x = 5;
+  int text_buffer_y = 5;
 } ButtonSettings; 
 
 class Button : public Label {

@@ -1,27 +1,26 @@
 #include "app/WindowComponents/Button.hpp"
 
-Button::Button(int x, int y, int width, int height, ButtonSettings settings) {
-  /* I HAVE NO FUCKING IDEA WHY I CANT PUT THEM HERE */
-  m_x = x;
-  m_y = y;
-  m_width = width;
-  m_height = height;
-  m_text = settings.text;
-  m_font = settings.font;
-  m_text_color = settings.text_color;
-
+Button::Button(int x, int y, int width, int height, ButtonSettings settings) 
+  : Label (
+    x, y, width, height, {
+    settings.text,
+    settings.font,
+    settings.text_color,
+    settings.background_default_color,
+    settings.image_default_surface,
+    settings.text_centered_x,
+    settings.text_centered_y,
+    settings.text_buffer_x,
+    settings.text_buffer_y
+  })
+{
   m_background_default_color = settings.background_default_color;
   // If clicked background color is not provided use the default
   m_background_clicked_color = settings. background_clicked_color;
-  m_background_color = settings.background_default_color;
   
   m_image_default_surface = settings.image_default_surface;
   // If clicked image is not provided use the default
   m_image_clicked_surface = (settings.image_clicked_surface == nullptr) ? settings.image_default_surface : settings.image_clicked_surface;
-  m_image_surface = settings.image_default_surface;
-  
-  // Alpha channel for text color must be zero otherwise will just renderer as a colored rectangle
-  m_text_color.a = 0;
 }
 
 void Button::handleEvents(SDL_Event* event) {

@@ -141,8 +141,8 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   settings_button_settings.image_default_surface = settings_icon;
 
   /* Create components */
-  Button* start_button = new Button(320, 250, 100, 50, start_settings); 
-  Button* settings_button = new Button(320, 450, 50, 50, settings_button_settings); 
+  Button* start_button = new Button(320, 250, 50, 50, start_settings); 
+  Button* settings_button = new Button(320, 450, 100, 50, settings_button_settings); 
   Label* title_text = new Label(365, 20, 100, 100, title_text_settings);
   Label* title_image = new Label(235, 20, 110, 100, title_image_settings);
 
@@ -255,11 +255,12 @@ void VolumeSettingsScreen::init(ScreenManager* screen_manager) {
   volume_label_settings.text = "VOLUME";
   volume_label_settings.font = normal_font;
   volume_label_settings.text_color = WHITE;
+  volume_label_settings.text_centered_x = false;
   
   /* Create components */
   Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
   Slider* volume_slider = new Slider(140, 18, 200, 50, volume_slider_settings); 
-  Label* volume_label = new Label(20, 20, 100, 50, volume_label_settings);
+  Label* volume_label = new Label(20, 20, 200, 50, volume_label_settings);
 
   return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
@@ -306,22 +307,23 @@ void AISettingsScreen::init(ScreenManager* screen_manager) {
   model_path_label_settings.text = "MODEL PATH";
   model_path_label_settings.font = normal_font;
   model_path_label_settings.text_color = WHITE;
+  model_path_label_settings.text_centered_x = false;
   
-  TextFieldSettings test_field_settings;
-  test_field_settings.initial_text = "example/path/model.onnx";
-  test_field_settings.font = text_field_font;
+  TextFieldSettings model_path_field_settings;
+  model_path_field_settings.initial_text = "example/path/model.onnx";
+  model_path_field_settings.font = text_field_font;
   
   /* Create components */
   Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
-  Label* model_path_label = new Label(45, 20, 100, 50, model_path_label_settings);
-  TextField* test_field = new TextField(190, 30, 400, 25, test_field_settings);
+  Label* model_path_label = new Label(20, 20, 200, 50, model_path_label_settings);
+  TextField* model_path_field = new TextField(190, 30, 400, 25, model_path_field_settings);
   
   return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
   
   /* Linking the components to the screen */
   m_components.emplace_back(return_button);
   m_components.emplace_back(model_path_label);
-  m_components.emplace_back(test_field);
+  m_components.emplace_back(model_path_field);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
