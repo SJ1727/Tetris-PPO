@@ -142,7 +142,7 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
 
   /* Create components */
   Button* start_button = new Button(320, 250, 50, 50, start_settings); 
-  Button* settings_button = new Button(320, 450, 100, 50, settings_button_settings); 
+  Button* settings_button = new Button(320, 450, 50, 50, settings_button_settings); 
   Label* title_text = new Label(365, 20, 100, 100, title_text_settings);
   Label* title_image = new Label(235, 20, 110, 100, title_image_settings);
 
