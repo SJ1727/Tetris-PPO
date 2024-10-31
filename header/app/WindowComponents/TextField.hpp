@@ -10,6 +10,7 @@ typedef struct {
   TTF_Font* font = nullptr;
   SDL_Color text_color = BLACK;
   SDL_Color background_color = WHITE;
+  int corner_radius = 0;
   
   bool text_centered_x = false;
   bool text_centered_y = true;

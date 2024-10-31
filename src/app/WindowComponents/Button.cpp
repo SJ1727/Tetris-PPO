@@ -7,6 +7,7 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
     settings.font,
     settings.text_color,
     settings.background_default_color,
+    settings.corner_radius,
     settings.image_default_surface,
     settings.text_centered_x,
     settings.text_centered_y,

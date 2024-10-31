@@ -7,6 +7,7 @@ TextField::TextField(int x, int y, int width, int height, TextFieldSettings sett
     settings.font,
     settings.text_color,
     settings.background_color,
+    settings.corner_radius,
     nullptr,
     settings.text_centered_x,
     settings.text_centered_y,
@@ -59,8 +60,6 @@ void TextField::handleEvents(SDL_Event* event) {
         break;
     } 
   }
-
-  m_display_text = getDisplayText();
 }
 
 void TextField::update() {
@@ -74,4 +73,6 @@ void TextField::update() {
   } else {
     m_show_cursor = false;
   } 
+  
+  m_display_text = getDisplayText();
 }

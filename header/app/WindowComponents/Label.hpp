@@ -11,6 +11,7 @@ typedef struct {
   TTF_Font* font = nullptr;
   SDL_Color text_color = TRANSPARENT;
   SDL_Color background_color = TRANSPARENT;
+  int corner_radius = 0;
   SDL_Surface* image_surface = nullptr;
   
   bool text_centered_x = true;
@@ -34,6 +35,8 @@ protected:
   TTF_Font* m_font;
   SDL_Color m_text_color;
   SDL_Color m_background_color;
+  int m_corner_radius;
+  SDL_Surface* m_background_surface;
   SDL_Surface* m_image_surface;
   
   bool m_text_centered_x;

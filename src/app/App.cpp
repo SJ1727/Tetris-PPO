@@ -38,7 +38,9 @@ App::App(int width, int height)
 
   std::shared_ptr<AppContext> context = std::make_shared<AppContext>();
   context->play_music = true;
+  context->play_sound_effects = false;
   context->music_volume = MIX_MAX_VOLUME;
+  context->sound_effects_volume = MIX_MAX_VOLUME;
 
   m_screen_manager = new ScreenManager(m_width, m_height, context);
 }
@@ -56,8 +58,6 @@ App::~App() {
 
 void App::run() {
   bool running = true;
-  int frame_start;
-  int frame_length;
 
   m_screen_manager->setScreen(MAIN_MENU);
 

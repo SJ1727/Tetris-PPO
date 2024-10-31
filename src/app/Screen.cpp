@@ -91,15 +91,19 @@ void Screen::update() {
     component->update();
   }
 
-  if (!Mix_PausedMusic() && !m_context->play_music) {
-    Mix_PauseMusic();
+  // Control the volume and playing of music
+  if (Mix_VolumeMusic(-1) != 0 && !m_context->play_music) {
+    Mix_VolumeMusic(0);
+  } else {
+    Mix_VolumeMusic(m_context->music_volume);
   }
 
-  if (Mix_PausedMusic() && m_context->play_music) {
-    Mix_ResumeMusic();
+  // Control the volume and playing of sound effects
+  if (Mix_Volume(-1, -1) != 0 && !m_context->play_sound_effects) {
+    Mix_Volume(-1, 0);
+  } else {
+    Mix_Volume(-1, m_context->sound_effects_volume);
   }
-
-  Mix_VolumeMusic(m_context->music_volume);
 }
 
 /*
@@ -141,13 +145,15 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   start_settings.font = normal_font;
   start_settings.text_color = WHITE;
   start_settings.background_default_color = BLACK;
+  start_settings.corner_radius = 5;
 
   ButtonSettings settings_button_settings;
   settings_button_settings.image_default_surface = settings_icon;
   settings_button_settings.on_click_sound = button_click;
+  settings_button_settings.corner_radius = 5;
 
   /* Create components */
-  Button* start_button = new Button(320, 250, 50, 50, start_settings); 
+  Button* start_button = new Button(320, 250, 100, 50, start_settings); 
   Button* settings_button = new Button(320, 450, 50, 50, settings_button_settings); 
   Label* title_text = new Label(365, 20, 100, 100, title_text_settings);
   Label* title_image = new Label(235, 20, 110, 100, title_image_settings);
@@ -201,12 +207,14 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   volume_button_settings.font = normal_font;
   volume_button_settings.text_color = WHITE;
   volume_button_settings.background_default_color = BLACK;
+  volume_button_settings.corner_radius = 5;
   
   ButtonSettings ai_button_settings;
   ai_button_settings.text = "AI Settings";
   ai_button_settings.font = normal_font;
   ai_button_settings.text_color = WHITE;
   ai_button_settings.background_default_color = BLACK;
+  ai_button_settings.corner_radius = 5;
   
   Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
   Button* volume_button = new Button(20, 20, 250, 60, volume_button_settings); 
@@ -250,36 +258,59 @@ void VolumeSettingsScreen::init(ScreenManager* screen_manager) {
   ButtonSettings return_button_settings;
   return_button_settings.image_default_surface = return_icon;
   
-  SliderSettings volume_slider_settings;
-  volume_slider_settings.min = 0;
-  volume_slider_settings.max = MIX_MAX_VOLUME;
-  volume_slider_settings.starting_value = m_context->music_volume;
-  volume_slider_settings.track_padding_x = 10;
-  volume_slider_settings.track_padding_y = 20;
-  volume_slider_settings.thumb_relative_size = 3;
+  SliderSettings music_volume_slider_settings;
+  music_volume_slider_settings.min = 0;
+  music_volume_slider_settings.max = MIX_MAX_VOLUME;
+  music_volume_slider_settings.starting_value = m_context->music_volume;
+  music_volume_slider_settings.track_padding_x = 10;
+  music_volume_slider_settings.track_padding_y = 20;
+  music_volume_slider_settings.thumb_relative_size = 3;
 
-  LabelSettings volume_label_settings;
-  volume_label_settings.text = "VOLUME";
-  volume_label_settings.font = normal_font;
-  volume_label_settings.text_color = WHITE;
-  volume_label_settings.text_centered_x = false;
+  LabelSettings music_volume_label_settings;
+  music_volume_label_settings.text = "MUSIC VOLUME";
+  music_volume_label_settings.font = normal_font;
+  music_volume_label_settings.text_color = WHITE;
+  music_volume_label_settings.text_centered_x = false;
+  
+  SliderSettings sound_effects_volume_slider_settings;
+  sound_effects_volume_slider_settings.min = 0;
+  sound_effects_volume_slider_settings.max = MIX_MAX_VOLUME;
+  sound_effects_volume_slider_settings.starting_value = m_context->sound_effects_volume;
+  sound_effects_volume_slider_settings.track_padding_x = 10;
+  sound_effects_volume_slider_settings.track_padding_y = 20;
+  sound_effects_volume_slider_settings.thumb_relative_size = 3;
+
+  LabelSettings sound_effects_volume_label_settings;
+  sound_effects_volume_label_settings.text = "SOUND FX VOLUME";
+  sound_effects_volume_label_settings.font = normal_font;
+  sound_effects_volume_label_settings.text_color = WHITE;
+  sound_effects_volume_label_settings.text_centered_x = false;
   
   /* Create components */
   Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
-  Slider* volume_slider = new Slider(140, 18, 200, 50, volume_slider_settings); 
-  Label* volume_label = new Label(20, 20, 200, 50, volume_label_settings);
+  Slider* music_volume_slider = new Slider(260, 18, 200, 50, music_volume_slider_settings); 
+  Label* music_volume_label = new Label(20, 20, 200, 50, music_volume_label_settings);
+  Slider* sound_effects_volume_slider = new Slider(260, 68, 200, 50, sound_effects_volume_slider_settings); 
+  Label* sound_effects_volume_label = new Label(20, 70, 250, 50, sound_effects_volume_label_settings);
 
   return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
-  volume_slider->bind(std::bind(
+  music_volume_slider->bind(std::bind(
     [](std::shared_ptr<AppContext> context, float volume) { 
       context->music_volume = (int)volume;
     }, m_context, std::placeholders::_1));
- 
+  
+  sound_effects_volume_slider->bind(std::bind(
+    [](std::shared_ptr<AppContext> context, float volume) { 
+      context->sound_effects_volume = (int)volume;
+    }, m_context, std::placeholders::_1));
+  
   /* Linking the components to the screen */
   link(return_button);
-  link(volume_slider);
-  link(volume_label);
+  link(music_volume_slider);
+  link(music_volume_label);
+  link(sound_effects_volume_slider);
+  link(sound_effects_volume_label);
   
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");

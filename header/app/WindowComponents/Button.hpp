@@ -16,6 +16,7 @@ typedef struct {
   SDL_Color text_color = BLACK;
   SDL_Color background_default_color = TRANSPARENT;
   SDL_Color background_clicked_color = TRANSPARENT;
+  int corner_radius = 0;
   SDL_Surface* image_default_surface = nullptr;
   SDL_Surface* image_clicked_surface = nullptr;
   

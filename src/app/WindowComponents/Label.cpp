@@ -5,6 +5,7 @@ Label::Label(int x, int y, int width, int height, LabelSettings settings)
   m_display_text = settings.text;
   m_font = settings.font;
   m_text_color = settings.text_color;
+  m_corner_radius = settings.corner_radius;
   m_background_color = settings.background_color;
   m_image_surface = settings.image_surface;
   
@@ -12,6 +13,8 @@ Label::Label(int x, int y, int width, int height, LabelSettings settings)
   m_text_centered_y = settings.text_centered_y;
   m_text_buffer_x = settings.text_buffer_x;
   m_text_buffer_y = settings.text_buffer_y;
+
+  m_background_surface = createRoundedRectangleSurface(m_width, m_height, m_corner_radius, m_background_color);
 
   // Alpha channel for text color must be zero otherwise will just renderer as a colored rectangle
   m_text_color.a = 0;
@@ -21,9 +24,11 @@ void Label::render(SDL_Renderer* renderer) {
   int text_x, text_y, text_width, text_height;
   SDL_FRect label_rectangle = createFRect(m_x, m_y, m_width, m_height);
   
-  // Renders background with one solid color
-  SDL_SetRenderDrawColor(renderer, m_background_color.r, m_background_color.g, m_background_color.b, m_background_color.a);
-  SDL_RenderFillRect(renderer, &label_rectangle);
+  // Renders background
+  SDL_Texture* background_texture = SDL_CreateTextureFromSurface(renderer, m_background_surface); 
+  SDL_RenderTexture(renderer, background_texture, nullptr, &label_rectangle);
+  
+  SDL_DestroyTexture(background_texture);
   
   // Renders the image AFTER the solid color so it is infront
   if (m_image_surface != nullptr) {  
