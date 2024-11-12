@@ -172,17 +172,64 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   help_button_settings.background_default_color = BUTTON_COLOR;
   help_button_settings.corner_radius = { 20, 20, 0, 0 };
   help_button_settings.on_click_sound = button_click;
+
+  LabelSettings game_infomation_background_settings;
+  game_infomation_background_settings.background_color = LABEL_COLOR;
+  game_infomation_background_settings.corner_radius = { 0, 20, 0, 20 };
   
+  LabelSettings high_score_label_settings;
+  high_score_label_settings.text = "High Score";
+  high_score_label_settings.font = normal_font;
+  high_score_label_settings.text_color = WHITE;
+  
+  LabelSettings high_score_number_label_settings;
+  high_score_number_label_settings.text = "xxx";
+  high_score_number_label_settings.font = normal_font;
+  high_score_number_label_settings.text_color = WHITE;
+  
+  LabelSettings most_lines_label_settings;
+  most_lines_label_settings.text = "Most Lines Cleared";
+  most_lines_label_settings.font = normal_font;
+  most_lines_label_settings.text_color = WHITE;
+  
+  LabelSettings most_lines_number_label_settings;
+  most_lines_number_label_settings.text = "xxx";
+  most_lines_number_label_settings.font = normal_font;
+  most_lines_number_label_settings.text_color = WHITE;
+  
+  LabelSettings time_played_label_settings;
+  time_played_label_settings.text = "Hours Played";
+  time_played_label_settings.font = normal_font;
+  time_played_label_settings.text_color = WHITE;
+  
+  LabelSettings time_played_number_label_settings;
+  time_played_number_label_settings.text = "xxx";
+  time_played_number_label_settings.font = normal_font;
+  time_played_number_label_settings.text_color = WHITE;
+
   /* Create components */
   Label* title_text = new Label(528, 10, 100, 100, title_text_settings);
+
   Button* single_player_button = new Button(440, 140, 360, 80, single_player_button_settings); 
   Button* local_multi_button = new Button(440, 260, 360, 80, local_multi_button_settings); 
   Button* versus_ai_button = new Button(440, 380, 360, 80, versus_ai_button_settings); 
+  
   Button* settings_button = new Button(480, 520, 80, 80, settings_button_settings); 
   Button* help_button = new Button(640, 520, 80, 80, help_button_settings); 
 
-  single_player_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
+  Label* game_infomation_background = new Label(0, 50, 280, 500, game_infomation_background_settings);
+  Line* game_infomation_line_1 = new Line(0, 206, 280, 206, BACKGROUND_COLOR);
+  Line* game_infomation_line_2 = new Line(0, 374, 280, 374, BACKGROUND_COLOR);
+  Label* high_score_label = new Label(68, 60, 122, 34, high_score_label_settings);
+  Label* high_score_number_label = new Label(108, 124, 42, 34, high_score_number_label_settings);
+  Label* most_lines_label = new Label(34, 216, 204, 34, most_lines_label_settings);
+  Label* most_lines_number_label = new Label(108, 284, 42, 34, most_lines_number_label_settings);
+  Label* time_played_label = new Label(58, 384, 146, 34, time_played_label_settings);
+  Label* time_played_number_label = new Label(108, 446, 42, 34, time_played_number_label_settings);
 
+
+
+  single_player_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
   settings_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
   /* Linking the components to the screen */
@@ -192,6 +239,15 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   link(versus_ai_button);
   link(settings_button);
   link(help_button);
+  link(game_infomation_background);
+  link(game_infomation_line_1);
+  link(game_infomation_line_2);
+  link(high_score_label);
+  link(high_score_number_label);
+  link(most_lines_label);
+  link(most_lines_number_label);
+  link(time_played_label);
+  link(time_played_number_label);
 
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
