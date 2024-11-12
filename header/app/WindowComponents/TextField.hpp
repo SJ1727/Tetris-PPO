@@ -2,6 +2,7 @@
 #define TEXT_FIELD_H
 
 #include <string>
+#include <array>
 #include "app/SdlHelper.hpp"
 #include "app/WindowComponents/Label.hpp"
 
@@ -10,7 +11,7 @@ typedef struct {
   TTF_Font* font = nullptr;
   SDL_Color text_color = BLACK;
   SDL_Color background_color = WHITE;
-  int corner_radius = 0;
+  std::array<int, 4> corner_radius = {0, 0, 0, 0};
   
   bool text_centered_x = false;
   bool text_centered_y = true;

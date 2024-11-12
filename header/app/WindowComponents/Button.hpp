@@ -4,9 +4,12 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_mixer/SDL_mixer.h>
+
 #include <string>
 #include <iostream>
 #include <functional>
+#include <array>
+
 #include "app/SdlHelper.hpp"
 #include "app/WindowComponents/Label.hpp"
 
@@ -16,9 +19,9 @@ typedef struct {
   SDL_Color text_color = BLACK;
   SDL_Color background_default_color = TRANSPARENT;
   SDL_Color background_clicked_color = TRANSPARENT;
-  int corner_radius = 0;
-  SDL_Surface* image_default_surface = nullptr;
-  SDL_Surface* image_clicked_surface = nullptr;
+  std::array<int, 4> corner_radius = {0, 0, 0, 0};
+  Image image_default;
+  Image image_clicked;
   
   bool text_centered_x = true;
   bool text_centered_y = true;
@@ -38,8 +41,8 @@ public:
 private:
   SDL_Color m_background_default_color;
   SDL_Color m_background_clicked_color;
-  SDL_Surface* m_image_default_surface;
-  SDL_Surface* m_image_clicked_surface;
+  Image m_image_default;
+  Image m_image_clicked;
   bool m_clicked;
   std::function<void()> m_on_click;
   Mix_Chunk* m_on_click_sound;

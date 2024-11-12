@@ -111,68 +111,87 @@ void Screen::update() {
  */
 
 void MainMenuScreen::loadResources() {
-  m_resource_manager.loadFont("resources/font/ahronbd.ttf", 15, "Default font 15");
-  m_resource_manager.loadFont("resources/font/ahronbd.ttf", 50, "Default font 50");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 32, "Default font 32");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 70, "Default font 70");
   m_resource_manager.loadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
-  m_resource_manager.loadImage("resources/images/Logo.png", "Title");
   m_resource_manager.loadImage("resources/images/settings_icon.png", "Settings Icon");
+  m_resource_manager.loadImage("resources/images/question_mark.png", "Question Mark");
   m_resource_manager.loadSoundEffect("resources/sound/Click1.wav", "Button Click");
 }
 
 void MainMenuScreen::init(ScreenManager* screen_manager) {
   loadResources();
 
-  const SDL_Color BACKGROUND_COLOR = {19, 19, 19, 255};
-  TTF_Font* normal_font = m_resource_manager.getFont("Default font 15");
-  TTF_Font* title_font = m_resource_manager.getFont("Default font 50");
-  SDL_Surface* title = m_resource_manager.getImage("Title");
+  const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255 };
+  const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
+  const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
+
+  TTF_Font* normal_font = m_resource_manager.getFont("Default font 32");
+  TTF_Font* title_font = m_resource_manager.getFont("Default font 70");
   SDL_Surface* settings_icon = m_resource_manager.getImage("Settings Icon");
+  SDL_Surface* help_icon = m_resource_manager.getImage("Question Mark");
   Mix_Chunk* button_click = m_resource_manager.getSoundEffect("Button Click");
   m_background_surface = createSingleColorSurface(m_width, m_height, BACKGROUND_COLOR);
 
   /* Defining components settings */
-  LabelSettings title_image_settings;
-  title_image_settings.image_surface = title;
-
   LabelSettings title_text_settings;
   title_text_settings.text = "Tetris";
   title_text_settings.font = title_font;
   title_text_settings.text_color = WHITE;
   title_text_settings.background_color = TRANSPARENT;
 
-  ButtonSettings start_settings;
-  start_settings.text = "Single Player";
-  start_settings.font = normal_font;
-  start_settings.text_color = WHITE;
-  start_settings.background_default_color = BLACK;
-  start_settings.corner_radius = 5;
+  ButtonSettings single_player_button_settings;
+  single_player_button_settings.text = "Single Player";
+  single_player_button_settings.font = normal_font;
+  single_player_button_settings.text_color = WHITE;
+  single_player_button_settings.background_default_color = BUTTON_COLOR;
+  single_player_button_settings.corner_radius = { 20, 0, 20, 0 };
+  
+  ButtonSettings local_multi_button_settings;
+  local_multi_button_settings.text = "Local Multiplayer";
+  local_multi_button_settings.font = normal_font;
+  local_multi_button_settings.text_color = WHITE;
+  local_multi_button_settings.background_default_color = BUTTON_COLOR;
+  local_multi_button_settings.corner_radius = { 20, 0, 20, 0 };
+  
+  ButtonSettings versus_ai_button_settings;
+  versus_ai_button_settings.text = "Player vs AI";
+  versus_ai_button_settings.font = normal_font;
+  versus_ai_button_settings.text_color = WHITE;
+  versus_ai_button_settings.background_default_color = BUTTON_COLOR;
+  versus_ai_button_settings.corner_radius = { 20, 0, 20, 0 };
 
   ButtonSettings settings_button_settings;
-  settings_button_settings.image_default_surface = settings_icon;
+  settings_button_settings.image_default = { settings_icon, 40, 40 };
+  settings_button_settings.background_default_color = BUTTON_COLOR;
+  settings_button_settings.corner_radius = { 20, 20, 0, 0 };
   settings_button_settings.on_click_sound = button_click;
-  settings_button_settings.corner_radius = 5;
 
+  ButtonSettings help_button_settings;
+  help_button_settings.image_default = { help_icon, 40, 40 };
+  help_button_settings.background_default_color = BUTTON_COLOR;
+  help_button_settings.corner_radius = { 20, 20, 0, 0 };
+  help_button_settings.on_click_sound = button_click;
+  
   /* Create components */
-  Button* start_button = new Button(320, 250, 100, 50, start_settings); 
-  Button* settings_button = new Button(320, 450, 50, 50, settings_button_settings); 
-  Label* title_text = new Label(365, 20, 100, 100, title_text_settings);
-  Label* title_image = new Label(235, 20, 110, 100, title_image_settings);
+  Label* title_text = new Label(528, 10, 100, 100, title_text_settings);
+  Button* single_player_button = new Button(440, 140, 360, 80, single_player_button_settings); 
+  Button* local_multi_button = new Button(440, 260, 360, 80, local_multi_button_settings); 
+  Button* versus_ai_button = new Button(440, 380, 360, 80, versus_ai_button_settings); 
+  Button* settings_button = new Button(480, 520, 80, 80, settings_button_settings); 
+  Button* help_button = new Button(640, 520, 80, 80, help_button_settings); 
 
-  start_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
+  single_player_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
 
   settings_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
-  /* music_button->bind(std::bind(
-    [](std::shared_ptr<AppContext> context) {
-      context->play_music = !context->play_music;
-    }, m_context));
-  */
-
   /* Linking the components to the screen */
-  link(start_button);
-  link(settings_button);
   link(title_text);
-  link(title_image);
+  link(single_player_button);
+  link(local_multi_button);
+  link(versus_ai_button);
+  link(settings_button);
+  link(help_button);
 
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
@@ -200,21 +219,21 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   
   /* Defining components settings */
   ButtonSettings return_button_settings;
-  return_button_settings.image_default_surface = return_icon;
+  return_button_settings.image_default = { return_icon, 40, 40 };
   
   ButtonSettings volume_button_settings;
   volume_button_settings.text = "Volume Settings";
   volume_button_settings.font = normal_font;
   volume_button_settings.text_color = WHITE;
   volume_button_settings.background_default_color = BLACK;
-  volume_button_settings.corner_radius = 5;
   
   ButtonSettings ai_button_settings;
   ai_button_settings.text = "AI Settings";
   ai_button_settings.font = normal_font;
   ai_button_settings.text_color = WHITE;
   ai_button_settings.background_default_color = BLACK;
-  ai_button_settings.corner_radius = 5;
+  ai_button_settings.corner_radius[0] = 5;
+  ai_button_settings.corner_radius[1] = 5;
   
   Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
   Button* volume_button = new Button(20, 20, 250, 60, volume_button_settings); 
@@ -256,7 +275,7 @@ void VolumeSettingsScreen::init(ScreenManager* screen_manager) {
   
   /* Defining components settings */
   ButtonSettings return_button_settings;
-  return_button_settings.image_default_surface = return_icon;
+  return_button_settings.image_default = { return_icon, 40, 40 };
   
   SliderSettings music_volume_slider_settings;
   music_volume_slider_settings.min = 0;
@@ -339,7 +358,7 @@ void AISettingsScreen::init(ScreenManager* screen_manager) {
   
   /* Defining components settings */
   ButtonSettings return_button_settings;
-  return_button_settings.image_default_surface = return_icon;
+  return_button_settings.image_default = { return_icon, 40, 40 };
   
   LabelSettings model_path_label_settings;
   model_path_label_settings.text = "MODEL PATH";
@@ -411,4 +430,3 @@ void SinglePlayerGameScreen::init(ScreenManager* screen_manager) {
   Mix_Music* music = m_resource_manager.getMusic("Game Music");
   Mix_PlayMusic(music, -1);
 }
-

@@ -3,16 +3,19 @@
 
 #include <string>
 #include <algorithm>
+#include <array>
+
 #include "app/SdlHelper.hpp"
 #include "app/WindowComponents/Component.hpp"
+#include "app/WindowComponents/Image.hpp"
 
 typedef struct {
   std::string text = " ";
   TTF_Font* font = nullptr;
   SDL_Color text_color = TRANSPARENT;
   SDL_Color background_color = TRANSPARENT;
-  int corner_radius = 0;
-  SDL_Surface* image_surface = nullptr;
+  std::array<int, 4> corner_radius = {0, 0, 0, 0};
+  Image image;
   
   bool text_centered_x = true;
   bool text_centered_y = true;
@@ -35,9 +38,9 @@ protected:
   TTF_Font* m_font;
   SDL_Color m_text_color;
   SDL_Color m_background_color;
-  int m_corner_radius;
+  std::array<int, 4> m_corner_radius;
   SDL_Surface* m_background_surface;
-  SDL_Surface* m_image_surface;
+  Image m_image;
   
   bool m_text_centered_x;
   bool m_text_centered_y;

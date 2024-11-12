@@ -7,7 +7,7 @@ Label::Label(int x, int y, int width, int height, LabelSettings settings)
   m_text_color = settings.text_color;
   m_corner_radius = settings.corner_radius;
   m_background_color = settings.background_color;
-  m_image_surface = settings.image_surface;
+  m_image = settings.image;
   
   m_text_centered_x = settings.text_centered_x;
   m_text_centered_y = settings.text_centered_y;
@@ -31,12 +31,8 @@ void Label::render(SDL_Renderer* renderer) {
   SDL_DestroyTexture(background_texture);
   
   // Renders the image AFTER the solid color so it is infront
-  if (m_image_surface != nullptr) {  
-    SDL_Texture* image_texture = SDL_CreateTextureFromSurface(renderer, m_image_surface);  
-    
-    // Renders image as labels background
-    SDL_RenderTexture(renderer, image_texture, nullptr, &label_rectangle);
-    SDL_DestroyTexture(image_texture);
+  if (m_image.surface != nullptr) {  
+    renderImage(renderer, m_image, m_x + m_width / 2, m_y + m_height / 2, true); 
   }
 
   if (m_display_text != " ") {

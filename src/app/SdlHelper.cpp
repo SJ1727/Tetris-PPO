@@ -43,25 +43,30 @@ SDL_Surface* createSingleColorSurface(int width, int height, SDL_Color color) {
 }
 
 
-SDL_Surface* createRoundedRectangleSurface(int width, int height, int radius, SDL_Color color) {
+SDL_Surface* createRoundedRectangleSurface(int width, int height, std::array<int, 4> radius, SDL_Color color) {
   SDL_Surface* surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
 
-  if ((2 * radius) > width || (2 * radius) > height) {
-    APP_ERROR("Cannot create rounded rectanlge with width={}, height={} with radius={}", width, height, radius);
+   if ((radius[0] + radius[1]) > width || (radius[2] + radius[3]) > height) {
+    APP_ERROR("Cannot create rounded rectanlge with width={}, height={}", width, height);
     return surface;
   }
 
   // Draw the corners
-  FilledSurfaceCircle(surface, radius, radius, radius, color);
-  FilledSurfaceCircle(surface, width - radius, radius, radius, color);
-  FilledSurfaceCircle(surface, radius, height - radius, radius, color);
-  FilledSurfaceCircle(surface, width - radius, height - radius, radius, color);
+  FilledSurfaceCircle(surface, radius[0], radius[0], radius[0], color);                  // Top left
+  FilledSurfaceCircle(surface, width - radius[1], radius[1], radius[1], color);          // Top right
+  FilledSurfaceCircle(surface, radius[2], height - radius[2], radius[2], color);         // Bottom Left
+  FilledSurfaceCircle(surface, width - radius[3], height - radius[3], radius[3], color); // Bottom right
 
   // Fill in center
-  SDL_Rect middle_rectangle_1 = { radius, 0, width - 2 * radius, height };
-  SDL_Rect middle_rectangle_2 = { 0, radius, width, height - 2 * radius };
-  SDL_FillSurfaceRect(surface, &middle_rectangle_1, SDLColorToUint(color));
-  SDL_FillSurfaceRect(surface, &middle_rectangle_2, SDLColorToUint(color));
+  SDL_Rect top_rectangle = { radius[0], 0, width - radius[0] - radius[1], height / 2 };
+  SDL_Rect bottom_rectangle = { radius[2], height / 2, width - radius[2] - radius[3], height / 2 };
+  SDL_Rect left_rectangle = { 0, radius[0], width / 2, height - radius[0] - radius[2] };
+  SDL_Rect right_rectangle = { width / 2, radius[1], width / 2, height - radius[1] - radius[3] };
+  
+  SDL_FillSurfaceRect(surface, &top_rectangle, SDLColorToUint(color));
+  SDL_FillSurfaceRect(surface, &bottom_rectangle, SDLColorToUint(color));
+  SDL_FillSurfaceRect(surface, &left_rectangle, SDLColorToUint(color));
+  SDL_FillSurfaceRect(surface, &right_rectangle, SDLColorToUint(color));
 
   return surface;
 }

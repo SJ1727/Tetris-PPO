@@ -8,7 +8,7 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
     settings.text_color,
     settings.background_default_color,
     settings.corner_radius,
-    settings.image_default_surface,
+    settings.image_default,
     settings.text_centered_x,
     settings.text_centered_y,
     settings.text_buffer_x,
@@ -19,9 +19,9 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
   // If clicked background color is not provided use the default
   m_background_clicked_color = settings. background_clicked_color;
   
-  m_image_default_surface = settings.image_default_surface;
+  m_image_default = settings.image_default;
   // If clicked image is not provided use the default
-  m_image_clicked_surface = (settings.image_clicked_surface == nullptr) ? settings.image_default_surface : settings.image_clicked_surface;
+  m_image_clicked = (settings.image_clicked.surface == nullptr) ? settings.image_default : settings.image_clicked;
 
   m_on_click_sound = settings.on_click_sound;
 }
@@ -34,11 +34,11 @@ void Button::handleEvents(SDL_Event* event) {
     bool mouse_over_button = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
     if (mouse_over_button) {
       m_clicked = true;
-      m_on_click();
+      if (m_on_click) { m_on_click(); }
 
       // Change the button appearance
       m_background_color = m_background_clicked_color;
-      m_image_surface = m_image_clicked_surface;
+      m_image = m_image_clicked;
 
       // Plays clicked sounded effect
       if (m_on_click_sound != nullptr) {
@@ -52,6 +52,6 @@ void Button::handleEvents(SDL_Event* event) {
     
     // Change the button appearance
     m_background_color = m_background_default_color;
-    m_image_surface = m_image_default_surface;
+    m_image = m_image_default;
   }
 }
