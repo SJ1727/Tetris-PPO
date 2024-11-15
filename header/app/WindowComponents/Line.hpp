@@ -2,7 +2,7 @@
 #define LINE_H
 
 
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 
 class Line : public Component {

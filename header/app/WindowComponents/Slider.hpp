@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <functional>
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 
 typedef struct {

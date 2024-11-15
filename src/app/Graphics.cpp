@@ -1,4 +1,4 @@
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 
 SDL_Texture* createTextTexture(SDL_Renderer* renderer, std::string text, TTF_Font* font, SDL_Color textColor) {
   SDL_Texture* text_texture;

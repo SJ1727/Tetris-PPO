@@ -4,7 +4,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 
 typedef struct {
   SDL_Surface* surface = nullptr;

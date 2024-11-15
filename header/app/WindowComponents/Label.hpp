@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <array>
 
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 #include "app/WindowComponents/Image.hpp"
 

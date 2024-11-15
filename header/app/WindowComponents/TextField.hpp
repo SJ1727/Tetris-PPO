@@ -3,7 +3,7 @@
 
 #include <string>
 #include <array>
-#include "app/SdlHelper.hpp"
+#include "app/Graphics.hpp"
 #include "app/WindowComponents/Label.hpp"
 
 typedef struct {
