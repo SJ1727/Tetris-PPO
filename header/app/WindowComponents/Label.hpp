@@ -29,7 +29,16 @@ public:
   virtual ~Label() = default;
   void render(SDL_Renderer* renderer) override;
   void handleEvents(SDL_Event* event) override;
+  
   inline void updateText(std::string text) { m_display_text = text; }
+  inline void updatePositionX(int x) { m_x = x; }
+  inline void updatePositionY(int y) { m_y = y; }
+  inline void updateWidth(int width) { m_width = width; }
+  inline void updateHeight(int height) { m_height = height; }
+  inline int getPositionX() { return m_x; }
+  inline int getPositionY() { return m_y; }
+  inline int getWidth() { return m_width; }
+  inline int getHeight() { return m_height; }
 
 protected:
   int m_x, m_y;

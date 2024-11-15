@@ -27,12 +27,17 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
 }
 
 void Button::handleEvents(SDL_Event* event) {
-  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-    float mouse_x, mouse_y;
-    SDL_GetMouseState(&mouse_x, &mouse_y);
+  float mouse_x, mouse_y;
+  SDL_GetMouseState(&mouse_x, &mouse_y);
+  
+  bool hovering = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
+  if (hovering && !m_hovering && m_on_hover_over) { m_on_hover_over(); }
+  if (!hovering && m_hovering && m_on_hover_off) { m_on_hover_off(); }
+  m_hovering = hovering;
 
-    bool mouse_over_button = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
-    if (mouse_over_button) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+
+    if (m_hovering) {
       m_clicked = true;
       if (m_on_click) { m_on_click(); }
 

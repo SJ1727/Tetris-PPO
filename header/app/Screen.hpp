@@ -24,6 +24,8 @@ enum ScreenType {
 
 std::unique_ptr<Screen> createScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screen_type);
 
+void animateButtonStrechLeft(Button* button, int x, int width, int distance, int duration, int time);
+
 class ScreenManager {
 public:
   ScreenManager(int width, int height, std::shared_ptr<AppContext> context)
@@ -54,6 +56,7 @@ public:
   void render(SDL_Renderer* renderer);
   void handleEvents(SDL_Event* event);
   inline void link(Component* component) { m_components.emplace_back(component); }
+  inline void addAnimation(Animation* animation) { m_animations.emplace_back(animation); }
 
 protected:
   virtual void loadResources() = 0;
@@ -64,6 +67,8 @@ protected:
   ResourceManager m_resource_manager;
   ScreenManager* m_screen_manager;
   std::vector<Component*> m_components;
+  std::vector<Animation*> m_animations;
+  int m_current_time;
   SDL_Surface* m_background_surface;
 };
 

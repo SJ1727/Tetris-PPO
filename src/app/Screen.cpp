@@ -17,6 +17,24 @@ std::unique_ptr<Screen> createScreen(int width, int height, std::shared_ptr<AppC
   return nullptr;
 }
 
+
+/* Animation functions */
+void animateButtonStrechLeft(Button* button, int x, int width, int distance, int duration, int time) {
+  float normilized_time = (float) time / duration;
+
+  int distance_travelled = easeInOut(normilized_time) * distance;
+  button->updatePositionX(x - distance_travelled);
+  button->updateWidth(width + distance_travelled);
+}
+
+void animateButtonStrechUp(Button* button, int y, int height, int distance, int duration, int time) {
+  float normilized_time = (float) time / duration;
+
+  int distance_travelled = easeInOut(normilized_time) * distance;
+  button->updatePositionY(y - distance_travelled);
+  button->updateHeight(height + distance_travelled);
+}
+
 /*
  *  --- Screen Manager ---  
  */
@@ -64,6 +82,10 @@ Screen::~Screen() {
   for (auto& component : m_components) {
     delete component;
   }
+  
+  for (auto& animation : m_animations) {
+    delete animation;
+  }
 
   m_components.clear();
   Mix_HaltMusic();
@@ -91,6 +113,11 @@ void Screen::update() {
     component->update();
   }
 
+  for (auto& animation : m_animations) {
+    animation->step(SDL_GetTicks() - m_current_time);
+  }
+  m_current_time = SDL_GetTicks();
+
   // Control the volume and playing of music
   if (Mix_VolumeMusic(-1) != 0 && !m_context->play_music) {
     Mix_VolumeMusic(0);
@@ -111,8 +138,8 @@ void Screen::update() {
  */
 
 void MainMenuScreen::loadResources() {
-  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 32, "Default font 32");
-  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 70, "Default font 70");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 32, "Def 32");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
   m_resource_manager.loadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
   m_resource_manager.loadImage("resources/images/settings_icon.png", "Settings Icon");
   m_resource_manager.loadImage("resources/images/question_mark.png", "Question Mark");
@@ -126,8 +153,8 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
   const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
 
-  TTF_Font* normal_font = m_resource_manager.getFont("Default font 32");
-  TTF_Font* title_font = m_resource_manager.getFont("Default font 70");
+  TTF_Font* normal_font = m_resource_manager.getFont("Def 32");
+  TTF_Font* title_font = m_resource_manager.getFont("Def 70");
   SDL_Surface* settings_icon = m_resource_manager.getImage("Settings Icon");
   SDL_Surface* help_icon = m_resource_manager.getImage("Question Mark");
   Mix_Chunk* button_click = m_resource_manager.getSoundEffect("Button Click");
@@ -227,10 +254,79 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   Label* time_played_label = new Label(58, 384, 146, 34, time_played_label_settings);
   Label* time_played_number_label = new Label(108, 446, 42, 34, time_played_number_label_settings);
 
+  Animation* single_player_button_animation = new Animation(std::bind(
+    animateButtonStrechLeft,
+    single_player_button,
+    single_player_button->getPositionX(),
+    single_player_button->getWidth(),
+    30,
+    300,
+    std::placeholders::_1
+  ), 300);
+  
+  Animation* local_multi_button_animation = new Animation(std::bind(
+    animateButtonStrechLeft,
+    local_multi_button,
+    local_multi_button->getPositionX(),
+    local_multi_button->getWidth(),
+    30,
+    300,
+    std::placeholders::_1
+  ), 300);
+  
+  Animation* versus_ai_button_animation = new Animation(std::bind(
+    animateButtonStrechLeft,
+    versus_ai_button,
+    versus_ai_button->getPositionX(),
+    versus_ai_button->getWidth(),
+    30,
+    300,
+    std::placeholders::_1
+  ), 300);
+  
+  Animation* setting_button_animation = new Animation(std::bind(
+    animateButtonStrechUp,
+    settings_button,
+    settings_button->getPositionY(),
+    settings_button->getHeight(),
+    10,
+    300,
+    std::placeholders::_1
+  ), 300);
+  
+  Animation* help_button_animation = new Animation(std::bind(
+    animateButtonStrechUp,
+    help_button,
+    help_button->getPositionY(),
+    help_button->getHeight(),
+    10,
+    300,
+    std::placeholders::_1
+  ), 300);
 
+  addAnimation(single_player_button_animation);
+  addAnimation(local_multi_button_animation);
+  addAnimation(versus_ai_button_animation);
+  addAnimation(setting_button_animation);
+  addAnimation(help_button_animation);
 
-  single_player_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
-  settings_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
+  single_player_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, single_player_button_animation));
+  single_player_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, single_player_button_animation));
+  
+  local_multi_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, local_multi_button_animation));
+  local_multi_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, local_multi_button_animation));
+  
+  versus_ai_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, versus_ai_button_animation));
+  versus_ai_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, versus_ai_button_animation));
+  
+  settings_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, setting_button_animation));
+  settings_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, setting_button_animation));
+  
+  help_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, help_button_animation));
+  help_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, help_button_animation));
+  
+  single_player_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, SINGLE_PLAYER_GAME));
+  settings_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
   /* Linking the components to the screen */
   link(title_text);
@@ -259,7 +355,9 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
  */
 
 void SettingsScreen::loadResources() {
-  m_resource_manager.loadFont("resources/font/ahronbd.ttf", 25, "Normal");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 32, "Def 32");
+  m_resource_manager.loadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
+  m_resource_manager.loadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
   m_resource_manager.loadImage("resources/images/return_icon.png", "Return Icon");
   m_resource_manager.loadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
 }
@@ -267,45 +365,78 @@ void SettingsScreen::loadResources() {
 void SettingsScreen::init(ScreenManager* screen_manager) {
   loadResources();
 
-  const SDL_Color BACKGROUND_COLOR = {19, 19, 19, 255};
-  TTF_Font* normal_font = m_resource_manager.getFont("Normal");
+  const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255 };
+  const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
+  const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
+  TTF_Font* title_font = m_resource_manager.getFont("Def 70");
+  TTF_Font* normal_font = m_resource_manager.getFont("Def 32");
   SDL_Surface* return_icon = m_resource_manager.getImage("Return Icon");
   m_background_surface = createSingleColorSurface(m_width, m_height, BACKGROUND_COLOR);
 
   
   /* Defining components settings */
+  LabelSettings title_text_settings;
+  title_text_settings.text = "Settings";
+  title_text_settings.font = title_font;
+  title_text_settings.text_color = WHITE;
+  title_text_settings.background_color = TRANSPARENT;
+  
   ButtonSettings return_button_settings;
   return_button_settings.image_default = { return_icon, 40, 40 };
+  return_button_settings.background_default_color = BUTTON_COLOR;
+  return_button_settings.corner_radius = { 20, 20, 0, 0 };
   
   ButtonSettings volume_button_settings;
-  volume_button_settings.text = "Volume Settings";
+  volume_button_settings.text = "Volume";
   volume_button_settings.font = normal_font;
   volume_button_settings.text_color = WHITE;
-  volume_button_settings.background_default_color = BLACK;
+  volume_button_settings.background_default_color = BUTTON_COLOR;
+  volume_button_settings.corner_radius = { 20, 0, 20, 0 };
+  
+  ButtonSettings control_button_settings;
+  control_button_settings.text = "Controls";
+  control_button_settings.font = normal_font;
+  control_button_settings.text_color = WHITE;
+  control_button_settings.background_default_color = BUTTON_COLOR;
+  control_button_settings.corner_radius = { 20, 0, 20, 0 };
   
   ButtonSettings ai_button_settings;
-  ai_button_settings.text = "AI Settings";
+  ai_button_settings.text = "AI Player";
   ai_button_settings.font = normal_font;
   ai_button_settings.text_color = WHITE;
-  ai_button_settings.background_default_color = BLACK;
-  ai_button_settings.corner_radius[0] = 5;
-  ai_button_settings.corner_radius[1] = 5;
+  ai_button_settings.background_default_color = BUTTON_COLOR;
+  ai_button_settings.corner_radius = { 20, 0, 20, 0 };
   
-  Button* return_button = new Button(20, 530, 50, 50, return_button_settings);
-  Button* volume_button = new Button(20, 20, 250, 60, volume_button_settings); 
-  Button* ai_button = new Button(20, 100, 250, 60, ai_button_settings); 
+  ButtonSettings reset_data_button_settings;
+  reset_data_button_settings.text = "Reset Data";
+  reset_data_button_settings.font = normal_font;
+  reset_data_button_settings.text_color = WHITE;
+  reset_data_button_settings.background_default_color = BUTTON_COLOR;
+  reset_data_button_settings.corner_radius = { 0, 20, 0, 20 };
   
-  return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
+  /* Create components */
+  Label* title_text = new Label(528, 10, 100, 100, title_text_settings);
+  
+  Button* return_button = new Button(640, 520, 80, 80, return_button_settings); 
+  
+  Button* volume_button = new Button(440, 140, 360, 80, volume_button_settings); 
+  Button* control_button = new Button(440, 260, 360, 80, control_button_settings); 
+  Button* ai_button = new Button(440, 380, 360, 80, ai_button_settings); 
+  Button* reset_data_button = new Button(0, 140, 360, 80, reset_data_button_settings); 
+  
+  return_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
 
-  volume_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, VOLUME_SETTINGS));
-  
-  ai_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, AI_SETTINGS));
+  volume_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, VOLUME_SETTINGS));
+  ai_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, AI_SETTINGS));
   
   /* Linking the components to the screen */
+  link(title_text);
   link(return_button);
   link(volume_button);
+  link(control_button);
   link(ai_button);
-  
+  link(reset_data_button);
+
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");
   Mix_PlayMusic(music, -1);
@@ -368,7 +499,7 @@ void VolumeSettingsScreen::init(ScreenManager* screen_manager) {
   Slider* sound_effects_volume_slider = new Slider(260, 68, 200, 50, sound_effects_volume_slider_settings); 
   Label* sound_effects_volume_label = new Label(20, 70, 250, 50, sound_effects_volume_label_settings);
 
-  return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
+  return_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
 
   music_volume_slider->bind(std::bind(
     [](std::shared_ptr<AppContext> context, float volume) { 
@@ -431,7 +562,7 @@ void AISettingsScreen::init(ScreenManager* screen_manager) {
   Label* model_path_label = new Label(20, 20, 200, 50, model_path_label_settings);
   TextField* model_path_field = new TextField(190, 30, 400, 25, model_path_field_settings);
   
-  return_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
+  return_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, SETTINGS));
   
   /* Linking the components to the screen */
   link(return_button);
@@ -476,7 +607,7 @@ void SinglePlayerGameScreen::init(ScreenManager* screen_manager) {
   Label* test_label = new Label(20, 150, 300, 300, test_label_settings);
   Button* quit_button = new Button(20, 20, 100, 50, quit_settings);
   
-  quit_button->bind(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
+  quit_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
   
   /* Linking the components to the screen */
   link(test_label);

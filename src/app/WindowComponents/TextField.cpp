@@ -8,7 +8,7 @@ TextField::TextField(int x, int y, int width, int height, TextFieldSettings sett
     settings.text_color,
     settings.background_color,
     {0, 0, 0, 0},
-    nullptr,
+    { nullptr, 0 , 0 },
     settings.text_centered_x,
     settings.text_centered_y,
     settings.text_buffer_x,

@@ -8,5 +8,6 @@
 #include "app/WindowComponents/TextField.hpp"
 #include "app/WindowComponents/Line.hpp"
 #include "app/WindowComponents/Image.hpp"
+#include "app/WindowComponents/Animation.hpp"
 
 #endif // !WINDOW_COMPONENTS_H

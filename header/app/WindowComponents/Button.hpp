@@ -36,7 +36,10 @@ public:
   Button(int x, int y, int width, int height, ButtonSettings settings);
   ~Button() = default;
   void handleEvents(SDL_Event* event) override;
-  inline void bind(std::function<void()> on_click) { m_on_click = on_click; }
+  inline void bindClick(std::function<void()> on_click) { m_on_click = on_click; }
+  inline void bindHoverOver(std::function<void()> on_hover_over) { m_on_hover_over = on_hover_over; }
+  inline void bindHoverOff(std::function<void()> on_hover_off) { m_on_hover_off = on_hover_off; }
+
 
 private:
   SDL_Color m_background_default_color;
@@ -44,7 +47,10 @@ private:
   Image m_image_default;
   Image m_image_clicked;
   bool m_clicked;
+  bool m_hovering;
   std::function<void()> m_on_click;
+  std::function<void()> m_on_hover_over;
+  std::function<void()> m_on_hover_off;
   Mix_Chunk* m_on_click_sound;
 };
 
