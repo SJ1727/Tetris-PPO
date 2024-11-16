@@ -2,20 +2,59 @@
 #include "app/Screens/ScreenFactory.hpp"
 
 /* Animation functions */
-void animateButtonStrechLeft(Button* button, int x, int width, int distance, int duration, int time) {
-  float normilized_time = (float) time / duration;
-
-  int distance_travelled = easeInOut(normilized_time) * distance;
-  button->updatePositionX(x - distance_travelled);
-  button->updateWidth(width + distance_travelled);
+Animation* animateButtonStretchLeft(Button* button, int distance, int duration) {
+  return new Animation(
+    std::bind(
+    [](Button* button, int x, int width, int distance, int duration, int time){
+      float normilized_time = (float) time / duration;
+      int distance_travelled = easeInOut(normilized_time) * distance;
+      button->updatePositionX(x - distance_travelled);
+      button->updateWidth(width + distance_travelled);
+    },
+    button,
+    button->getPositionX(),
+    button->getWidth(),
+    distance,
+    duration,
+    std::placeholders::_1
+  ), duration
+  );
 }
 
-void animateButtonStrechUp(Button* button, int y, int height, int distance, int duration, int time) {
-  float normilized_time = (float) time / duration;
+Animation* animateButtonStretchRight(Button* button, int distance, int duration) {
+  return new Animation(
+    std::bind(
+    [](Button* button, int width, int distance, int duration, int time){
+      float normilized_time = (float) time / duration;
+      int distance_travelled = easeInOut(normilized_time) * distance;
+      button->updateWidth(width + distance_travelled);
+    },
+    button,
+    button->getWidth(),
+    distance,
+    duration,
+    std::placeholders::_1
+  ), duration
+  );
+}
 
-  int distance_travelled = easeInOut(normilized_time) * distance;
-  button->updatePositionY(y - distance_travelled);
-  button->updateHeight(height + distance_travelled);
+Animation* animateButtonStretchUp(Button* button, int distance, int duration) {
+  return new Animation(
+    std::bind(
+    [](Button* button, int y, int height, int distance, int duration, int time){
+      float normilized_time = (float) time / duration;
+      int distance_travelled = easeInOut(normilized_time) * distance;
+      button->updatePositionY(y - distance_travelled);
+      button->updateHeight(height + distance_travelled);
+    },
+    button,
+    button->getPositionY(),
+    button->getHeight(),
+    distance,
+    duration,
+    std::placeholders::_1
+  ), duration
+  );
 }
 
 /*

@@ -15,6 +15,7 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255 };
   const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
   const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
+
   TTF_Font* title_font = m_resource_manager.getFont("Def 70");
   TTF_Font* normal_font = m_resource_manager.getFont("Def 32");
   SDL_Surface* return_icon = m_resource_manager.getImage("Return Icon");
@@ -71,6 +72,29 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   Button* ai_button = new Button(440, 380, 360, 80, ai_button_settings); 
   Button* reset_data_button = new Button(0, 140, 360, 80, reset_data_button_settings); 
   
+  /* Create Animations */
+  Animation* return_button_animation = animateButtonStretchUp(return_button, 10, 300);
+  Animation* volume_button_animation = animateButtonStretchLeft(volume_button, 30, 300);
+  Animation* control_button_animation = animateButtonStretchLeft(control_button, 30, 300);
+  Animation* ai_button_animation = animateButtonStretchLeft(ai_button, 30, 300);
+  Animation* reset_data_button_animation = animateButtonStretchRight(reset_data_button, 30, 300);
+
+  /* Adding bindings to components */
+  return_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, return_button_animation));
+  return_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, return_button_animation));
+  
+  volume_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, volume_button_animation));
+  volume_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, volume_button_animation));
+  
+  control_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, control_button_animation));
+  control_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, control_button_animation));
+  
+  ai_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, ai_button_animation));
+  ai_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, ai_button_animation));
+  
+  reset_data_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, reset_data_button_animation));
+  reset_data_button->bindHoverOff(std::bind([](Animation* animation){ animation->backward(); }, reset_data_button_animation));
+  
   return_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
 
   volume_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, VOLUME_SETTINGS));
@@ -83,6 +107,13 @@ void SettingsScreen::init(ScreenManager* screen_manager) {
   link(control_button);
   link(ai_button);
   link(reset_data_button);
+  
+  /* Adding animations */
+  addAnimation(return_button_animation);
+  addAnimation(volume_button_animation);
+  addAnimation(control_button_animation);
+  addAnimation(ai_button_animation);
+  addAnimation(reset_data_button_animation);
 
   /* Starting Music */
   Mix_Music* music = m_resource_manager.getMusic("Main Menu Music");

@@ -25,8 +25,9 @@ enum ScreenType {
 class Screen;
 class ScreenManager;
 
-void animateButtonStrechLeft(Button* button, int x, int width, int distance, int duration, int time);
-void animateButtonStrechUp(Button* button, int y, int height, int distance, int duration, int time);
+Animation* animateButtonStretchLeft(Button* button, int distance, int duration);
+Animation* animateButtonStretchRight(Button* button, int distance, int duration);
+Animation* animateButtonStretchUp(Button* button, int distance, int duration);
 
 class ScreenManager {
 public:

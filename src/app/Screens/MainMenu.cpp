@@ -119,55 +119,11 @@ void MainMenuScreen::init(ScreenManager* screen_manager) {
   Label* time_played_number_label = new Label(108, 446, 42, 34, time_played_number_label_settings);
 
   /* Create Animations */
-  Animation* single_player_button_animation = new Animation(std::bind(
-    animateButtonStrechLeft,
-    single_player_button,
-    single_player_button->getPositionX(),
-    single_player_button->getWidth(),
-    30,
-    300,
-    std::placeholders::_1
-  ), 300);
-  
-  Animation* local_multi_button_animation = new Animation(std::bind(
-    animateButtonStrechLeft,
-    local_multi_button,
-    local_multi_button->getPositionX(),
-    local_multi_button->getWidth(),
-    30,
-    300,
-    std::placeholders::_1
-  ), 300);
-  
-  Animation* versus_ai_button_animation = new Animation(std::bind(
-    animateButtonStrechLeft,
-    versus_ai_button,
-    versus_ai_button->getPositionX(),
-    versus_ai_button->getWidth(),
-    30,
-    300,
-    std::placeholders::_1
-  ), 300);
-  
-  Animation* setting_button_animation = new Animation(std::bind(
-    animateButtonStrechUp,
-    settings_button,
-    settings_button->getPositionY(),
-    settings_button->getHeight(),
-    10,
-    300,
-    std::placeholders::_1
-  ), 300);
-  
-  Animation* help_button_animation = new Animation(std::bind(
-    animateButtonStrechUp,
-    help_button,
-    help_button->getPositionY(),
-    help_button->getHeight(),
-    10,
-    300,
-    std::placeholders::_1
-  ), 300);
+  Animation* single_player_button_animation = animateButtonStretchLeft(single_player_button, 30, 300);
+  Animation* local_multi_button_animation = animateButtonStretchLeft(local_multi_button, 30, 300);
+  Animation* versus_ai_button_animation = animateButtonStretchLeft(versus_ai_button, 30, 300);
+  Animation* setting_button_animation = animateButtonStretchUp(settings_button, 10, 300);
+  Animation* help_button_animation = animateButtonStretchUp(help_button, 10, 300);
 
   /* Adding bindings to components */
   single_player_button->bindHoverOver(std::bind([](Animation* animation){ animation->forward(); }, single_player_button_animation));
