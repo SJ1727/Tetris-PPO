@@ -11,20 +11,22 @@
 #include "app/AppContext.hpp"
 #include "app/WindowComponents/WindowComponents.hpp"
 
-class Screen;
-class ScreenManager;
-
 enum ScreenType {
   MAIN_MENU,
   SETTINGS,
   VOLUME_SETTINGS,
   AI_SETTINGS,
-  SINGLE_PLAYER_GAME
+  SINGLE_PLAYER_GAME,
+  CONTROL_SETTINGS,
+  PLAYER_1_CONTROL_SETTINGS,
+  PLAYER_2_CONTROL_SETTINGS
 };
 
-std::unique_ptr<Screen> createScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screen_type);
+class Screen;
+class ScreenManager;
 
 void animateButtonStrechLeft(Button* button, int x, int width, int distance, int duration, int time);
+void animateButtonStrechUp(Button* button, int y, int height, int distance, int duration, int time);
 
 class ScreenManager {
 public:
@@ -70,51 +72,6 @@ protected:
   std::vector<Animation*> m_animations;
   int m_current_time;
   SDL_Surface* m_background_surface;
-};
-
-class MainMenuScreen : public Screen {
-public:
-  MainMenuScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager) override;
-
-protected:
-  void loadResources() override;
-};
-
-class SettingsScreen : public Screen {
-public:
-  SettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager) override;
-
-protected:
-  void loadResources() override;
-};
-
-class VolumeSettingsScreen : public Screen {
-public:
-  VolumeSettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager);
-
-protected:
-  void loadResources() override;
-};
-
-class AISettingsScreen : public Screen {
-public:
-  AISettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager);
-
-protected:
-  void loadResources() override;
-};
-
-class SinglePlayerGameScreen : public Screen {
-public:
-  SinglePlayerGameScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager) override;
-
-protected:
-  void loadResources() override;
 };
 
 #endif // !SCREEN_H

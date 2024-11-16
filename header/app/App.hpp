@@ -5,7 +5,8 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
-#include "app/Screen.hpp"
+#include "app/Screens/Screen.hpp"
+#include "app/Screens/ScreenFactory.hpp"
 #include "app/AppContext.hpp"
 #include "log.hpp"
 
