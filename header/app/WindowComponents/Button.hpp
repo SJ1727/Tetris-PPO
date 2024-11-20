@@ -12,46 +12,47 @@
 
 #include "app/Graphics.hpp"
 #include "app/WindowComponents/Label.hpp"
+#include "app/WindowComponents/Animation.hpp"
 
 typedef struct {
   std::string text = " ";
   TTF_Font* font = nullptr;
-  SDL_Color text_color = BLACK;
-  SDL_Color background_default_color = TRANSPARENT;
-  SDL_Color background_clicked_color = TRANSPARENT;
-  std::array<int, 4> corner_radius = {0, 0, 0, 0};
-  Image image_default;
-  Image image_clicked;
+  SDL_Color textColor = BLACK;
+  SDL_Color backgroundDefaultColor = TRANSPARENT;
+  SDL_Color backgroundClickedColor = TRANSPARENT;
+  std::array<int, 4> cornerRadius = {0, 0, 0, 0};
+  Image imageDefault;
+  Image imageClicked;
   
-  bool text_centered_x = true;
-  bool text_centered_y = true;
-  int text_buffer_x = 5;
-  int text_buffer_y = 5;
+  bool textCenteredX = true;
+  bool textCenteredY = true;
+  int textBufferX = 5;
+  int textBufferY = 5;
 
-  Mix_Chunk *on_click_sound = nullptr;
+  Mix_Chunk *onClickSound = nullptr;
 } ButtonSettings; 
 
 class Button : public Label {
 public:
   Button(int x, int y, int width, int height, ButtonSettings settings);
   ~Button() = default;
-  void handleEvents(SDL_Event* event) override;
-  inline void bindClick(std::function<void()> on_click) { m_on_click = on_click; }
-  inline void bindHoverOver(std::function<void()> on_hover_over) { m_on_hover_over = on_hover_over; }
-  inline void bindHoverOff(std::function<void()> on_hover_off) { m_on_hover_off = on_hover_off; }
+  void HandleEvents(SDL_Event* event) override;
+  inline void BindClick(std::function<void()> onClick) { m_OnClick = onClick; }
+  inline void BindHoverOver(std::function<void()> onHoverOver) { m_OnHoverOver = onHoverOver; }
+  inline void BindHoverOff(std::function<void()> onHoverOff) { m_OnHoverOff = onHoverOff; }
 
 
 private:
-  SDL_Color m_background_default_color;
-  SDL_Color m_background_clicked_color;
-  Image m_image_default;
-  Image m_image_clicked;
-  bool m_clicked;
-  bool m_hovering;
-  std::function<void()> m_on_click;
-  std::function<void()> m_on_hover_over;
-  std::function<void()> m_on_hover_off;
-  Mix_Chunk* m_on_click_sound;
+  SDL_Color m_BackgroundDefaultColor;
+  SDL_Color m_BackgroundClickedColor;
+  Image m_ImageDefault;
+  Image m_ImageClicked;
+  bool m_Clicked;
+  bool m_Hovering;
+  std::function<void()> m_OnClick;
+  std::function<void()> m_OnHoverOver;
+  std::function<void()> m_OnHoverOff;
+  Mix_Chunk* m_OnClickSound;
 };
 
 #endif //!BUTTON_H

@@ -6,10 +6,10 @@
 class VolumeSettingsScreen : public Screen {
 public:
   VolumeSettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager);
+  void Init(ScreenManager* screenManager);
 
 protected:
-  void loadResources() override;
+  void LoadResources() override;
 };
 
 #endif // !VOLUME_SETTINGS_H

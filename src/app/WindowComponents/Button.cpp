@@ -5,58 +5,58 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
     x, y, width, height, {
     settings.text,
     settings.font,
-    settings.text_color,
-    settings.background_default_color,
-    settings.corner_radius,
-    settings.image_default,
-    settings.text_centered_x,
-    settings.text_centered_y,
-    settings.text_buffer_x,
-    settings.text_buffer_y
+    settings.textColor,
+    settings.backgroundDefaultColor,
+    settings.cornerRadius,
+    settings.imageDefault,
+    settings.textCenteredX,
+    settings.textCenteredY,
+    settings.textBufferX,
+    settings.textBufferY
   })
 {
-  m_background_default_color = settings.background_default_color;
+  m_BackgroundDefaultColor = settings.backgroundDefaultColor;
   // If clicked background color is not provided use the default
-  m_background_clicked_color = settings. background_clicked_color;
+  m_BackgroundClickedColor = settings. backgroundClickedColor;
   
-  m_image_default = settings.image_default;
+  m_ImageDefault = settings.imageDefault;
   // If clicked image is not provided use the default
-  m_image_clicked = (settings.image_clicked.surface == nullptr) ? settings.image_default : settings.image_clicked;
+  m_ImageClicked = (settings.imageClicked.surface == nullptr) ? settings.imageDefault : settings.imageClicked;
 
-  m_on_click_sound = settings.on_click_sound;
+  m_OnClickSound = settings.onClickSound;
 }
 
-void Button::handleEvents(SDL_Event* event) {
-  float mouse_x, mouse_y;
-  SDL_GetMouseState(&mouse_x, &mouse_y);
+void Button::HandleEvents(SDL_Event* event) {
+  float mouseX, mouseY;
+  SDL_GetMouseState(&mouseX, &mouseY);
   
-  bool hovering = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
-  if (hovering && !m_hovering && m_on_hover_over) { m_on_hover_over(); }
-  if (!hovering && m_hovering && m_on_hover_off) { m_on_hover_off(); }
-  m_hovering = hovering;
+  bool hovering = (mouseX > m_X && mouseX < m_X + m_Width && mouseY > m_Y && mouseY < m_Y + m_Height);
+  if (hovering && !m_Hovering && m_OnHoverOver) { m_OnHoverOver(); }
+  if (!hovering && m_Hovering && m_OnHoverOff) { m_OnHoverOff(); }
+  m_Hovering = hovering;
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
 
-    if (m_hovering) {
-      m_clicked = true;
-      if (m_on_click) { m_on_click(); }
+    if (m_Hovering) {
+      m_Clicked = true;
+      if (m_OnClick) { m_OnClick(); }
 
       // Change the button appearance
-      m_background_color = m_background_clicked_color;
-      m_image = m_image_clicked;
+      m_BackgroundColor = m_BackgroundClickedColor;
+      m_Image = m_ImageClicked;
 
       // Plays clicked sounded effect
-      if (m_on_click_sound != nullptr) {
-        Mix_PlayChannel(-1, m_on_click_sound, 0);
+      if (m_OnClickSound != nullptr) {
+        Mix_PlayChannel(-1, m_OnClickSound, 0);
       }
     }
   }
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-    m_clicked = false;
+    m_Clicked = false;
     
     // Change the button appearance
-    m_background_color = m_background_default_color;
-    m_image = m_image_default;
+    m_BackgroundColor = m_BackgroundDefaultColor;
+    m_Image = m_ImageDefault;
   }
 }

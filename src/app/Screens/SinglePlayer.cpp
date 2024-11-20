@@ -1,42 +1,41 @@
 #include "app/Screens/SinglePlayer.hpp"
-#include "app/Screens/ScreenFactory.hpp"
 
-void SinglePlayerGameScreen::loadResources() {
-  m_resource_manager.loadFont("resources/font/ahronbd.ttf", 20, "Default font 12");
-  m_resource_manager.loadMusic("resources/sound/Korobeiniki_piano.ogg", "Game Music");
+void SinglePlayerGameScreen::LoadResources() {
+  m_ResourceManager.LoadFont("resources/font/ahronbd.ttf", 20, "Default font 12");
+  m_ResourceManager.LoadMusic("resources/sound/Korobeiniki_piano.ogg", "Game Music");
 }
 
-void SinglePlayerGameScreen::init(ScreenManager* screen_manager) {
-  loadResources();
+void SinglePlayerGameScreen::Init(ScreenManager* screenManager) {
+  LoadResources();
 
-  TTF_Font* font = m_resource_manager.getFont("Default font 12");
-  m_background_surface = createSingleColorSurface(m_width, m_height, BLACK);
+  TTF_Font* font = m_ResourceManager.GetFont("Default font 12");
+  m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BLACK);
 
   /* Defining components settings */
-  LabelSettings test_label_settings;
-  test_label_settings.text = "Game";
-  test_label_settings.font = font;
-  test_label_settings.text_color = BLACK;
-  test_label_settings.background_color = WHITE;
+  LabelSettings testLabelSettings;
+  testLabelSettings.text = "Game";
+  testLabelSettings.font = font;
+  testLabelSettings.textColor = BLACK;
+  testLabelSettings.backgroundColor = WHITE;
 
-  ButtonSettings quit_settings;
-  quit_settings.text = "Quit";
-  quit_settings.font = font;
-  quit_settings.text_color = WHITE;
-  quit_settings.background_default_color = RED;
-  quit_settings.background_clicked_color = GREEN;
+  ButtonSettings quitSettings;
+  quitSettings.text = "Quit";
+  quitSettings.font = font;
+  quitSettings.textColor = WHITE;
+  quitSettings.backgroundDefaultColor = RED;
+  quitSettings.backgroundClickedColor = GREEN;
 
   /* Create components */
-  Label* test_label = new Label(20, 150, 300, 300, test_label_settings);
-  Button* quit_button = new Button(20, 20, 100, 50, quit_settings);
+  Label* testLabel = new Label(20, 150, 300, 300, testLabelSettings);
+  Button* quitButton = new Button(20, 20, 100, 50, quitSettings);
   
-  quit_button->bindClick(std::bind(&ScreenManager::setScreen, screen_manager, MAIN_MENU));
+  quitButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
   
   /* Linking the components to the screen */
-  link(test_label);
-  link(quit_button);
+  Link(testLabel);
+  Link(quitButton);
   
   /* Starting Music */
-  Mix_Music* music = m_resource_manager.getMusic("Game Music");
+  Mix_Music* music = m_ResourceManager.GetMusic("Game Music");
   Mix_PlayMusic(music, -1);
 }

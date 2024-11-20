@@ -3,7 +3,7 @@
 const int FRAME_DELAY = 1000 / 60;
 
 App::App(int width, int height)
-  : m_width(width), m_height(height) {
+  : m_Width(width), m_Height(height) {
   APP_TRACE("--- Starting Application ---");
 
   if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -27,28 +27,28 @@ App::App(int width, int height)
     APP_ERROR("Init Fail: Could not initlise SDL mixer");
   }
 
-  m_window = SDL_CreateWindow("Tetris", m_width, m_height, 0);
-  m_renderer = SDL_CreateRenderer(m_window, NULL);
+  m_Window = SDL_CreateWindow("Tetris", m_Width, m_Height, 0);
+  m_Renderer = SDL_CreateRenderer(m_Window, NULL);
 
   // Allows for text input to window
-  SDL_StartTextInput(m_window);
+  SDL_StartTextInput(m_Window);
   
   // Allows for use of the alpha color channel
-  SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 
   std::shared_ptr<AppContext> context = std::make_shared<AppContext>();
-  context->play_music = true;
-  context->play_sound_effects = false;
-  context->music_volume = MIX_MAX_VOLUME;
-  context->sound_effects_volume = MIX_MAX_VOLUME;
+  context->playMusic = true;
+  context->playSoundEffects = false;
+  context->musicVolume = MIX_MAX_VOLUME;
+  context->soundEffectsVolume = MIX_MAX_VOLUME;
 
-  m_screen_manager = new ScreenManager(m_width, m_height, context);
+  m_ScreenManager = new ScreenManager(m_Width, m_Height, context);
 }
 
 App::~App() {
-  SDL_DestroyWindow(m_window);
-  SDL_DestroyRenderer(m_renderer);
-  delete m_screen_manager;
+  SDL_DestroyWindow(m_Window);
+  SDL_DestroyRenderer(m_Renderer);
+  delete m_ScreenManager;
 
   Mix_Quit();
   IMG_Quit();
@@ -56,10 +56,10 @@ App::~App() {
   SDL_Quit();
 }
 
-void App::run() {
+void App::Run() {
   bool running = true;
 
-  m_screen_manager->setScreen(MAIN_MENU);
+  m_ScreenManager->SetScreen(MAIN_MENU);
 
   // Main loop
   while (running) {
@@ -70,14 +70,14 @@ void App::run() {
         running = false;
       }
 
-      m_screen_manager->handleEvents(&event);
+      m_ScreenManager->HandleEvents(&event);
     }
 
-    m_screen_manager->render(m_renderer);
-    m_screen_manager->update();
+    m_ScreenManager->Render(m_Renderer);
+    m_ScreenManager->Update();
 
     // Rendering
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(m_Renderer);
   }
 }
 

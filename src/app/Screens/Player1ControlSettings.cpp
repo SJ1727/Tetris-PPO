@@ -1,10 +1,9 @@
 #include "app/Screens/Player1ControlSettings.hpp"
-#include "app/Screens/ScreenFactory.hpp"
 
-void Player1ControlSettingsScreen::loadResources() {
+void Player1ControlSettingsScreen::LoadResources() {
 
 }
 
-void Player1ControlSettingsScreen::init(ScreenManager* screen_manager) {
+void Player1ControlSettingsScreen::Init(ScreenManager* screenManager) {
 
 }

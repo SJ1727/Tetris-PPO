@@ -14,15 +14,15 @@ class App {
 public:
   App(int width, int height);
   ~App();
-  void run();
-  void changeScreen(Screen* screen);
+  void Run();
+  void ChangeScreen(Screen* screen);
 
 private:
-  int m_width;
-  int m_height;
-  ScreenManager* m_screen_manager;
-  SDL_Window* m_window;
-  SDL_Renderer* m_renderer;
+  int m_Width;
+  int m_Height;
+  ScreenManager* m_ScreenManager;
+  SDL_Window* m_Window;
+  SDL_Renderer* m_Renderer;
 };
 
 #endif //!APP_H

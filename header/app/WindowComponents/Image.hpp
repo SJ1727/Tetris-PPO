@@ -12,6 +12,6 @@ typedef struct {
   int height = 0;
 } Image;
 
-void renderImage(SDL_Renderer* renderer, Image image, int x, int y, bool center=false);
+void RenderImage(SDL_Renderer* renderer, Image image, int x, int y, bool center=false);
 
 #endif // IMAGE_H

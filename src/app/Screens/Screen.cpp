@@ -2,18 +2,18 @@
 #include "app/Screens/ScreenFactory.hpp"
 
 /* Animation functions */
-Animation* animateButtonStretchLeft(Button* button, int distance, int duration) {
+Animation* AnimateButtonStretchLeft(Button* button, int distance, int duration) {
   return new Animation(
     std::bind(
     [](Button* button, int x, int width, int distance, int duration, int time){
-      float normilized_time = (float) time / duration;
-      int distance_travelled = easeInOut(normilized_time) * distance;
-      button->updatePositionX(x - distance_travelled);
-      button->updateWidth(width + distance_travelled);
+      float normilizedTime = (float) time / duration;
+      int distanceTravelled = EaseInOut(normilizedTime) * distance;
+      button->UpdatePositionX(x - distanceTravelled);
+      button->UpdateWidth(width + distanceTravelled);
     },
     button,
-    button->getPositionX(),
-    button->getWidth(),
+    button->GetPositionX(),
+    button->GetWidth(),
     distance,
     duration,
     std::placeholders::_1
@@ -21,16 +21,16 @@ Animation* animateButtonStretchLeft(Button* button, int distance, int duration) 
   );
 }
 
-Animation* animateButtonStretchRight(Button* button, int distance, int duration) {
+Animation* AnimateButtonStretchRight(Button* button, int distance, int duration) {
   return new Animation(
     std::bind(
     [](Button* button, int width, int distance, int duration, int time){
-      float normilized_time = (float) time / duration;
-      int distance_travelled = easeInOut(normilized_time) * distance;
-      button->updateWidth(width + distance_travelled);
+      float normilizedTime = (float) time / duration;
+      int distanceTravelled = EaseInOut(normilizedTime) * distance;
+      button->UpdateWidth(width + distanceTravelled);
     },
     button,
-    button->getWidth(),
+    button->GetWidth(),
     distance,
     duration,
     std::placeholders::_1
@@ -38,18 +38,18 @@ Animation* animateButtonStretchRight(Button* button, int distance, int duration)
   );
 }
 
-Animation* animateButtonStretchUp(Button* button, int distance, int duration) {
+Animation* AnimateButtonStretchUp(Button* button, int distance, int duration) {
   return new Animation(
     std::bind(
     [](Button* button, int y, int height, int distance, int duration, int time){
-      float normilized_time = (float) time / duration;
-      int distance_travelled = easeInOut(normilized_time) * distance;
-      button->updatePositionY(y - distance_travelled);
-      button->updateHeight(height + distance_travelled);
+      float normilizedTime = (float) time / duration;
+      int distanceTravelled = EaseInOut(normilizedTime) * distance;
+      button->UpdatePositionY(y - distanceTravelled);
+      button->UpdateHeight(height + distanceTravelled);
     },
     button,
-    button->getPositionY(),
-    button->getHeight(),
+    button->GetPositionY(),
+    button->GetHeight(),
     distance,
     duration,
     std::placeholders::_1
@@ -61,38 +61,38 @@ Animation* animateButtonStretchUp(Button* button, int distance, int duration) {
  *  --- Screen Manager ---  
  */
 
-void ScreenManager::setScreen(ScreenType screen_type) {
-  m_next_screen = createScreen(m_screen_width, m_screen_height, m_context, screen_type);
+void ScreenManager::SetScreen(ScreenType screenType) {
+  m_NextScreen = CreateScreen(m_ScreenWidth, m_ScreenHeight, m_Context, screenType);
 }
 
-void ScreenManager::switchScreen() {
+void ScreenManager::SwitchScreen() {
   // Waits for any sound effects to finish playing
   while (Mix_Playing(-1)) { }
 
-  if (m_next_screen != nullptr) {
-    m_current_screen = std::move(m_next_screen);
-    m_current_screen->init(this);
-    m_next_screen = nullptr;
+  if (m_NextScreen != nullptr) {
+    m_CurrentScreen = std::move(m_NextScreen);
+    m_CurrentScreen->Init(this);
+    m_NextScreen = nullptr;
   }
 }
 
-void ScreenManager::update() {
-  if (m_current_screen) {
-    m_current_screen->update();
+void ScreenManager::Update() {
+  if (m_CurrentScreen) {
+    m_CurrentScreen->Update();
   }
   
-  switchScreen();
+  SwitchScreen();
 }
 
-void ScreenManager::render(SDL_Renderer* renderer) {
-  if (m_current_screen) {
-    m_current_screen->render(renderer);
+void ScreenManager::Render(SDL_Renderer* renderer) {
+  if (m_CurrentScreen) {
+    m_CurrentScreen->Render(renderer);
   }
 }
 
-void ScreenManager::handleEvents(SDL_Event* event) {
-  if (m_current_screen) {
-    m_current_screen->handleEvents(event);
+void ScreenManager::HandleEvents(SDL_Event* event) {
+  if (m_CurrentScreen) {
+    m_CurrentScreen->HandleEvents(event);
   }
 }
 
@@ -101,56 +101,56 @@ void ScreenManager::handleEvents(SDL_Event* event) {
  */
 
 Screen::~Screen() {
-  for (auto& component : m_components) {
+  for (auto& component : m_Components) {
     delete component;
   }
   
-  for (auto& animation : m_animations) {
+  for (auto& animation : m_Animations) {
     delete animation;
   }
 
-  m_components.clear();
+  m_Components.clear();
   Mix_HaltMusic();
 }
 
-void Screen::render(SDL_Renderer* renderer) {
-  SDL_FRect background_rectangle = createFRect(0, 0, m_width, m_height); 
-  SDL_Texture* background_texture = SDL_CreateTextureFromSurface(renderer, m_background_surface);
-  SDL_RenderTexture(renderer, background_texture, nullptr, &background_rectangle);
-  SDL_DestroyTexture(background_texture);
+void Screen::Render(SDL_Renderer* renderer) {
+  SDL_FRect backgroundRectangle = CreateFRect(0, 0, m_Width, m_Height); 
+  SDL_Texture* backgroundTexture = SDL_CreateTextureFromSurface(renderer, m_BackgroundSurface);
+  SDL_RenderTexture(renderer, backgroundTexture, nullptr, &backgroundRectangle);
+  SDL_DestroyTexture(backgroundTexture);
   
-  for (auto& component : m_components) {
-    component->render(renderer);
+  for (auto& component : m_Components) {
+    component->Render(renderer);
   }
 }
 
-void Screen::handleEvents(SDL_Event* event) {
-  for (auto& component : m_components) {
-    component->handleEvents(event);
+void Screen::HandleEvents(SDL_Event* event) {
+  for (auto& component : m_Components) {
+    component->HandleEvents(event);
   }
 }
 
-void Screen::update() {
-  for (auto& component : m_components) {
-    component->update();
+void Screen::Update() {
+  for (auto& component : m_Components) {
+    component->Update();
   }
 
-  for (auto& animation : m_animations) {
-    animation->step(SDL_GetTicks() - m_current_time);
+  for (auto& animation : m_Animations) {
+    animation->Step(SDL_GetTicks() - m_CurrentTime);
   }
-  m_current_time = SDL_GetTicks();
+  m_CurrentTime = SDL_GetTicks();
 
   // Control the volume and playing of music
-  if (Mix_VolumeMusic(-1) != 0 && !m_context->play_music) {
+  if (Mix_VolumeMusic(-1) != 0 && !m_Context->playMusic) {
     Mix_VolumeMusic(0);
   } else {
-    Mix_VolumeMusic(m_context->music_volume);
+    Mix_VolumeMusic(m_Context->musicVolume);
   }
 
   // Control the volume and playing of sound effects
-  if (Mix_Volume(-1, -1) != 0 && !m_context->play_sound_effects) {
+  if (Mix_Volume(-1, -1) != 0 && !m_Context->playSoundEffects) {
     Mix_Volume(-1, 0);
   } else {
-    Mix_Volume(-1, m_context->sound_effects_volume);
+    Mix_Volume(-1, m_Context->soundEffectsVolume);
   }
 }

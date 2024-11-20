@@ -6,10 +6,10 @@
 class Player2ControlSettingsScreen : public Screen {
 public:
   Player2ControlSettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void init(ScreenManager* screen_manager) override;
+  void Init(ScreenManager* screenManager) override;
 
 protected:
-  void loadResources() override;
+  void LoadResources() override;
 };
 
 #endif // !PLAYER_2_CONTROL_SETTINGS_H

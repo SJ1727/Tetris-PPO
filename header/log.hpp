@@ -7,18 +7,18 @@
 
 class Log {
 public:
-  static void init();
+  static void Init();
 
-  inline static std::shared_ptr<spdlog::logger>& getApplicationLogger() { return s_application_logger; }
+  inline static std::shared_ptr<spdlog::logger>& GetApplicationLogger() { return s_ApplicationLogger; }
 
 private:
-  static std::shared_ptr<spdlog::logger> s_application_logger;
+  static std::shared_ptr<spdlog::logger> s_ApplicationLogger;
 };
 
-#define APP_TRACE(...)  ::Log::getApplicationLogger()->trace(__VA_ARGS__)
-#define APP_INFO(...)  ::Log::getApplicationLogger()->info(__VA_ARGS__)
-#define APP_WARN(...)  ::Log::getApplicationLogger()->warn(__VA_ARGS__)
-#define APP_ERROR(...)  ::Log::getApplicationLogger()->error(__VA_ARGS__)
-#define APP_FATAL(...)  ::Log::getApplicationLogger()->fatal(__VA_ARGS__)
+#define APP_TRACE(...)  ::Log::GetApplicationLogger()->trace(__VA_ARGS__)
+#define APP_INFO(...)  ::Log::GetApplicationLogger()->info(__VA_ARGS__)
+#define APP_WARN(...)  ::Log::GetApplicationLogger()->warn(__VA_ARGS__)
+#define APP_ERROR(...)  ::Log::GetApplicationLogger()->error(__VA_ARGS__)
+#define APP_FATAL(...)  ::Log::GetApplicationLogger()->fatal(__VA_ARGS__)
 
 #endif // !LOG_H

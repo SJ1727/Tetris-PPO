@@ -1,62 +1,62 @@
 #include "app/WindowComponents/Label.hpp"
 
 Label::Label(int x, int y, int width, int height, LabelSettings settings)
-  : m_x(x), m_y(y), m_width(width), m_height(height) {
-  m_display_text = settings.text;
-  m_font = settings.font;
-  m_text_color = settings.text_color;
-  m_corner_radius = settings.corner_radius;
-  m_background_color = settings.background_color;
-  m_image = settings.image;
+  : m_X(x), m_Y(y), m_Width(width), m_Height(height) {
+  m_DisplayText = settings.text;
+  m_Font = settings.font;
+  m_TextColor = settings.textColor;
+  m_CornerRadius = settings.cornerRadius;
+  m_BackgroundColor = settings.backgroundColor;
+  m_Image = settings.image;
   
-  m_text_centered_x = settings.text_centered_x;
-  m_text_centered_y = settings.text_centered_y;
-  m_text_buffer_x = settings.text_buffer_x;
-  m_text_buffer_y = settings.text_buffer_y;
+  m_TextCenteredX = settings.textCenteredX;
+  m_TextCenteredY = settings.textCenteredY;
+  m_TextBufferX = settings.textBufferX;
+  m_TextBufferY = settings.textBufferY;
 
-  m_background_surface = createRoundedRectangleSurface(m_width, m_height, m_corner_radius, m_background_color);
+  m_BackgroundSurface = CreateRoundedRectangleSurface(m_Width, m_Height, m_CornerRadius, m_BackgroundColor);
 
   // Alpha channel for text color must be zero otherwise will just renderer as a colored rectangle
-  m_text_color.a = 0;
+  m_TextColor.a = 0;
 }
 
-void Label::render(SDL_Renderer* renderer) {
-  int text_x, text_y, text_width, text_height;
-  SDL_FRect label_rectangle = createFRect(m_x, m_y, m_width, m_height);
+void Label::Render(SDL_Renderer* renderer) {
+  int textX, textY, textWidth, textHeight;
+  SDL_FRect labelRectangle = CreateFRect(m_X, m_Y, m_Width, m_Height);
   
   // Renders background
-  SDL_Texture* background_texture = SDL_CreateTextureFromSurface(renderer, m_background_surface); 
-  SDL_RenderTexture(renderer, background_texture, nullptr, &label_rectangle);
+  SDL_Texture* backgroundTexture = SDL_CreateTextureFromSurface(renderer, m_BackgroundSurface); 
+  SDL_RenderTexture(renderer, backgroundTexture, nullptr, &labelRectangle);
   
-  SDL_DestroyTexture(background_texture);
+  SDL_DestroyTexture(backgroundTexture);
   
   // Renders the image AFTER the solid color so it is infront
-  if (m_image.surface != nullptr) {  
-    renderImage(renderer, m_image, m_x + m_width / 2, m_y + m_height / 2, true); 
+  if (m_Image.surface != nullptr) {  
+    RenderImage(renderer, m_Image, m_X + m_Width / 2, m_Y + m_Height / 2, true); 
   }
 
-  if (m_display_text != " ") {
-    SDL_Texture* text_texture = createTextTexture(renderer, m_display_text, m_font, m_text_color);
+  if (m_DisplayText != " ") {
+    SDL_Texture* textTexture = CreateTextTexture(renderer, m_DisplayText, m_Font, m_TextColor);
     
     // Calculate position of text rectangle
-    text_x = m_x + (m_text_centered_x ? (m_width - text_texture->w) / 2 : m_text_buffer_x);
-    text_y = m_y + (m_text_centered_y ? (m_height - text_texture->h) / 2 : m_text_buffer_y);
-    text_width = m_width - 2 * (text_x - m_x);
-    text_height = m_height - 2 * (text_y - m_y);
+    textX = m_X + (m_TextCenteredX ? (m_Width - textTexture->w) / 2 : m_TextBufferX);
+    textY = m_Y + (m_TextCenteredY ? (m_Height - textTexture->h) / 2 : m_TextBufferY);
+    textWidth = m_Width - 2 * (textX - m_X);
+    textHeight = m_Height - 2 * (textY - m_Y);
 
-    int text_rectangle_width = std::min(text_texture->w, text_width);
-    int clipping_x = std::max(text_texture->w, text_width) - text_width;
+    int textRectangleWidth = std::min(textTexture->w, textWidth);
+    int clippingX = std::max(textTexture->w, textWidth) - textWidth;
       
     // Rendering Text
-    SDL_FRect text_rectangle = createFRect(text_x, text_y, text_rectangle_width, text_texture->h);
-    SDL_FRect clipping_rectangle = createFRect(clipping_x, 0, text_rectangle_width, text_texture->h);
+    SDL_FRect textRectangle = CreateFRect(textX, textY, textRectangleWidth, textTexture->h);
+    SDL_FRect clippingRectangle = CreateFRect(clippingX, 0, textRectangleWidth, textTexture->h);
 
-    SDL_RenderTexture(renderer, text_texture, &clipping_rectangle, &text_rectangle);
-    SDL_DestroyTexture(text_texture);
+    SDL_RenderTexture(renderer, textTexture, &clippingRectangle, &textRectangle);
+    SDL_DestroyTexture(textTexture);
   }
   
 }
 
-void Label::handleEvents(SDL_Event* event) {
+void Label::HandleEvents(SDL_Event* event) {
 
 }

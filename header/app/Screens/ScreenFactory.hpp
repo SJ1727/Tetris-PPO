@@ -12,6 +12,6 @@
 #include "app/Screens/Player2ControlSettings.hpp"
 #include <memory>
 
-std::unique_ptr<Screen> createScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screen_type);
+std::unique_ptr<Screen> CreateScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screenType);
 
 #endif // !SCREEN_FACTORY_H

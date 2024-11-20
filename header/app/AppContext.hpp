@@ -5,13 +5,13 @@
 
 typedef struct {
   // Music Settings
-  bool play_music;
-  bool play_sound_effects;
-  int music_volume;
-  int sound_effects_volume;
+  bool playMusic;
+  bool playSoundEffects;
+  int musicVolume;
+  int soundEffectsVolume;
 
-  KeyBindings player_1_keybindings;
-  KeyBindings player_2_keybindings;
+  KeyBindings player1Keybindings;
+  KeyBindings player2Keybindings;
 
 } AppContext;
 

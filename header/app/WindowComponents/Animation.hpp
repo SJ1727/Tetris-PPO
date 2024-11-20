@@ -7,23 +7,23 @@
 
 class Animation {
 public:
-  Animation(std::function<void(int)> animation_function, int length);
+  Animation(std::function<void(int)> animationFunction, int length);
   ~Animation() = default;
-  void start() { m_playing = true; }
-  void stop() { m_playing = false; }
-  void forward();
-  void backward();
-  void reset();
-  void step(int delta_time);
+  void Start() { m_Playing = true; }
+  void Stop() { m_Playing = false; }
+  void Forward();
+  void Backward();
+  void Reset();
+  void Step(int deltaTime);
 
 private:
-  std::function<void(int)> m_animation_function;
-  int m_length;
-  int m_time_elapsed = 0;
-  bool m_playing = false;
-  bool m_backward = false;
+  std::function<void(int)> m_AnimationFunction;
+  int m_Length;
+  int m_TimeElapsed = 0;
+  bool m_Playing = false;
+  bool m_Backward = false;
 };
 
-float easeInOut(float normilized_time);
+float EaseInOut(float normilizedTime);
 
 #endif // !ANIMATION_H

@@ -3,7 +3,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  Log::init();
+  Log::Init();
   App app(800, 600);
-  app.run();
+  app.Run();
 }

@@ -11,9 +11,9 @@
 
 class Component {
 public:
-  virtual void handleEvents(SDL_Event* event) = 0;
-  virtual void render(SDL_Renderer* renderer) = 0;
-  virtual void update() {}
+  virtual void HandleEvents(SDL_Event* event) = 0;
+  virtual void Render(SDL_Renderer* renderer) = 0;
+  virtual void Update() {}
 };
 
 #endif // !COMPONENTS_H

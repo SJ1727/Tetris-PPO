@@ -3,76 +3,76 @@
 TextField::TextField(int x, int y, int width, int height, TextFieldSettings settings)
   : Label (
     x, y, width, height, {
-    settings.initial_text,
+    settings.initialText,
     settings.font,
-    settings.text_color,
-    settings.background_color,
+    settings.textColor,
+    settings.backgroundColor,
     {0, 0, 0, 0},
     { nullptr, 0 , 0 },
-    settings.text_centered_x,
-    settings.text_centered_y,
-    settings.text_buffer_x,
-    settings.text_buffer_y
+    settings.textCenteredX,
+    settings.textCenteredY,
+    settings.textBufferX,
+    settings.textBufferY
   }) 
 {
-  m_text = settings.initial_text;
+  m_Text = settings.initialText;
 
-  m_show_cursor = true;
-  m_last_cursor_blink_milliseconds = 0;
-  m_cursor_blink_milliseconds = settings.cursor_blink_milliseconds;
+  m_ShowCursor = true;
+  m_LastCursorBlinkMilliseconds = 0;
+  m_CursorBlinkMilliseconds = settings.cursorBlinkMilliseconds;
 
-  m_clicked = false;
+  m_Clicked = false;
 }
   
-std::string TextField::getDisplayText() {
+std::string TextField::GetDisplayText() {
   // Adding cursor
-  std::string display_text = m_text + (m_show_cursor ? "_" : " ");
+  std::string displayText = m_Text + (m_ShowCursor ? "_" : " ");
 
-  return display_text;
+  return displayText;
 }
 
-void TextField::handleEvents(SDL_Event* event) {
+void TextField::HandleEvents(SDL_Event* event) {
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-    float mouse_x, mouse_y;
-    SDL_GetMouseState(&mouse_x, &mouse_y);
+    float mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
 
-    m_clicked = (mouse_x > m_x && mouse_x < m_x + m_width && mouse_y > m_y && mouse_y < m_y + m_height);
+    m_Clicked = (mouseX > m_X && mouseX < m_X + m_Width && mouseY > m_Y && mouseY < m_Y + m_Height);
   }
   
-  if (m_clicked) {
+  if (m_Clicked) {
     switch (event->type) {
       // Adding characters to text
       case SDL_EVENT_TEXT_INPUT:
-        m_text += event->text.text;
+        m_Text += event->text.text;
         break;
      
       case SDL_EVENT_KEY_DOWN:
         // Handles backspace
-        if (event->key.key == SDLK_BACKSPACE && m_text.length() > 0) {
-          m_text = m_text.substr(0, m_text.length() - 1);
+        if (event->key.key == SDLK_BACKSPACE && m_Text.length() > 0) {
+          m_Text = m_Text.substr(0, m_Text.length() - 1);
         }
 
         // Handles pasting
         if (event->key.key == SDLK_V && event->key.mod == SDL_KMOD_LCTRL) {
-          std::string clipboard_text = SDL_GetClipboardText();
-          m_text += clipboard_text;
+          std::string clipboardText = SDL_GetClipboardText();
+          m_Text += clipboardText;
         }
         break;
     } 
   }
 }
 
-void TextField::update() {
+void TextField::Update() {
   // Makes the cursor blink
-  if (m_clicked) {
-    int current_time = SDL_GetTicks();
-    if (current_time - m_last_cursor_blink_milliseconds > m_cursor_blink_milliseconds) {
-      m_show_cursor = !m_show_cursor;
-      m_last_cursor_blink_milliseconds = current_time;
+  if (m_Clicked) {
+    int currentTime = SDL_GetTicks();
+    if (currentTime - m_LastCursorBlinkMilliseconds > m_CursorBlinkMilliseconds) {
+      m_ShowCursor = !m_ShowCursor;
+      m_LastCursorBlinkMilliseconds = currentTime;
     }
   } else {
-    m_show_cursor = false;
+    m_ShowCursor = false;
   } 
   
-  m_display_text = getDisplayText();
+  m_DisplayText = GetDisplayText();
 }

@@ -1,7 +1,7 @@
 #include "app/Screens/ScreenFactory.hpp"
 
-std::unique_ptr<Screen> createScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screen_type) {
-  switch (screen_type) {
+std::unique_ptr<Screen> CreateScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screenType) {
+  switch (screenType) {
     case MAIN_MENU:
       return std::make_unique<MainMenuScreen>(width, height, context);
     case SETTINGS:

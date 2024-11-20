@@ -9,52 +9,52 @@
 
 typedef struct {
   float min, max; // Min and Max value that the slider will return
-  float starting_value;
-  SDL_Color background_color = TRANSPARENT;
-  SDL_Color track_color = GRAY;
-  SDL_Color thumb_color = WHITE;
-  int track_padding_x;
-  int track_padding_y;
-  int thumb_relative_size; // Size of the thumb relative to the track
+  float startingValue;
+  SDL_Color backgroundColor = TRANSPARENT;
+  SDL_Color trackColor = GRAY;
+  SDL_Color thumbColor = WHITE;
+  int trackPaddingX;
+  int trackPaddingY;
+  int thumbRelativeSize; // Size of the thumb relative to the track
 } SliderSettings; 
 
 class Slider : public Component {
 public:
   Slider(int x, int y, int width, int height, SliderSettings settings);
   ~Slider() = default;
-  void render(SDL_Renderer* renderer) override;
-  void handleEvents(SDL_Event* event) override;
-  void bind(std::function<void(float)> on_value_change);
+  void Render(SDL_Renderer* renderer) override;
+  void HandleEvents(SDL_Event* event) override;
+  void Bind(std::function<void(float)> on_ValueChange);
 
 private:
-  float getValue();
+  float GetValue();
 
 private:
-  int m_x, m_y;
-  int m_width, m_height;
-  float m_min, m_max;
-  SDL_Color m_background_color;
-  SDL_Color m_track_color;
-  SDL_Color m_thumb_color;
-  int m_track_padding_x;
-  int m_track_padding_y;
-  int m_thumb_relative_size;
-  int m_max_thumb_position;
-  int m_thumb_position;
+  int m_X, m_Y;
+  int m_Width, m_Height;
+  float m_Min, m_Max;
+  SDL_Color m_BackgroundColor;
+  SDL_Color m_TrackColor;
+  SDL_Color m_ThumbColor;
+  int m_TrackPaddingX;
+  int m_TrackPaddingY;
+  int m_ThumbRelativeSize;
+  int m_MaxThumbPosition;
+  int m_ThumbPosition;
 
-  int m_track_x;
-  int m_track_y;
-  int m_track_width;
-  int m_track_height;
-  int m_thumb_x;
-  int m_thumb_y;
-  int m_thumb_width;
-  int m_thumb_height;
+  int m_TrackX;
+  int m_TrackY;
+  int m_TrackWidth;
+  int m_TrackHeight;
+  int m_ThumbX;
+  int m_ThumbY;
+  int m_ThumbWidth;
+  int m_ThumbHeight;
 
-  std::function<void(float)> m_on_value_change;
+  std::function<void(float)> m_OnValueChange;
 
-  bool m_clicked = false;
-  int m_click_start_position;
+  bool m_Clicked = false;
+  int m_ClickStartPosition;
 };
 
 #endif //!SLIDER_H
