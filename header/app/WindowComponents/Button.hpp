@@ -37,6 +37,7 @@ public:
   Button(int x, int y, int width, int height, ButtonSettings settings);
   ~Button() = default;
   void HandleEvents(SDL_Event* event) override;
+  inline void AddHoverAnimation(Animation* animation) { m_HoverAnimation = animation; }
   inline void BindClick(std::function<void()> onClick) { m_OnClick = onClick; }
   inline void BindHoverOver(std::function<void()> onHoverOver) { m_OnHoverOver = onHoverOver; }
   inline void BindHoverOff(std::function<void()> onHoverOff) { m_OnHoverOff = onHoverOff; }
@@ -52,6 +53,7 @@ private:
   std::function<void()> m_OnClick;
   std::function<void()> m_OnHoverOver;
   std::function<void()> m_OnHoverOff;
+  Animation* m_HoverAnimation;
   Mix_Chunk* m_OnClickSound;
 };
 

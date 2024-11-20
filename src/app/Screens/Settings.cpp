@@ -79,21 +79,12 @@ void SettingsScreen::Init(ScreenManager* screenManager) {
   Animation* resetDataButtonAnimation = AnimateButtonStretchRight(resetDataButton, 30, 300);
 
   /* Adding bindings to components */
-  returnButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, returnButtonAnimation));
-  returnButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, returnButtonAnimation));
-  
-  volumeButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, volumeButtonAnimation));
-  volumeButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, volumeButtonAnimation));
-  
-  controlButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, controlButtonAnimation));
-  controlButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, controlButtonAnimation));
-  
-  aiButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, aiButtonAnimation));
-  aiButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, aiButtonAnimation));
-  
-  resetDataButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, resetDataButtonAnimation));
-  resetDataButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, resetDataButtonAnimation));
-  
+  returnButton->AddHoverAnimation(returnButtonAnimation);
+  volumeButton->AddHoverAnimation(volumeButtonAnimation);
+  controlButton->AddHoverAnimation(controlButtonAnimation);
+  aiButton->AddHoverAnimation(aiButtonAnimation);
+  resetDataButton->AddHoverAnimation(resetDataButtonAnimation);
+
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
   volumeButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, VOLUME_SETTINGS));
   aiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, AI_SETTINGS));

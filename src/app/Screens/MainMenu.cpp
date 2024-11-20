@@ -125,21 +125,12 @@ void MainMenuScreen::Init(ScreenManager* screenManager) {
   Animation* helpButtonAnimation = AnimateButtonStretchUp(helpButton, 10, 300);
 
   /* Adding bindings to components */
-  singlePlayerButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, singlePlayerButtonAnimation));
-  singlePlayerButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, singlePlayerButtonAnimation));
-  
-  localMultiButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, localMultiButtonAnimation));
-  localMultiButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, localMultiButtonAnimation));
-  
-  versusAiButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, versusAiButtonAnimation));
-  versusAiButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, versusAiButtonAnimation));
-  
-  settingsButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, settingButtonAnimation));
-  settingsButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, settingButtonAnimation));
-  
-  helpButton->BindHoverOver(std::bind([](Animation* animation){ animation->Forward(); }, helpButtonAnimation));
-  helpButton->BindHoverOff(std::bind([](Animation* animation){ animation->Backward(); }, helpButtonAnimation));
-  
+  singlePlayerButton->AddHoverAnimation(singlePlayerButtonAnimation);
+  localMultiButton->AddHoverAnimation(localMultiButtonAnimation);
+  versusAiButton->AddHoverAnimation(versusAiButtonAnimation);
+  settingsButton->AddHoverAnimation(settingButtonAnimation);
+  helpButton->AddHoverAnimation(helpButtonAnimation);
+
   singlePlayerButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SINGLE_PLAYER_GAME));
   settingsButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
 

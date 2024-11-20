@@ -24,6 +24,8 @@ Button::Button(int x, int y, int width, int height, ButtonSettings settings)
   m_ImageClicked = (settings.imageClicked.surface == nullptr) ? settings.imageDefault : settings.imageClicked;
 
   m_OnClickSound = settings.onClickSound;
+
+  m_HoverAnimation = nullptr;
 }
 
 void Button::HandleEvents(SDL_Event* event) {
@@ -31,8 +33,15 @@ void Button::HandleEvents(SDL_Event* event) {
   SDL_GetMouseState(&mouseX, &mouseY);
   
   bool hovering = (mouseX > m_X && mouseX < m_X + m_Width && mouseY > m_Y && mouseY < m_Y + m_Height);
-  if (hovering && !m_Hovering && m_OnHoverOver) { m_OnHoverOver(); }
-  if (!hovering && m_Hovering && m_OnHoverOff) { m_OnHoverOff(); }
+  if (hovering && !m_Hovering) { 
+    if (m_HoverAnimation) { m_HoverAnimation->Forward(); }
+    if (m_OnHoverOver)    { m_OnHoverOver(); }
+  }
+
+  if (!hovering && m_Hovering) { 
+    if (m_HoverAnimation) { m_HoverAnimation->Backward(); }
+    if (m_OnHoverOff)     { m_OnHoverOff(); }
+  }
   m_Hovering = hovering;
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
