@@ -34,6 +34,7 @@ public:
   ScreenManager(int width, int height, std::shared_ptr<AppContext> context)
     : m_ScreenWidth(width), m_ScreenHeight(height), m_Context(context) {};
   ~ScreenManager() = default;
+
   void SetScreen(ScreenType screenType);
   void Update();
   void Render(SDL_Renderer* renderer);
@@ -54,11 +55,13 @@ public:
   Screen(int width, int height, std::shared_ptr<AppContext> context) 
     : m_ResourceManager(), m_Width(width), m_Height(height), m_Context(context) {}
   ~Screen();
+
   virtual void Init(ScreenManager* screenManager) = 0;
   void Update();
   void Render(SDL_Renderer* renderer);
   void HandleEvents(SDL_Event* event);
-  inline void Link(Component* component) { m_Components.emplace_back(component); }
+
+  inline void Link(Component* component)         { m_Components.emplace_back(component); }
   inline void AddAnimation(Animation* animation) { m_Animations.emplace_back(animation); }
 
 protected:

@@ -4,13 +4,13 @@
 #include <array>
 #include "log.hpp"
 
-enum Move:          uint8_t { RIGHT, LEFT, DOWN, ROTATE_LEFT, ROTATE_RIGHT, DROP, HOLD, NO_MOVE };
-enum TetrominoType: uint8_t { I, J, L, S, T, Z, O, NONE };
-enum Rotation:      uint8_t { ROTATION_0, ROTATION_1, ROTATION_2, ROTATION_3 };
+enum Move:          int8_t { RIGHT, LEFT, DOWN, ROTATE_LEFT, ROTATE_RIGHT, DROP, HOLD, NO_MOVE };
+enum TetrominoType: int8_t { I, J, L, S, T, Z, O, NONE };
+enum Rotation:      int8_t { ROTATION_0, ROTATION_1, ROTATION_2, ROTATION_3 };
 
 struct Position {
-  uint16_t x : 5;
-  uint16_t y : 5;
+  int8_t x;
+  int8_t y;
 };
 
 Position Add(Position pos1, Position pos2);
@@ -18,17 +18,21 @@ Position Subtract(Position pos1, Position pos2);
 
 class Tetromino {
 public:
-  Tetromino(TetrominoType type, Rotation rotation, Position position);
+  Tetromino(TetrominoType type, Rotation rotation, Position position) 
+    : m_Type(type), m_Rotation(rotation), m_Position(position) {}
   ~Tetromino() = default;
 
   inline Tetromino Copy() { return { m_Type, m_Rotation, m_Position }; }
 
-  inline void operator+(Position offset) { m_Position = Add(m_Position, offset); }
-  inline void operator-(Position offset) { m_Position = Add(m_Position, offset); }
+  inline void operator+=(Position offset) { m_Position = Add(m_Position, offset); }
+  inline void operator-=(Position offset) { m_Position = Subtract(m_Position, offset); }
   
   inline TetrominoType GetType() { return m_Type; }
   inline Rotation GetRotation()  { return m_Rotation; }
   inline Position GetPosition()  { return m_Position; }
+
+  inline void RotateLeft()  { m_Rotation = static_cast<Rotation>((m_Rotation + 3) % 4); }
+  inline void RotateRight() { m_Rotation = static_cast<Rotation>((m_Rotation + 1) % 4); }
 
 private:
   TetrominoType m_Type; 
@@ -69,10 +73,23 @@ constexpr std::array<Position, 100> rotationOffsetLookupTable = {{
   {0, 1}, {0, 0}, {1, 2}, {1, 1},
   // O piece
   {0, 1}, {0, 0}, {1, 1}, {1, 0}
-}}; 
+}};
+
+constexpr std::array<Position, 32> srsOffsetLookupTable = {{
+  // I piece
+  {-2, 0}, {1, 0}, {-2, -1}, {1, 2},
+  {-1, 0}, {2, 0}, {-1, 2}, {2, -1},
+  {2, 0}, {-1, 0}, {2, 1}, {-1, -2},
+  {1, 0}, {-2, 0}, {1, 2}, {-2, 1},
+  // Other pieces
+  {-1, 0}, {-1, 1}, {0, -2}, {-1, -2},
+  {1, 0}, {1, -1}, {0, 2}, {1, 2},
+  {1, 0}, {1, 1}, {0, -2}, {1, -2},
+  {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}
+}};
 
 std::array<Position, 4> GetBlockPositions(Tetromino tetromino);
 
-Tetromino SrsCandidate(Tetromino tetromino, Move rotation, uint8_t test);
+Tetromino SrsCandidate(Tetromino tetromino, Move rotation, int test);
 
 #endif // !TETROMINO_H
