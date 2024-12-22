@@ -4,6 +4,8 @@
 #include <array>
 #include "log.hpp"
 
+#define NUMBER_OF_TETROMINO_TYPES 7
+
 enum Move:          int8_t { RIGHT, LEFT, DOWN, ROTATE_LEFT, ROTATE_RIGHT, DROP, HOLD, NO_MOVE };
 enum TetrominoType: int8_t { I, J, L, S, T, Z, O, NONE };
 enum Rotation:      int8_t { ROTATION_0, ROTATION_1, ROTATION_2, ROTATION_3 };
@@ -25,7 +27,7 @@ public:
   inline Tetromino Copy() { return { m_Type, m_Rotation, m_Position }; }
 
   inline void operator+=(Position offset) { m_Position = Add(m_Position, offset); }
-  inline void operator-=(Position offset) { m_Position = Subtract(m_Position, offset); }
+  inline void operator-=(Position offset) { m_Position = Subtract(m_Position, offset); } 
   
   inline TetrominoType GetType() { return m_Type; }
   inline Rotation GetRotation()  { return m_Rotation; }

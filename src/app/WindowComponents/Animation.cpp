@@ -40,10 +40,10 @@ void Animation::Step(int deltaTime) {
   if (m_TimeElapsed == m_Length && !m_Backward) { Stop(); }
 }
 
-float EaseInOut(float normilizedTime) {
-  if (normilizedTime < 0.5) {
-    return 4 * std::pow(normilizedTime, 3);
+float EaseInOut(float normalizedTime) {
+  if (normalizedTime < 0.5) {
+    return 4 * std::pow(normalizedTime, 3);
   }
 
-  return 1 - std::pow(-2 * normilizedTime + 2, 3) / 2;
+  return 1 - std::pow(-2 * normalizedTime + 2, 3) / 2;
 }

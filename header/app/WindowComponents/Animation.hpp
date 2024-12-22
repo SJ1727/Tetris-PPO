@@ -9,8 +9,9 @@ class Animation {
 public:
   Animation(std::function<void(int)> animationFunction, int length);
   ~Animation() = default;
-  void Start() { m_Playing = true; }
-  void Stop() { m_Playing = false; }
+
+  inline void Start() { m_Playing = true; }
+  inline void Stop()  { m_Playing = false; }
   void Forward();
   void Backward();
   void Reset();
@@ -24,6 +25,6 @@ private:
   bool m_Backward = false;
 };
 
-float EaseInOut(float normilizedTime);
+float EaseInOut(float normalizedTime);
 
 #endif // !ANIMATION_H
