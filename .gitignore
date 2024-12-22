@@ -7,7 +7,8 @@ CMakeCache.txt
 build
 _deps
 tetris
-application.log
+*.log
+*.csv
 
 vendor/SDL
 vendor/SDL_image
