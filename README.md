@@ -22,4 +22,4 @@ If you want to train your own Tetris AI then first install the required dependen
 ```
 pip install -r requirements.txt
 ```
-And then run `python3 Train.py`
+And then run `python3 src/ppo/Train.py`
