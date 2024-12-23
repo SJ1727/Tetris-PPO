@@ -26,17 +26,22 @@ public:
   ~TetrisEngine() = default;
 
   void Init();
+  void Update();
 
-  inline TetrominoType GetBoardPositionType(int x, int y) ;
+  inline void SetNextMove(Move move) { m_NextMove = move; }
+  inline TetrominoType GetBoardPositionType(int x, int y);
   std::string GetBoardAsString();
-
-  void PlaceTetromino(Tetromino tetromino);
 
 private:
   void RefillBag();
   TetrominoType GetNextTetrominoType();
+  void SetCurrentTetrominoToNext();
 
   inline void SetBoardPositionType(int x, int y, TetrominoType type);
+  void PlaceTetromino(Tetromino tetromino);
+
+  bool TetrominoInValidPosition(Tetromino tetromino);
+  void AttemptMoveCurrentPiece(Move move);
 
   int GenerateRandomNumber(int lower, int upper);
 
@@ -45,7 +50,14 @@ private:
   std::vector<TetrominoType> m_UsedTetrominoes;
   std::queue<TetrominoType> m_NextTetrominoBag;
 
-  Move nextMove = NO_MOVE;
+  Tetromino m_CurrentTetromino;
+  TetrominoType m_HeldTetrominoType;
+  Move m_NextMove = NO_MOVE;
+
+  int m_TotalFrameCount;
+  uint8_t m_Level;
+
+  int m_LastMoveDownFrame;
 
   std::mt19937 m_RandomNumberGen;
 };

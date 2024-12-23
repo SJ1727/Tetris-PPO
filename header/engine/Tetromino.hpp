@@ -5,6 +5,7 @@
 #include "log.hpp"
 
 #define NUM_TETROMINO_TYPES 7
+#define NUM_SRS_TESTS 5
 
 enum Move:          int8_t { RIGHT, LEFT, DOWN, ROTATE_LEFT, ROTATE_RIGHT, DROP, HOLD, NO_MOVE };
 enum TetrominoType: int8_t { I, J, L, S, T, Z, O, NONE };
@@ -20,6 +21,7 @@ Position Subtract(Position pos1, Position pos2);
 
 class Tetromino {
 public:
+  Tetromino() = default;
   Tetromino(TetrominoType type, Rotation rotation, Position position) 
     : m_Type(type), m_Rotation(rotation), m_Position(position) {}
   ~Tetromino() = default;
@@ -35,6 +37,14 @@ public:
 
   inline void RotateLeft()  { m_Rotation = static_cast<Rotation>((m_Rotation + 3) % 4); }
   inline void RotateRight() { m_Rotation = static_cast<Rotation>((m_Rotation + 1) % 4); }
+
+  Tetromino SrsCandidate(Move rotation, int test);
+
+  bool Intersects(int x, int y);
+  inline bool Intersects(Position position) { return Intersects(position.x, position.y); }
+  bool InBounds(int8_t minX, int8_t maxX, int8_t minY, int8_t maxY);
+  
+  std::array<Position, 4> GetBlockPositions();
 
 private:
   TetrominoType m_Type; 
@@ -90,8 +100,6 @@ constexpr std::array<Position, 32> srsOffsetLookupTable = {{
   {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}
 }};
 
-std::array<Position, 4> GetBlockPositions(Tetromino tetromino);
 
-Tetromino SrsCandidate(Tetromino tetromino, Move rotation, int test);
 
 #endif // !TETROMINO_H
