@@ -9,4 +9,5 @@ int main(int argc, char* argv[]) {
   // App app(800, 600);
   // app.Run();
   TetrisEngine engine;
+  ENGINE_TRACE(engine.GetBoardAsString());
 }

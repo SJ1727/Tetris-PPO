@@ -4,7 +4,7 @@
 #include <array>
 #include "log.hpp"
 
-#define NUMBER_OF_TETROMINO_TYPES 7
+#define NUM_TETROMINO_TYPES 7
 
 enum Move:          int8_t { RIGHT, LEFT, DOWN, ROTATE_LEFT, ROTATE_RIGHT, DROP, HOLD, NO_MOVE };
 enum TetrominoType: int8_t { I, J, L, S, T, Z, O, NONE };
