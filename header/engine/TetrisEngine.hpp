@@ -12,7 +12,9 @@
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 20
 #define BOARD_SIZE 200
+
 #define FRAMES_PER_SECOND 50
+
 #define NUM_PREVIEW_TETROMINOES 1
 
 // If the level is greater than 19, use the same speed as level 19
@@ -23,12 +25,18 @@ public:
   TetrisEngine();
   ~TetrisEngine() = default;
 
-  inline TetrominoType GetBoardPositionType(int x, int y);
+  void Init();
+
+  inline TetrominoType GetBoardPositionType(int x, int y) ;
   std::string GetBoardAsString();
+
+  void PlaceTetromino(Tetromino tetromino);
 
 private:
   void RefillBag();
   TetrominoType GetNextTetrominoType();
+
+  inline void SetBoardPositionType(int x, int y, TetrominoType type);
 
   int GenerateRandomNumber(int lower, int upper);
 

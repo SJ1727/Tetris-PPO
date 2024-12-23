@@ -1,22 +1,25 @@
 #include "engine/TetrisEngine.hpp"
 
 TetrisEngine::TetrisEngine() {
+  Init();
+}
+
+void TetrisEngine::Init() {
   std::fill(m_Board.begin(), m_Board.end(), NONE);
-  
+
   for (int8_t type; type < NUM_TETROMINO_TYPES; type++) {
     m_UsedTetrominoes.push_back(static_cast<TetrominoType>(type));
   }
-
+  
   RefillBag();
-
-  for (int i = 0; i < NUM_TETROMINO_TYPES; i++) {
-    ENGINE_TRACE("{}",(int8_t) m_NextTetrominoBag.front());
-    m_NextTetrominoBag.pop();
-  }
 }
 
 TetrominoType TetrisEngine::GetBoardPositionType(int x, int y) {
   return m_Board[y * BOARD_WIDTH + x];
+}
+
+void TetrisEngine::SetBoardPositionType(int x, int y, TetrominoType type) {
+  m_Board[y * BOARD_WIDTH + x] = type;
 }
 
 std::string TetrisEngine::GetBoardAsString() {
@@ -25,12 +28,21 @@ std::string TetrisEngine::GetBoardAsString() {
   for (int i = 0; i < BOARD_HEIGHT; i++) {
     boardString += "\n";
     
+    // Uses a # to denote a block occupied by a tetromino and a . to denote an empty block
     for (int j = 0; j < BOARD_WIDTH; j++) {
-      boardString += std::to_string(7 - GetBoardPositionType(j, i)) + " ";
+      boardString += (GetBoardPositionType(j, i) == NONE) ? ". " : "# ";
     }
   }
 
   return boardString;
+}
+
+void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
+  auto blockPositions = GetBlockPositions(tetromino);
+
+  for (auto& position : blockPositions) {
+    SetBoardPositionType(position.x, position.y, tetromino.GetType()); 
+  }
 }
 
 void TetrisEngine::RefillBag() {
