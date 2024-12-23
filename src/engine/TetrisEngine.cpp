@@ -10,6 +10,7 @@ void TetrisEngine::Init() {
   m_TotalFrameCount = 0;
   m_Level = 0;
   m_LastMoveDownFrame = 0;
+  m_HasHeld = false;
 
   // Sets used tetrominoes to include one of all possible types
   for (int8_t type; type < NUM_TETROMINO_TYPES; type++) {
@@ -20,7 +21,7 @@ void TetrisEngine::Init() {
   RefillBag();
 
   m_HeldTetrominoType = NONE;
-  SetCurrentTetrominoToNext();
+  SetCurrentTetrominoByType(GetNextTetrominoType());
 }
 
 void TetrisEngine::Update() {
@@ -71,13 +72,32 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
     return;
    }
 
+  if (move == HOLD && !m_HasHeld) {
+    TetrominoType currentTetrominoType = m_CurrentTetromino.GetType();
+    
+    // If no piece has been held yet then just set the held type to the current tetromino type and get the next type from the bag
+    // Otherwise, swap the held and current tetromino types 
+    if (m_HeldTetrominoType == NONE) {
+      SetCurrentTetrominoByType(GetNextTetrominoType());
+    } else {
+      SetCurrentTetrominoByType(m_HeldTetrominoType);
+    }
+   
+    // Used to prevent the player from repeatably holding 
+    m_HasHeld = true;
+
+    m_HeldTetrominoType = currentTetrominoType;
+  }
+
   candidateTetromino = m_CurrentTetromino.Copy();
   
   if (move == DROP) {
+    // Keep moving the current piece down until it cant be moved down any further
     while (TetrominoInValidPosition(candidateTetromino)) {
       m_CurrentTetromino = candidateTetromino;
       candidateTetromino += { 0, 1 };
     }
+    return;
   }
 
   switch (move) {
@@ -131,8 +151,8 @@ void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
   // Sets all cells on the board with same coordinate as a block to the tetromino type
   // It is set to the type instead of just true or false because we want to colour the board
   // Depending on what the tetromino type was
-  for (auto& position : blockPositions) {
-    SetBoardPositionType(position.x, position.y, tetromino.GetType()); 
+  for (auto& blockPosition : blockPositions) {
+    SetBoardPositionType(blockPosition.x, blockPosition.y, tetromino.GetType()); 
   }
 }
 
@@ -148,10 +168,8 @@ void TetrisEngine::RefillBag() {
   }
 }
 
-void TetrisEngine::SetCurrentTetrominoToNext() {
-  TetrominoType nextTetrominoType = GetNextTetrominoType();
-
-  m_CurrentTetromino = { nextTetrominoType, ROTATION_0, {BOARD_WIDTH / 2 - 2, 0} };
+void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
+  m_CurrentTetromino = { type, ROTATION_0, {BOARD_WIDTH / 2 - 2, 0} };
 }
 
 TetrominoType TetrisEngine::GetNextTetrominoType() {
@@ -159,6 +177,9 @@ TetrominoType TetrisEngine::GetNextTetrominoType() {
   if (m_NextTetrominoBag.size() < NUM_PREVIEW_TETROMINOES + 1) {
     RefillBag();
   }
+
+  // Since we are getting a new tetromino we can now hold
+  m_HasHeld = false;
 
   // Gets next tetromino type
   TetrominoType nextType = m_NextTetrominoBag.front();

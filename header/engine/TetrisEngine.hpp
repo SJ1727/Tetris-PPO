@@ -35,7 +35,7 @@ public:
 private:
   void RefillBag();
   TetrominoType GetNextTetrominoType();
-  void SetCurrentTetrominoToNext();
+  void SetCurrentTetrominoByType(TetrominoType type);
 
   inline void SetBoardPositionType(int x, int y, TetrominoType type);
   void PlaceTetromino(Tetromino tetromino);
@@ -58,6 +58,7 @@ private:
   uint8_t m_Level;
 
   int m_LastMoveDownFrame;
+  bool m_HasHeld;
 
   std::mt19937 m_RandomNumberGen;
 };
