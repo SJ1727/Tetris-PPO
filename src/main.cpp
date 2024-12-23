@@ -9,9 +9,8 @@ int main(int argc, char* argv[]) {
   //App app(800, 600);
   //app.Run();
   TetrisEngine engine;
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 20; i++) {
     ENGINE_TRACE(engine.GetBoardAsString());
-    engine.SetNextMove(DROP);
-    engine.Update();
+    engine.Init();
   }
 }
