@@ -10,6 +10,9 @@ tetris
 *.log
 *.csv
 
+dist
+*.egg-info
+
 vendor/SDL
 vendor/SDL_image
 vendor/SDL_mixer

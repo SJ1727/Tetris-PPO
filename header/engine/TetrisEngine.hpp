@@ -7,7 +7,6 @@
 #include <random>
 #include <string>
 #include "engine/Tetromino.hpp"
-#include "log.hpp"
 
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 20
@@ -29,7 +28,6 @@ public:
   void Update();
 
   inline void SetNextMove(Move move) { m_NextMove = move; }
-  inline TetrominoType GetBoardPositionType(int x, int y);
   std::string GetBoardAsString();
 
 private:
@@ -37,6 +35,7 @@ private:
   TetrominoType GetNextTetrominoType();
   void SetCurrentTetrominoByType(TetrominoType type);
 
+  inline TetrominoType GetBoardPositionType(int x, int y);
   inline void SetBoardPositionType(int x, int y, TetrominoType type);
   void PlaceTetromino(Tetromino tetromino);
 

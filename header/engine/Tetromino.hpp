@@ -2,7 +2,7 @@
 #define TETROMINO_H
 
 #include <array>
-#include "log.hpp"
+#include <cstdint>
 
 #define NUM_TETROMINO_TYPES 7
 #define NUM_SRS_TESTS 5

@@ -37,7 +37,6 @@ Position Subtract(Position pos1, Position pos2) {
 std::array<Position, 4> Tetromino::GetBlockPositions() {
   switch (m_Type) {
     case NONE:
-      ENGINE_ERROR("Tetromino type should not be none");
       return {{ {0, 0}, {0, 0}, {0, 0}, {0, 0} }};
 
     case O:
@@ -64,12 +63,10 @@ Tetromino Tetromino::SrsCandidate(Move rotation, int test) {
   Tetromino candidate = Copy();
 
   if (rotation != ROTATE_LEFT && rotation != ROTATE_RIGHT) {
-    ENGINE_ERROR("Move must be a rotation");
     return candidate;
   }
 
   if (test > 4) {
-    ENGINE_ERROR("Test number must be in the range 0-4 inclusive");
     return candidate;
   }
 
@@ -84,7 +81,6 @@ Tetromino Tetromino::SrsCandidate(Move rotation, int test) {
   // Getting the offset from the lookup table
   switch (m_Type) {
     case NONE:
-      ENGINE_ERROR("Tetromino type should not be none");
       return candidate;
     case I:
       offset = srsOffsetLookupTable[index];

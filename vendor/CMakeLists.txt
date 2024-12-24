@@ -3,6 +3,7 @@ add_subdirectory(SDL_ttf)
 add_subdirectory(SDL_mixer)
 add_subdirectory(SDL_image)
 add_subdirectory(spdlog)
+add_subdirectory(pybind11)
 add_library(vendor INTERFACE)
 
 target_link_libraries(vendor INTERFACE
