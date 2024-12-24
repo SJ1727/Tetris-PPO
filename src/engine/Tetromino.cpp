@@ -18,7 +18,7 @@ bool Tetromino::InBounds(int8_t minX, int8_t maxX, int8_t minY, int8_t maxY) {
   auto blockPositions = GetBlockPositions();
 
   for (auto& blockPosition : blockPositions) {
-    if (blockPosition.x < minX && blockPosition.x > maxX && blockPosition.y < minY && blockPosition.y > maxY) {
+    if (blockPosition.x < minX || blockPosition.x > maxX || blockPosition.y < minY || blockPosition.y > maxY) {
       return false;
     }
   }
@@ -69,9 +69,15 @@ Tetromino Tetromino::SrsCandidate(Move rotation, int test) {
   if (test > 4) {
     return candidate;
   }
+  
+  if (rotation == ROTATE_LEFT) {
+    candidate.RotateLeft();  
+  } else {
+    candidate.RotateRight();
+  }
 
   // Case where there should be no rotation, no need to lookup
-  if (test == 0 || m_Type == O) {
+  if (test == 0 || m_Type == O) {  
     return candidate;
   }
 
@@ -92,10 +98,8 @@ Tetromino Tetromino::SrsCandidate(Move rotation, int test) {
 
   // If the rotation is anti clockwise we need to subtract the offset rather than add it
   if (rotation == ROTATE_LEFT) {
-    candidate.RotateLeft();
     candidate -= offset; 
   } else {
-    candidate.RotateRight();
     candidate += offset;
   }
 

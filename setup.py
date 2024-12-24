@@ -7,6 +7,10 @@ from pathlib import Path
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
+# -------------------------------------------------------------------
+#   This has been taken from https://github.com/pybind/cmake_example
+# -------------------------------------------------------------------
+
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
     "win32": "Win32",
@@ -48,8 +52,7 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
-            f"-DSDLTTF_VENDORED=ON",
-            f"-DSDLMIXER_VENDORED=ON"
+            f"-DTETRIS_ENGINE_BIND_COMPILE=ON"
         ]
         build_args = []
         # Adding CMake arguments set as environment variable

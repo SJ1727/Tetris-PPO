@@ -9,7 +9,8 @@ void TetrisEngine::Init() {
 
   m_TotalFrameCount = 0;
   m_Level = 0;
-  m_LastMoveDownFrame = 0;
+  m_FramesSinceFallen = 0;
+  m_FramesSinceMoveDown = 0;
   m_HasHeld = false;
 
   // Sets used tetrominoes to include one of all possible types
@@ -25,6 +26,7 @@ void TetrisEngine::Init() {
 }
 
 void TetrisEngine::Update() {
+  ENGINE_TRACE("Rotation = {}", (int) m_CurrentTetromino.GetRotation());
   // Moves the current piece based on the next move
   if (m_NextMove != NO_MOVE) {
     AttemptMoveCurrentPiece(m_NextMove);
@@ -32,16 +34,29 @@ void TetrisEngine::Update() {
   }
 
   int speed = m_Level > 19 ? 19 : m_Level;
+
+  // Checks if Tetromino has fallen and if so it gives the next tetromino
+  if (CurrentTetrominoHasFallen()) {
+    if (m_FramesSinceFallen >= RELATIVE_TIME_UNTIL_LOCK * fallingSpeedLookupTable[speed]) {
+      PlaceTetromino(m_CurrentTetromino);
+      SetCurrentTetrominoByType(GetNextTetrominoType());
+    } else {
+      m_FramesSinceFallen++;
+    }
+  }
+  
   // Automatically moves the current tetris piece down
-  if (m_TotalFrameCount - m_LastMoveDownFrame >= fallingSpeedLookupTable[speed]) {
+  if (m_FramesSinceMoveDown >= fallingSpeedLookupTable[speed]) {
     AttemptMoveCurrentPiece(DOWN);
+  } else {
+    m_FramesSinceMoveDown++;
   }
 
-  m_TotalFrameCount += 1;
+  m_TotalFrameCount++;
 }
 
 bool TetrisEngine::TetrominoInValidPosition(Tetromino tetromino) {
-  if (!tetromino.InBounds(0, BOARD_WIDTH, 0, BOARD_HEIGHT)) { return false; }
+  if (!tetromino.InBounds(0, BOARD_WIDTH - 1, 0, BOARD_HEIGHT - 1)) { return false; }
 
   auto blockPositions = tetromino.GetBlockPositions();
 
@@ -54,6 +69,13 @@ bool TetrisEngine::TetrominoInValidPosition(Tetromino tetromino) {
   return true;
 }
 
+bool TetrisEngine::CurrentTetrominoHasFallen() {
+  Tetromino testTetromino = m_CurrentTetromino.Copy();
+  testTetromino += { 0, 1 };
+
+  return !TetrominoInValidPosition(testTetromino);
+}
+
 void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
   Tetromino candidateTetromino;
 
@@ -63,10 +85,13 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
       candidateTetromino = m_CurrentTetromino.SrsCandidate(move, test); 
 
       if (TetrominoInValidPosition(candidateTetromino)) {
+        ENGINE_TRACE("Chose candidate from test {}", test);
         m_CurrentTetromino = candidateTetromino;
         return;
       }
     }
+
+    ENGINE_TRACE("Could not find a valid position");
 
     // If its not possible to find a valid position then do not modify the current tetromino 
     return;
@@ -87,6 +112,8 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
     m_HasHeld = true;
 
     m_HeldTetrominoType = currentTetrominoType;
+
+    return;
   }
 
   candidateTetromino = m_CurrentTetromino.Copy();
@@ -97,6 +124,7 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
       m_CurrentTetromino = candidateTetromino;
       candidateTetromino += { 0, 1 };
     }
+    m_FramesSinceFallen = 1000;
     return;
   }
 
@@ -109,7 +137,7 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
       break;
     case DOWN:
       candidateTetromino += { 0, 1 };
-      m_LastMoveDownFrame = m_TotalFrameCount;
+      m_FramesSinceMoveDown = 0;
       break;
     default:
       return;
@@ -169,6 +197,9 @@ void TetrisEngine::RefillBag() {
 }
 
 void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
+  m_FramesSinceFallen = 0;
+  m_FramesSinceMoveDown = 0;
+  
   m_CurrentTetromino = { type, ROTATION_0, {BOARD_WIDTH / 2 - 2, 0} };
 }
 
@@ -180,7 +211,7 @@ TetrominoType TetrisEngine::GetNextTetrominoType() {
 
   // Since we are getting a new tetromino we can now hold
   m_HasHeld = false;
-
+  
   // Gets next tetromino type
   TetrominoType nextType = m_NextTetrominoBag.front();
   
