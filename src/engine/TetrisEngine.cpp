@@ -8,6 +8,7 @@ void TetrisEngine::Init() {
   std::fill(m_Board.begin(), m_Board.end(), NONE);
 
   m_TotalFrameCount = 0;
+  m_LinesCleared = 0;
   m_Level = 0;
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
@@ -26,7 +27,6 @@ void TetrisEngine::Init() {
 }
 
 void TetrisEngine::Update() {
-  ENGINE_TRACE("Rotation = {}", (int) m_CurrentTetromino.GetRotation());
   // Moves the current piece based on the next move
   if (m_NextMove != NO_MOVE) {
     AttemptMoveCurrentPiece(m_NextMove);
@@ -34,6 +34,13 @@ void TetrisEngine::Update() {
   }
 
   int speed = m_Level > 19 ? 19 : m_Level;
+  
+  // Automatically moves the current tetris piece down
+  if (m_FramesSinceMoveDown >= fallingSpeedLookupTable[speed]) {
+    AttemptMoveCurrentPiece(DOWN);
+  } else {
+    m_FramesSinceMoveDown++;
+  }
 
   // Checks if Tetromino has fallen and if so it gives the next tetromino
   if (CurrentTetrominoHasFallen()) {
@@ -43,15 +50,10 @@ void TetrisEngine::Update() {
     } else {
       m_FramesSinceFallen++;
     }
+
+    ClearLines();
   }
   
-  // Automatically moves the current tetris piece down
-  if (m_FramesSinceMoveDown >= fallingSpeedLookupTable[speed]) {
-    AttemptMoveCurrentPiece(DOWN);
-  } else {
-    m_FramesSinceMoveDown++;
-  }
-
   m_TotalFrameCount++;
 }
 
@@ -85,13 +87,10 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
       candidateTetromino = m_CurrentTetromino.SrsCandidate(move, test); 
 
       if (TetrominoInValidPosition(candidateTetromino)) {
-        ENGINE_TRACE("Chose candidate from test {}", test);
         m_CurrentTetromino = candidateTetromino;
         return;
       }
     }
-
-    ENGINE_TRACE("Could not find a valid position");
 
     // If its not possible to find a valid position then do not modify the current tetromino 
     return;
@@ -124,7 +123,7 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
       m_CurrentTetromino = candidateTetromino;
       candidateTetromino += { 0, 1 };
     }
-    m_FramesSinceFallen = 1000;
+    m_FramesSinceFallen = 1000; // Bit of a hack
     return;
   }
 
@@ -146,6 +145,37 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
   if (TetrominoInValidPosition(candidateTetromino)) {
     m_CurrentTetromino = candidateTetromino;
   }
+}
+
+void TetrisEngine::ClearLines() {
+  int linesCleared = 0;
+  bool lineIsFull;
+
+  // Loops through the rows starting from the bottom
+  for (int i = BOARD_HEIGHT - 1; i >= 0; i--) {
+    lineIsFull = true;
+
+    // Checks if lines is full
+    for (int j = 0; j < BOARD_WIDTH; j++) {
+      if (GetBoardPositionType(j, i) == NONE) {
+        lineIsFull = false;
+        break;
+      }
+    }
+
+    // If lines is full we add one to the number of lines cleared and then go back to the top of the loop
+    if (lineIsFull) {
+      linesCleared++;
+      continue;
+    }
+
+    // If the line is not full we move it down by the number of lines cleared
+    for (int j = 0; j < BOARD_WIDTH; j++) {
+      SetBoardPositionType(j, i + linesCleared, GetBoardPositionType(j, i));
+    }
+  }
+
+  m_LinesCleared += linesCleared;
 }
 
 TetrominoType TetrisEngine::GetBoardPositionType(int x, int y) {

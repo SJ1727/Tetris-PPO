@@ -6,7 +6,6 @@
 #include <queue>
 #include <random>
 #include <string>
-#include "log.hpp"
 #include "engine/Tetromino.hpp"
 
 #define BOARD_WIDTH 10
@@ -46,6 +45,8 @@ private:
   bool CurrentTetrominoHasFallen();
   void AttemptMoveCurrentPiece(Move move);
 
+  void ClearLines();
+
   int GenerateRandomNumber(int lower, int upper);
 
 private:
@@ -58,6 +59,7 @@ private:
   Move m_NextMove = NO_MOVE;
 
   int m_TotalFrameCount;
+  int m_LinesCleared;
   uint8_t m_Level;
 
   int m_FramesSinceMoveDown;
