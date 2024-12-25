@@ -6,6 +6,7 @@
 #include <queue>
 #include <random>
 #include <string>
+#include <tuple>
 #include "engine/Tetromino.hpp"
 
 #define BOARD_WIDTH 10
@@ -31,6 +32,8 @@ public:
 
   inline void SetNextMove(Move move) { m_NextMove = move; }
   std::string GetBoardAsString();
+
+  std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int> GetGameState();
 
 private:
   void RefillBag();
@@ -62,6 +65,7 @@ private:
   int m_TotalFrameCount;
   int m_LinesCleared;
   int m_Score;
+  int m_ScoreThisFrame;
   uint8_t m_Level;
 
   int m_FramesSinceMoveDown;

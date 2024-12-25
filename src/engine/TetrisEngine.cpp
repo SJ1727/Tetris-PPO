@@ -10,6 +10,7 @@ void TetrisEngine::Init() {
   m_TotalFrameCount = 0;
   m_LinesCleared = 0;
   m_Score = 0;
+  m_ScoreThisFrame = 0;
   m_Level = 0;
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
@@ -28,6 +29,8 @@ void TetrisEngine::Init() {
 }
 
 void TetrisEngine::Update() {
+  m_ScoreThisFrame = 0;
+
   // Moves the current piece based on the next move
   if (m_NextMove != NO_MOVE) {
     AttemptMoveCurrentPiece(m_NextMove);
@@ -178,7 +181,8 @@ void TetrisEngine::ClearLines() {
 
   m_LinesCleared += linesCleared;
 
-  m_Score += CalculateScore(linesCleared);
+  m_ScoreThisFrame = CalculateScore(linesCleared);
+  m_Score += m_ScoreThisFrame;
 }
 
 int TetrisEngine::CalculateScore(int linesCleared) {
@@ -219,6 +223,26 @@ std::string TetrisEngine::GetBoardAsString() {
   }
 
   return boardString;
+}
+
+std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int> TetrisEngine::GetGameState() {
+  std::array<int, BOARD_SIZE> board;
+  std::array<int, NUM_TETROMINO_TYPES + 1> heldPiece;
+
+  std::fill(heldPiece.begin(), heldPiece.end(), 0);
+  heldPiece[m_HeldTetrominoType] = 1;
+
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    board[i] = m_Board[i] == NONE ? 0 : 1;
+  }
+
+  auto blockPositions = m_CurrentTetromino.GetBlockPositions();
+
+  for (auto& blockPosition : blockPositions) {
+    board[blockPosition.y * BOARD_WIDTH + blockPosition.x] = -1;
+  }
+
+  return std::make_tuple(board, heldPiece, m_ScoreThisFrame);
 }
 
 void TetrisEngine::PlaceTetromino(Tetromino tetromino) {

@@ -1,7 +1,17 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
 #include "engine/TetrisEngine.hpp"
 
 namespace py = pybind11;
+
+py::tuple GameStateWrapperFunction(TetrisEngine &self) {
+  auto [board, heldPiece, reward] = self.GetGameState();
+
+  py::array pyBoard = py::array(board.size(), board.data());
+  py::array pyHeldPiece = py::array(heldPiece.size(), heldPiece.data());
+
+  return py::make_tuple(pyBoard, pyHeldPiece, reward);
+}
 
 PYBIND11_MODULE(tetris_engine, m) {
   m.doc() = "Test";
@@ -22,5 +32,6 @@ PYBIND11_MODULE(tetris_engine, m) {
     .def("init", &TetrisEngine::Init)
     .def("update", &TetrisEngine::Update)
     .def("set_next_move", &TetrisEngine::SetNextMove)
-    .def("get_board_as_string", &TetrisEngine::GetBoardAsString);
+    .def("get_board_as_string", &TetrisEngine::GetBoardAsString)
+    .def("get_game_state", &GameStateWrapperFunction);
 }

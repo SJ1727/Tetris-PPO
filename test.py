@@ -22,6 +22,7 @@ while cmd != "stop":
         engine.set_next_move(move)
 
     engine.update()
+    print(engine.get_game_state());
     
     print(engine.get_board_as_string())
 
