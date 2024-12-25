@@ -13,7 +13,7 @@ class PPO(nn.Module):
         )
 
         self.shared_head: nn.Module = nn.Sequential(
-            nn.Linear(351, 128),    # 351 -> 128
+            nn.Linear(352, 128),    # 351 -> 128
             nn.ReLU(),
             nn.Linear(128, 64),     # 128 -> 64
             nn.ReLU(),

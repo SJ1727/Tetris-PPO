@@ -1,36 +1,32 @@
+from tetris_engine import TetrisEngine, Move
 from enum import Enum
 import torch
-from random import randint
 
-class Move(Enum):
-    RIGHT = 0
-    LEFT = 1
-    DOWN = 2
-    ROTATE_RIGHT = 3
-    ROTATE_LEFT = 4
-    DROP = 5
-    HOLD = 6
-    NO_MOVE = 7
+BOARD_SIZE = 200
+BOARD_WIDTH = 10
+BOARD_HEIGHT = 20
+PIECE_SIZE = 8
+STATE_SIZE = BOARD_SIZE + PIECE_SIZE
 
 class TetrisEnv:
-    BOARD_SIZE = 200
-    BOARD_WIDTH = 10
-    BOARD_HEIGHT = 20
-    PIECE_SIZE = 7
-    STATE_SIZE = 207
-    
     def __init__(self):
-        self.value = 0
+        self.engine = TetrisEngine()
 
     def reset(self):
-        pass
+        self.engine.init()
 
     def step(self, move):
-        self.value = int(move)
+        self.engine.set_next_move(Move(move))
+        self.engine.update()
 
     def get_observation(self):
-        board = torch.randint(0, 2, (10, 20)).float()
-        piece = torch.randint(0, 2, (7,)).float()
-        reward = torch.rand(1).float() + self.value
-        done = randint(0, 100) == 42 
+        done = False
+        board, piece, reward = self.engine.get_game_state()
+        
+        board = torch.tensor(board, dtype=torch.float32)
+        piece = torch.tensor(piece, dtype=torch.float32)
+        reward = torch.tensor([reward], dtype=torch.float32)
+
+        board = torch.reshape(board, (BOARD_WIDTH, BOARD_HEIGHT))
+        
         return board, piece, reward, done

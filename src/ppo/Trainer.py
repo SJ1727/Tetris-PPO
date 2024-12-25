@@ -238,7 +238,7 @@ class TetrisPPOTrainer:
 
 
     def save_policy_as_onnx(self, file_name: str) -> None:
-        dummy_input = (torch.zeros((1, 10, 20)).float(), torch.zeros((1, 7)).float())
+        dummy_input = (torch.zeros((1, 10, 20)).float(), torch.zeros((1, 8)).float())
         torch.onnx.export(
             self.policy,
             dummy_input,
