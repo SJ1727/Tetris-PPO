@@ -9,6 +9,7 @@ void TetrisEngine::Init() {
 
   m_TotalFrameCount = 0;
   m_LinesCleared = 0;
+  m_Score = 0;
   m_Level = 0;
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
@@ -176,7 +177,24 @@ void TetrisEngine::ClearLines() {
   }
 
   m_LinesCleared += linesCleared;
+
+  m_Score += CalculateScore(linesCleared);
 }
+
+int TetrisEngine::CalculateScore(int linesCleared) {
+  switch (linesCleared) {
+    case 4:
+      return 800 * (m_Level + 1);
+    case 3:
+      return 500 * (m_Level + 1);
+    case 2:
+      return 300 * (m_Level + 1);
+    case 1:
+      return 100 * (m_Level + 1);
+    default:
+      return 0;
+  }
+} 
 
 TetrominoType TetrisEngine::GetBoardPositionType(int x, int y) {
   return m_Board[y * BOARD_WIDTH + x];

@@ -46,6 +46,7 @@ private:
   void AttemptMoveCurrentPiece(Move move);
 
   void ClearLines();
+  int CalculateScore(int lines);
 
   int GenerateRandomNumber(int lower, int upper);
 
@@ -60,6 +61,7 @@ private:
 
   int m_TotalFrameCount;
   int m_LinesCleared;
+  int m_Score;
   uint8_t m_Level;
 
   int m_FramesSinceMoveDown;
