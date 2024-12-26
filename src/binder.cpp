@@ -5,12 +5,12 @@
 namespace py = pybind11;
 
 py::tuple GameStateWrapperFunction(TetrisEngine &self) {
-  auto [board, heldPiece, reward] = self.GetGameState();
+  auto [board, heldPiece, reward, done] = self.GetGameState();
 
   py::array pyBoard = py::array(board.size(), board.data());
   py::array pyHeldPiece = py::array(heldPiece.size(), heldPiece.data());
 
-  return py::make_tuple(pyBoard, pyHeldPiece, reward);
+  return py::make_tuple(pyBoard, pyHeldPiece, reward, done);
 }
 
 PYBIND11_MODULE(tetris_engine, m) {

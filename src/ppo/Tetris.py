@@ -20,8 +20,7 @@ class TetrisEnv:
         self.engine.update()
 
     def get_observation(self):
-        done = False
-        board, piece, reward = self.engine.get_game_state()
+        board, piece, reward, done = self.engine.get_game_state()
         
         board = torch.tensor(board, dtype=torch.float32)
         piece = torch.tensor(piece, dtype=torch.float32)

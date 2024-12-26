@@ -15,6 +15,7 @@ void TetrisEngine::Init() {
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
   m_HasHeld = false;
+  m_ToppedOut = false;
 
   // Sets used tetrominoes to include one of all possible types
   for (int8_t type; type < NUM_TETROMINO_TYPES; type++) {
@@ -29,6 +30,8 @@ void TetrisEngine::Init() {
 }
 
 void TetrisEngine::Update() {
+  if (m_ToppedOut) { return; }
+
   m_ScoreThisFrame = 0;
 
   // Moves the current piece based on the next move
@@ -225,7 +228,7 @@ std::string TetrisEngine::GetBoardAsString() {
   return boardString;
 }
 
-std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int> TetrisEngine::GetGameState() {
+std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int, bool> TetrisEngine::GetGameState() {
   std::array<int, BOARD_SIZE> board;
   std::array<int, NUM_TETROMINO_TYPES + 1> heldPiece;
 
@@ -242,7 +245,7 @@ std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>
     board[blockPosition.y * BOARD_WIDTH + blockPosition.x] = -1;
   }
 
-  return std::make_tuple(board, heldPiece, m_ScoreThisFrame);
+  return std::make_tuple(board, heldPiece, m_ScoreThisFrame, m_ToppedOut);
 }
 
 void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
@@ -273,6 +276,8 @@ void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
   m_FramesSinceMoveDown = 0;
   
   m_CurrentTetromino = { type, ROTATION_0, {BOARD_WIDTH / 2 - 2, 0} };
+
+  if (!TetrominoInValidPosition(m_CurrentTetromino)) { m_ToppedOut = true; }
 }
 
 TetrominoType TetrisEngine::GetNextTetrominoType() {

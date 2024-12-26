@@ -33,7 +33,7 @@ public:
   inline void SetNextMove(Move move) { m_NextMove = move; }
   std::string GetBoardAsString();
 
-  std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int> GetGameState();
+  std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int, bool> GetGameState();
 
 private:
   void RefillBag();
@@ -71,6 +71,7 @@ private:
   int m_FramesSinceMoveDown;
   int m_FramesSinceFallen;
   bool m_HasHeld;
+  bool m_ToppedOut;
 
   std::mt19937 m_RandomNumberGen;
 };
