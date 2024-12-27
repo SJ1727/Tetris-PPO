@@ -11,6 +11,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--actor-loss", action=argparse.BooleanOptionalAction, help="Plot Actor Loss")
     parser.add_argument("--critic-loss", action=argparse.BooleanOptionalAction, help="Plot Critic Loss")
     parser.add_argument("--entropy", action=argparse.BooleanOptionalAction, help="Plot Entropy Penalty")
+    parser.add_argument("--reward", action=argparse.BooleanOptionalAction, help="Plot Entropy Penalty")
+    parser.add_argument("--first-epoch", action=argparse.BooleanOptionalAction, help="Plot Entropy Penalty")
     parser.add_argument("--rolling-average", type=int, default=-1, help="Show rolling average for the specified window")
     return parser.parse_args()
 
@@ -37,9 +39,14 @@ def main():
         print(f"Error loading data from {args.data_path}: {e}")
         return
 
+
     # Validate necessary columns
-    required_columns = ["Episodes_trained", "Actor_loss", "Critic_loss", "Entropy"]
+    required_columns = ["Episodes_trained", "Actor_loss", "Critic_loss", "Entropy", "Average_Reward"]
     validate_columns(training_data, required_columns)
+
+    # Filters out data to only include data from first epoch
+    if args.first_epoch:
+        training_data = training_data[training_data["Epoch"] == 1]
 
     episodes_trained = training_data["Episodes_trained"]
 
@@ -52,6 +59,9 @@ def main():
 
     if args.entropy:
         plot_data(episodes_trained, training_data["Entropy"], "Entropy", args.rolling_average)
+    
+    if args.reward:
+        plot_data(episodes_trained, training_data["Average_Reward"], "Average Reward", args.rolling_average)
 
     plt.xlabel("Episodes Trained")
     plt.title("Training Data Visualization")

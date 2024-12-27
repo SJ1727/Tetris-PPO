@@ -87,7 +87,7 @@ class TetrisPPOTrainer:
             self._initialize_training_csv()
 
 
-    def fit(self, iterations: int, epochs: int, verbose: bool=True) -> None:
+    def fit(self, iterations: int, epochs: int, verbose: bool=True, save_path: str=None) -> None:
         self.trajectory_collector = TrajectoryCollector(self.policy, max_episode_length=self.max_episode_length, num_workers=self.num_workers)
 
         for iteration in range(iterations):
@@ -119,6 +119,9 @@ class TetrisPPOTrainer:
                 print(f" Loss calculation time = {loss_calculation_time:.4f} ({loss_calculation_time / iteration_time * 100:.2f}%)")
                 print(f" Optimization time = {optimization_time:.4f} ({optimization_time / iteration_time * 100:.2f}%)\n")
 
+            if save_path:
+                self.save(save_path)
+
         self.trajectory_collector.close()
 
 
@@ -144,7 +147,16 @@ class TetrisPPOTrainer:
             if self.training_info_file_name is not None:
                 with open(self.training_info_file_name, mode='a', newline='') as file:
                     writer = csv.writer(file)
-                    writer.writerow([self.episodes_trained, iteration + 1, epoch + 1, episode + 1, critic_loss.item(), actor_loss.item(), entropy_penalty.item()])
+                    writer.writerow([
+                        self.episodes_trained,
+                        iteration + 1,
+                        epoch + 1,
+                        episode + 1,
+                        critic_loss.item(),
+                        -actor_loss.item(),
+                        entropy_penalty.item(),
+                        torch.mean(rewards).item()
+                    ])
 
             # Writing training infomation to the console
             if verbose and episode % (self.num_episodes // EPISODE_LOGGING_FREQUENCY) == 0:
@@ -153,8 +165,9 @@ class TetrisPPOTrainer:
                 print(f" Epoch = {epoch + 1}")
                 print(f" Episode = {episode + 1}")
                 print(f" Critic Loss = {round(critic_loss.item(), 7)}")
-                print(f" Actor Loss = {round(actor_loss.item(), 7)}")
+                print(f" Actor Loss = {-round(actor_loss.item(), 7)}")
                 print(f" Entropy = {round(entropy_penalty.item(), 7)}")
+                print(f" Average Reward = {round(torch.mean(rewards).item(), 7)}")
 
         return total_loss
 
@@ -258,4 +271,4 @@ class TetrisPPOTrainer:
     def _initialize_training_csv(self) -> None:
         with open(self.training_info_file_name, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Episodes_trained", "Iteration", "Epoch", "Episode", "Critic_loss", "Actor_loss", "Entropy"])
+            writer.writerow(["Episodes_trained", "Iteration", "Epoch", "Episode", "Critic_loss", "Actor_loss", "Entropy", "Average_Reward"])

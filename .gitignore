@@ -9,6 +9,7 @@ _deps
 tetris
 *.log
 *.csv
+*.pt
 
 dist
 *.egg-info

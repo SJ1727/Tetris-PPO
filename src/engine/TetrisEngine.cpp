@@ -256,7 +256,9 @@ float TetrisEngine::CalculateReward() {
   bool aboveHeightLimit = false;
 
   // Gaining score will increase the amount of reward given
-  reward += m_ScoreThisFrame;
+  // I divide by the current level because i dont want the reward to be dependent on the
+  // current level 
+  reward += m_ScoreThisFrame / (m_Level + 1);
 
   // If there are tetrominoes placed above the defined height limit then a negative reward
   // is given to discourage the policy fron choosing actions that increase the height
@@ -264,7 +266,7 @@ float TetrisEngine::CalculateReward() {
     for (int j = 0; j < BOARD_WIDTH; j++) {
       if (GetBoardPositionType(j, i) != NONE) {
         aboveHeightLimit = true;
-        reward -= BOARD_HEIGHT - LINE_HEIGHT_LIMIT - i;
+        reward -= (BOARD_HEIGHT - LINE_HEIGHT_LIMIT - i) * LINE_HEIGHT_LIMIT_PENALTY;
         break;
       }
     }
