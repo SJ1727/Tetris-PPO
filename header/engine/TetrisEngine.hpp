@@ -19,8 +19,10 @@
 
 #define RELATIVE_TIME_UNTIL_LOCK 1
 
-#define LINE_HEIGHT_LIMIT 6
-#define LINE_HEIGHT_LIMIT_PENALTY 3
+#define LINE_CLEAR_BONUS 5
+#define LINE_HEIGHT_LIMIT 7
+#define LINE_HEIGHT_LIMIT_PENALTY 20
+#define COVERED_TILE_PENALTY 3
 
 // If the level is greater than 19, use the same speed as level 19
 constexpr std::array<int, 20> fallingSpeedLookupTable = { 36, 32, 29, 25, 22, 18, 15, 11, 7, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1 };
@@ -78,6 +80,11 @@ private:
   int m_FramesSinceFallen;
   bool m_HasHeld;
   bool m_ToppedOut;
+
+  int m_LastFrameLinesOverHeightLimit;
+  int m_ThisFrameLinesOverHeightLimit;
+  int m_LastFrameCoveredTiles;
+  int m_ThisFrameCoveredTiles;
 
   std::mt19937 m_RandomNumberGen;
 };

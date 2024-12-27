@@ -16,6 +16,10 @@ void TetrisEngine::Init() {
   m_FramesSinceMoveDown = 0;
   m_HasHeld = false;
   m_ToppedOut = false;
+  m_LastFrameLinesOverHeightLimit = 0;
+  m_ThisFrameLinesOverHeightLimit = 0;
+  m_LastFrameCoveredTiles = 0;
+  m_ThisFrameCoveredTiles = 0;
 
   // Sets used tetrominoes to include one of all possible types
   for (int8_t type; type < NUM_TETROMINO_TYPES; type++) {
@@ -254,11 +258,15 @@ std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>
 float TetrisEngine::CalculateReward() {
   float reward = 0;
   bool aboveHeightLimit = false;
+  bool foundOccupiedTile;
 
   // Gaining score will increase the amount of reward given
   // I divide by the current level because i dont want the reward to be dependent on the
   // current level 
-  reward += m_ScoreThisFrame / (m_Level + 1);
+  reward += m_ScoreThisFrame / (m_Level + 1) * LINE_CLEAR_BONUS;
+
+  m_LastFrameLinesOverHeightLimit = m_ThisFrameLinesOverHeightLimit;
+  m_ThisFrameLinesOverHeightLimit = 0;
 
   // If there are tetrominoes placed above the defined height limit then a negative reward
   // is given to discourage the policy fron choosing actions that increase the height
@@ -266,13 +274,29 @@ float TetrisEngine::CalculateReward() {
     for (int j = 0; j < BOARD_WIDTH; j++) {
       if (GetBoardPositionType(j, i) != NONE) {
         aboveHeightLimit = true;
-        reward -= (BOARD_HEIGHT - LINE_HEIGHT_LIMIT - i) * LINE_HEIGHT_LIMIT_PENALTY;
+        m_ThisFrameLinesOverHeightLimit = (BOARD_HEIGHT - LINE_HEIGHT_LIMIT - i);
         break;
       }
     }
 
     if (aboveHeightLimit) { break; }
   }
+
+  m_LastFrameCoveredTiles = m_ThisFrameCoveredTiles;
+  m_ThisFrameCoveredTiles = 0;
+
+  // Goes column by column and counts number of unoccupied tile covered by an occupied tile
+  for (int i = 0; i < BOARD_WIDTH; i++) {
+    foundOccupiedTile = false;
+
+    for (int j = 0; j < BOARD_HEIGHT; j++) {
+      if (!foundOccupiedTile && GetBoardPositionType(i, j) != NONE) { foundOccupiedTile = true; }
+      if (foundOccupiedTile && GetBoardPositionType(i, j) == NONE)  { m_ThisFrameCoveredTiles++; }
+    }
+  }
+
+  reward -= (m_ThisFrameCoveredTiles - m_LastFrameCoveredTiles) * COVERED_TILE_PENALTY;
+  reward -= (m_ThisFrameLinesOverHeightLimit - m_LastFrameLinesOverHeightLimit) * LINE_HEIGHT_LIMIT_PENALTY;
 
   return reward;
 } 
