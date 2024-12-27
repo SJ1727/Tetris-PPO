@@ -228,9 +228,10 @@ std::string TetrisEngine::GetBoardAsString() {
   return boardString;
 }
 
-std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int, bool> TetrisEngine::GetGameState() {
+std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> TetrisEngine::GetGameState() {
   std::array<int, BOARD_SIZE> board;
   std::array<int, NUM_TETROMINO_TYPES + 1> heldPiece;
+  float reward;
 
   std::fill(heldPiece.begin(), heldPiece.end(), 0);
   heldPiece[m_HeldTetrominoType] = 1;
@@ -245,8 +246,34 @@ std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>
     board[blockPosition.y * BOARD_WIDTH + blockPosition.x] = -1;
   }
 
-  return std::make_tuple(board, heldPiece, m_ScoreThisFrame, m_ToppedOut);
+  reward = CalculateReward();
+
+  return std::make_tuple(board, heldPiece, reward, m_ToppedOut);
 }
+
+float TetrisEngine::CalculateReward() {
+  float reward = 0;
+  bool aboveHeightLimit = false;
+
+  // Gaining score will increase the amount of reward given
+  reward += m_ScoreThisFrame;
+
+  // If there are tetrominoes placed above the defined height limit then a negative reward
+  // is given to discourage the policy fron choosing actions that increase the height
+  for (int i = 0; i < BOARD_HEIGHT - LINE_HEIGHT_LIMIT; i++) {
+    for (int j = 0; j < BOARD_WIDTH; j++) {
+      if (GetBoardPositionType(j, i) != NONE) {
+        aboveHeightLimit = true;
+        reward -= BOARD_HEIGHT - LINE_HEIGHT_LIMIT - i;
+        break;
+      }
+    }
+
+    if (aboveHeightLimit) { break; }
+  }
+
+  return reward;
+} 
 
 void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
   auto blockPositions = tetromino.GetBlockPositions();

@@ -19,6 +19,8 @@
 
 #define RELATIVE_TIME_UNTIL_LOCK 1
 
+#define LINE_HEIGHT_LIMIT 6
+
 // If the level is greater than 19, use the same speed as level 19
 constexpr std::array<int, 20> fallingSpeedLookupTable = { 36, 32, 29, 25, 22, 18, 15, 11, 7, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1 };
 
@@ -31,9 +33,10 @@ public:
   void Update();
 
   inline void SetNextMove(Move move) { m_NextMove = move; }
+  inline void SetLevel(int level)    { m_Level = level; }
   std::string GetBoardAsString();
 
-  std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, int, bool> GetGameState();
+  std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> GetGameState();
 
 private:
   void RefillBag();
@@ -50,6 +53,8 @@ private:
 
   void ClearLines();
   int CalculateScore(int lines);
+
+  float CalculateReward();
 
   int GenerateRandomNumber(int lower, int upper);
 

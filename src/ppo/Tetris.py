@@ -11,6 +11,7 @@ STATE_SIZE = BOARD_SIZE + PIECE_SIZE
 class TetrisEnv:
     def __init__(self):
         self.engine = TetrisEngine()
+        self.engine.set_level(19)
 
     def reset(self):
         self.engine.init()

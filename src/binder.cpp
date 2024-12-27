@@ -33,5 +33,6 @@ PYBIND11_MODULE(tetris_engine, m) {
     .def("update", &TetrisEngine::Update)
     .def("set_next_move", &TetrisEngine::SetNextMove)
     .def("get_board_as_string", &TetrisEngine::GetBoardAsString)
-    .def("get_game_state", &GameStateWrapperFunction);
+    .def("get_game_state", &GameStateWrapperFunction)
+    .def("set_level", &TetrisEngine::SetLevel);
 }

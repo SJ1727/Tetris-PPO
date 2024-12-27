@@ -30,6 +30,8 @@ class TrajectoryCollector:
         while True:
             command, _ = conn.recv()
             if command == "run_episode":
+                env.reset()
+
                 boards, pieces, rewards, actions, action_probs, state_values = [], [], [], [], [], []
                 done = False
 
