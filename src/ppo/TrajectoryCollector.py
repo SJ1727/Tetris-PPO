@@ -52,8 +52,7 @@ class TrajectoryCollector:
                     )
 
                     with torch.no_grad():
-                        actor_output = policy.forward_actor(*current_game_state)
-                        critic_output = policy.forward_critic(*current_game_state)
+                        actor_output, critic_output = policy.forward(*current_game_state)
 
                     action_dist = Categorical(probs=policy.dist_from_actor_output(actor_output))  
                     action = action_dist.sample()

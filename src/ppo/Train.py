@@ -9,7 +9,7 @@ def main():
     print(f"Init Time: {timer.elapsed_time}")
 
     with PerformaceTimer() as timer:
-        trainer.fit(iterations=100, epochs=50, verbose=True)
+        trainer.fit(iterations=100, epochs=10, verbose=True)
 
     print(f"Training Time: {timer.elapsed_time}")
 

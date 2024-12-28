@@ -49,7 +49,7 @@ class TetrisPPOTrainer:
         gae_lambda: float = 0.95,
         epsilon: float = 0.2,
         alpha: float = 0.5,
-        beta: float = 1e-3,
+        beta: float = 1e-2,
         num_workers: int = 1,
         training_info_file_name: str = None,
         device: str = None

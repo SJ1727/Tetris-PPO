@@ -8,12 +8,16 @@ class PPO(nn.Module):
         super(PPO, self).__init__()
 
         self.board_encode = nn.Sequential(
-            nn.Conv2d(1, 1, 3),
+            nn.Conv2d(1, 16, 3),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(16, 16, 3),
+            nn.ReLU(),
             nn.Flatten()
         )
 
         self.shared_head: nn.Module = nn.Sequential(
-            nn.Linear(352, 128),    # 351 -> 128
+            nn.Linear(432, 128),    # 432 -> 128
             nn.ReLU(),
             nn.Linear(128, 64),     # 128 -> 64
             nn.ReLU(),

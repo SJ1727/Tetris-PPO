@@ -297,6 +297,7 @@ float TetrisEngine::CalculateReward() {
 
   reward -= (m_ThisFrameCoveredTiles - m_LastFrameCoveredTiles) * COVERED_TILE_PENALTY;
   reward -= (m_ThisFrameLinesOverHeightLimit - m_LastFrameLinesOverHeightLimit) * LINE_HEIGHT_LIMIT_PENALTY;
+  if (m_ToppedOut) { reward -= TOP_OUT_PENALTY; }
 
   return reward;
 } 

@@ -23,6 +23,7 @@
 #define LINE_HEIGHT_LIMIT 7
 #define LINE_HEIGHT_LIMIT_PENALTY 20
 #define COVERED_TILE_PENALTY 3
+#define TOP_OUT_PENALTY 100
 
 // If the level is greater than 19, use the same speed as level 19
 constexpr std::array<int, 20> fallingSpeedLookupTable = { 36, 32, 29, 25, 22, 18, 15, 11, 7, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1 };
