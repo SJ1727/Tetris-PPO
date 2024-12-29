@@ -19,3 +19,4 @@ vendor/SDL_image
 vendor/SDL_mixer
 vendor/SDL_ttf
 vendor/spdlog
+vendor/pybind11

@@ -4,6 +4,8 @@ TetrisEngine::TetrisEngine() {
   Init();
 }
 
+
+
 void TetrisEngine::Init() {
   std::fill(m_Board.begin(), m_Board.end(), NONE);
 
@@ -32,6 +34,8 @@ void TetrisEngine::Init() {
   m_HeldTetrominoType = NONE;
   SetCurrentTetrominoByType(GetNextTetrominoType());
 }
+
+
 
 void TetrisEngine::Update() {
   if (m_ToppedOut) { return; }
@@ -68,6 +72,8 @@ void TetrisEngine::Update() {
   m_TotalFrameCount++;
 }
 
+
+
 bool TetrisEngine::TetrominoInValidPosition(Tetromino tetromino) {
   if (!tetromino.InBounds(0, BOARD_WIDTH - 1, 0, BOARD_HEIGHT - 1)) { return false; }
 
@@ -82,12 +88,16 @@ bool TetrisEngine::TetrominoInValidPosition(Tetromino tetromino) {
   return true;
 }
 
+
+
 bool TetrisEngine::CurrentTetrominoHasFallen() {
   Tetromino testTetromino = m_CurrentTetromino.Copy();
   testTetromino += { 0, 1 };
 
   return !TetrominoInValidPosition(testTetromino);
 }
+
+
 
 void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
   Tetromino candidateTetromino;
@@ -158,6 +168,8 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
   }
 }
 
+
+
 void TetrisEngine::ClearLines() {
   int linesCleared = 0;
   bool lineIsFull;
@@ -192,6 +204,8 @@ void TetrisEngine::ClearLines() {
   m_Score += m_ScoreThisFrame;
 }
 
+
+
 int TetrisEngine::CalculateScore(int linesCleared) {
   switch (linesCleared) {
     case 4:
@@ -207,13 +221,7 @@ int TetrisEngine::CalculateScore(int linesCleared) {
   }
 } 
 
-TetrominoType TetrisEngine::GetBoardPositionType(int x, int y) {
-  return m_Board[y * BOARD_WIDTH + x];
-}
 
-void TetrisEngine::SetBoardPositionType(int x, int y, TetrominoType type) {
-  m_Board[y * BOARD_WIDTH + x] = type;
-}
 
 std::string TetrisEngine::GetBoardAsString() {
   std::string boardString;
@@ -232,28 +240,48 @@ std::string TetrisEngine::GetBoardAsString() {
   return boardString;
 }
 
+
+
+std::array<TetrominoType, BOARD_SIZE> TetrisEngine::GetBoard() {
+  std::array<TetrominoType, BOARD_SIZE> board = m_Board;
+
+  // Place the current tetromino onto the board to be returned
+  auto blockPositions = m_CurrentTetromino.GetBlockPositions();
+  for (auto& blockPosition : blockPositions) {
+    board[BoardPositionToIndex(blockPosition)] = m_CurrentTetromino.GetType();
+  }
+
+  return board;
+}
+
+
+
 std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> TetrisEngine::GetGameState() {
   std::array<int, BOARD_SIZE> board;
   std::array<int, NUM_TETROMINO_TYPES + 1> heldPiece;
   float reward;
 
+  // One hot encoding for the held tetromino
   std::fill(heldPiece.begin(), heldPiece.end(), 0);
   heldPiece[m_HeldTetrominoType] = 1;
 
+  // Sets the filled position with 1 and unfilled with 0
   for (int i = 0; i < BOARD_SIZE; i++) {
     board[i] = m_Board[i] == NONE ? 0 : 1;
   }
 
+  // Setting the positions of the board occupied by the current tetromino by -1
   auto blockPositions = m_CurrentTetromino.GetBlockPositions();
-
   for (auto& blockPosition : blockPositions) {
-    board[blockPosition.y * BOARD_WIDTH + blockPosition.x] = -1;
+    board[BoardPositionToIndex(blockPosition)] = -1;
   }
 
   reward = CalculateReward();
 
   return std::make_tuple(board, heldPiece, reward, m_ToppedOut);
 }
+
+
 
 float TetrisEngine::CalculateReward() {
   float reward = 0;
@@ -302,6 +330,8 @@ float TetrisEngine::CalculateReward() {
   return reward;
 } 
 
+
+
 void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
   auto blockPositions = tetromino.GetBlockPositions();
 
@@ -312,6 +342,8 @@ void TetrisEngine::PlaceTetromino(Tetromino tetromino) {
     SetBoardPositionType(blockPosition.x, blockPosition.y, tetromino.GetType()); 
   }
 }
+
+
 
 void TetrisEngine::RefillBag() {
   int index;
@@ -325,6 +357,8 @@ void TetrisEngine::RefillBag() {
   }
 }
 
+
+
 void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
@@ -333,6 +367,8 @@ void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
 
   if (!TetrominoInValidPosition(m_CurrentTetromino)) { m_ToppedOut = true; }
 }
+
+
 
 TetrominoType TetrisEngine::GetNextTetrominoType() {
   // If bag is close to being empty, we need to refill it
@@ -353,6 +389,8 @@ TetrominoType TetrisEngine::GetNextTetrominoType() {
 
   return nextType;
 }
+
+
 
 int TetrisEngine::GenerateRandomNumber(int lower, int upper) {
   std::uniform_int_distribution<> dist(lower, upper);

@@ -36,9 +36,17 @@ public:
   void Init();
   void Update();
 
+  static inline int BoardPositionToIndex(int x, int y)      { return y * BOARD_WIDTH + x; }
+  static inline int BoardPositionToIndex(Position position) { return position.y * BOARD_WIDTH + position.x; }
+
   inline void SetNextMove(Move move) { m_NextMove = move; }
   inline void SetLevel(int level)    { m_Level = level; }
   std::string GetBoardAsString();
+
+  std::array<TetrominoType, BOARD_SIZE> GetBoard();
+  inline TetrominoType GetHeldTetrominoType() { return m_HeldTetrominoType; }
+  inline int GetScore()                       { return m_Score; }
+  inline int GetLevel()                       { return m_Level; }
 
   std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> GetGameState();
 
@@ -47,8 +55,8 @@ private:
   TetrominoType GetNextTetrominoType();
   void SetCurrentTetrominoByType(TetrominoType type);
 
-  inline TetrominoType GetBoardPositionType(int x, int y);
-  inline void SetBoardPositionType(int x, int y, TetrominoType type);
+  inline TetrominoType GetBoardPositionType(int x, int y)            { return m_Board[BoardPositionToIndex(x, y)]; }
+  inline void SetBoardPositionType(int x, int y, TetrominoType type) { m_Board[BoardPositionToIndex(x, y)] = type; }
   void PlaceTetromino(Tetromino tetromino);
 
   bool TetrominoInValidPosition(Tetromino tetromino);
