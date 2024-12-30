@@ -4,18 +4,18 @@ const int FRAME_DELAY = 1000 / 60;
 
 App::App(int width, int height)
   : m_Width(width), m_Height(height) {
-  APP_TRACE("--- Starting Application ---");
+  LOG_TRACE("--- Starting Application ---");
 
   if (!SDL_Init(SDL_INIT_VIDEO)) {
-    APP_ERROR("Init Fail: Could not initlise SDL");
+    LOG_ERROR("Init Fail: Could not initlise SDL");
   }
   
   if (!TTF_Init()) {
-    APP_ERROR("Init Fail: Could not initlise SDL TTF");
+    LOG_ERROR("Init Fail: Could not initlise SDL TTF");
   }
 
   if (!IMG_Init(IMG_INIT_PNG)) {
-    APP_ERROR("Init Fail: Could not initlise SDL image");
+    LOG_ERROR("Init Fail: Could not initlise SDL image");
   }
 
   SDL_AudioSpec spec;
@@ -24,7 +24,7 @@ App::App(int width, int height)
   spec.channels = 1;
 
   if (!Mix_OpenAudio(0, &spec)) {
-    APP_ERROR("Init Fail: Could not initlise SDL mixer");
+    LOG_ERROR("Init Fail: Could not initlise SDL mixer");
   }
 
   m_Window = SDL_CreateWindow("Tetris", m_Width, m_Height, 0);

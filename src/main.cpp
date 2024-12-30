@@ -5,21 +5,8 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  Log::Init();
-  //App app(800, 600);
-  //app.Run();
-  TetrisEngine engine;
-  for (int i = 0; i < 100; i++) {
-    if (i % 1 == 0) {
-      ENGINE_TRACE("{}", i);
-      ENGINE_TRACE(engine.GetBoardAsString());
-    }
-
-    if (i % 5 == 0) {
-      engine.SetNextMove(ROTATE_RIGHT);
-    } else {
-      engine.SetNextMove(DOWN);
-    }
-    engine.Update();
-  }
+  Logger::Init("tetris.log");
+  Logger::ClearLog();
+  App app(800, 600);
+  app.Run();
 }

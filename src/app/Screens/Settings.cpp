@@ -5,7 +5,6 @@ void SettingsScreen::LoadResources() {
   m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
   m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
   m_ResourceManager.LoadImage("resources/images/return_icon.png", "Return Icon");
-  m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
 }
 
 void SettingsScreen::Init(ScreenManager* screenManager) {

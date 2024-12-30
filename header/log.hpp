@@ -1,30 +1,36 @@
 #ifndef LOG_H 
 #define LOG_H
 
-#include <memory>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <ctime>
+#include <mutex>
+#include <sstream>
+#include <iomanip>
 
-#include <spdlog/spdlog.h> 
 
-class Log {
+class Logger {
 public:
-  static void Init();
-
-  inline static std::shared_ptr<spdlog::logger>& GetApplicationLogger() { return s_ApplicationLogger; }
-  inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return s_EngineLogger; }
+  enum LogLevel { TRACE, INFO, WARN, ERROR };
+  
+  static void Init(std::string fileName);
+  static void ClearLog();
+  static void Log(LogLevel level, std::string message);
 
 private:
-  static std::shared_ptr<spdlog::logger> s_ApplicationLogger;
-  static std::shared_ptr<spdlog::logger> s_EngineLogger;
+  static std::string GetCurrentTime();
+  static std::string LogLevelToString(LogLevel level);
+
+private:
+  static std::ofstream s_LogFile;
+  static std::string s_LogFileName;
+  static std::mutex s_LogMutex;
 };
 
-#define APP_TRACE(...)  ::Log::GetApplicationLogger()->trace(__VA_ARGS__)
-#define APP_INFO(...)  ::Log::GetApplicationLogger()->info(__VA_ARGS__)
-#define APP_WARN(...)  ::Log::GetApplicationLogger()->warn(__VA_ARGS__)
-#define APP_ERROR(...)  ::Log::GetApplicationLogger()->error(__VA_ARGS__)
-
-#define ENGINE_TRACE(...)  ::Log::GetEngineLogger()->trace(__VA_ARGS__)
-#define ENGINE_INFO(...)  ::Log::GetEngineLogger()->info(__VA_ARGS__)
-#define ENGINE_WARN(...)  ::Log::GetEngineLogger()->warn(__VA_ARGS__)
-#define ENGINE_ERROR(...)  ::Log::GetEngineLogger()->error(__VA_ARGS__)
+#define LOG_TRACE(message)  ::Logger::Log(Logger::LogLevel::TRACE, message)
+#define LOG_INFO(message)   ::Logger::Log(Logger::LogLevel::INFO, message)
+#define LOG_WARN(message)   ::Logger::Log(Logger::LogLevel::WARN, message)
+#define LOG_ERROR(message)  ::Logger::Log(Logger::LogLevel::ERROR, message)
 
 #endif // !LOG_H

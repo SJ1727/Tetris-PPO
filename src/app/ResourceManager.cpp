@@ -21,14 +21,14 @@ ResourceManager::~ResourceManager() {
 bool ResourceManager::LoadFont(std::string path, int fontSize, std::string alias) {
   // Check if there already exist a loaded font with same alias
   if (m_FontMap.find(alias) != m_FontMap.end()) {
-    APP_WARN("Cannot load two fonts with the same alias of \"{}\"", alias);
+    LOG_WARN("Cannot load two fonts with the same alias of \"" + alias + "\"");
     return false;
   }
 
   TTF_Font* font = TTF_OpenFont(path.c_str(), fontSize);
   // Check if the font has been loaded
   if (!font) {
-    APP_WARN("Failed to load font from \"{}\"", path);
+    LOG_WARN("Failed to load font from \"" + path + "\"");
     return false;
   } 
 
@@ -41,7 +41,7 @@ TTF_Font* ResourceManager::GetFont(std::string alias) {
     return m_FontMap[alias];
   }
   
-  APP_WARN("Font with alias \"{}\" has not been loaded", alias);
+  LOG_WARN("Font with alias \"" + alias + "\" has not been loaded");
   // Return nullptr if font with alias does not exist
   return nullptr;
 }
@@ -49,14 +49,14 @@ TTF_Font* ResourceManager::GetFont(std::string alias) {
 bool ResourceManager::LoadMusic(std::string path, std::string alias) {
   // Check if there already exist a loaded music object with same alias
   if (m_MusicMap.find(alias) != m_MusicMap.end()) {
-    APP_WARN("Cannot load two music objects with the same alias of \"{}\"", alias);
+    LOG_WARN("Cannot load two music objects with the same alias of \"" + alias + "\"");
     return false;
   }
 
   Mix_Music* music = Mix_LoadMUS(path.c_str());
   // Check if the music has been loaded
   if (!music) {
-    APP_WARN("Failed to load music from \"{}\"", path);
+    LOG_WARN("Failed to load music from \"" + path + "\"");
     return false;
   } 
 
@@ -68,7 +68,7 @@ Mix_Music* ResourceManager::GetMusic(std::string alias) {
     return m_MusicMap[alias];
   }
   
-  APP_WARN("Music with alias \"{}\" has not been loaded", alias);
+  LOG_WARN("Music with alias \"" + alias + "\" has not been loaded");
   // Return nullptr if music object with alias does not exist
   return nullptr;
 }
@@ -76,14 +76,14 @@ Mix_Music* ResourceManager::GetMusic(std::string alias) {
 bool ResourceManager::LoadSoundEffect(std::string path, std::string alias) {
   // Check if there already exist a loaded sound effect with same alias
   if (m_SoundEffectMap.find(alias) != m_SoundEffectMap.end()) {
-    APP_WARN("Cannot load two sound effects with the same alias of \"{}\"", alias);
+    LOG_WARN("Cannot load two sound effects with the same alias of \"" + alias + "\"");
     return false;
   }
 
   Mix_Chunk* soundEffect = Mix_LoadWAV(path.c_str());
   // Check if the sound effect has been loaded
   if (!soundEffect) {
-    APP_WARN("Failed to load sound effect from \"{}\"", path);
+    LOG_WARN("Failed to load sound effect from \"" + path + "\"");
     return false;
   } 
 
@@ -96,7 +96,7 @@ Mix_Chunk* ResourceManager::GetSoundEffect(std::string alias) {
     return m_SoundEffectMap[alias];
   }
   
-  APP_WARN("Sound effect with alias \"{}\" has not been loaded", alias);
+  LOG_WARN("Sound effect with alias \"" + alias + "\" has not been loaded");
   // Return nullptr if sound effect object with alias does not exist
   return nullptr;
 }
@@ -104,14 +104,14 @@ Mix_Chunk* ResourceManager::GetSoundEffect(std::string alias) {
 bool ResourceManager::LoadImage(std::string path, std::string alias) {
   // Check if there already exist a loaded image with same alias
   if (m_ImageMap.find(alias) != m_ImageMap.end()) {
-    APP_WARN("Cannot load two images with the same alias of \"{}\"", alias);
+    LOG_WARN("Cannot load two images with the same alias of \"" + alias + "\"");
     return false;
   }
 
   SDL_Surface* image = IMG_Load(path.c_str());
   // Check if the image has been loaded
   if (!image) {
-    APP_WARN("Failed to load image from \"{}\"", path);
+    LOG_WARN("Failed to load image from \"" + path + "\"");
     return false;
   } 
 
@@ -124,7 +124,7 @@ SDL_Surface* ResourceManager::GetImage(std::string alias) {
     return m_ImageMap[alias];
   }
 
-  APP_WARN("Image with alias \"{}\" has not been loaded", alias);
+  LOG_WARN("Image with alias \"" + alias + "\" has not been loaded");
   // Return nullptr if image with alias does not exist
   return nullptr;
 }

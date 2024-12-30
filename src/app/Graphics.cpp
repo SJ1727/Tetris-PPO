@@ -4,7 +4,7 @@ SDL_Texture* CreateTextTexture(SDL_Renderer* renderer, std::string text, TTF_Fon
   SDL_Texture* textTexture;
   
   if (font == nullptr) {
-    APP_ERROR("Unable to create text texture since font is null");
+    LOG_ERROR("Unable to create text texture since font is null");
     return nullptr;
   }
 
@@ -15,7 +15,7 @@ SDL_Texture* CreateTextTexture(SDL_Renderer* renderer, std::string text, TTF_Fon
     SDL_DestroySurface(textSurface);
   } else {
     textTexture = nullptr;
-    APP_ERROR("Could not create text surface with text {}", text);
+    LOG_ERROR("Could not create text surface with text " + text);
   }
 
   return textTexture;
@@ -47,7 +47,7 @@ SDL_Surface* CreateRoundedRectangleSurface(int width, int height, std::array<int
   SDL_Surface* surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
 
    if ((radius[0] + radius[1]) > width || (radius[2] + radius[3]) > height) {
-    APP_ERROR("Cannot create rounded rectanlge with width={}, height={}", width, height);
+    LOG_ERROR("Cannot create rounded rectanlge with width=" + std::to_string(width) +  "height=" + std::to_string(height));
     return surface;
   }
 
