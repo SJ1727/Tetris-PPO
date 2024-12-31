@@ -1,7 +1,5 @@
 #include "app/App.hpp"
 
-const int FRAME_DELAY = 1000 / 60;
-
 App::App(int width, int height)
   : m_Width(width), m_Height(height) {
   LOG_TRACE("--- Starting Application ---");
@@ -37,10 +35,12 @@ App::App(int width, int height)
   SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 
   std::shared_ptr<AppContext> context = std::make_shared<AppContext>();
+  context->playMaster = true;
   context->playMusic = true;
-  context->playSoundEffects = false;
-  context->musicVolume = MIX_MAX_VOLUME;
-  context->soundEffectsVolume = MIX_MAX_VOLUME;
+  context->playSoundEffects = true;
+  context->masterVolume = APP_MAX_VOLUME; 
+  context->musicVolume = APP_MAX_VOLUME;
+  context->soundEffectsVolume = APP_MAX_VOLUME;
 
   m_ScreenManager = new ScreenManager(m_Width, m_Height, context);
 }

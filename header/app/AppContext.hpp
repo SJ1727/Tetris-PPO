@@ -3,10 +3,14 @@
 
 #include "app/KeyBindings.hpp"
 
+#define APP_MAX_VOLUME 16
+
 typedef struct {
   // Music Settings
+  bool playMaster;
   bool playMusic;
   bool playSoundEffects;
+  int masterVolume;
   int musicVolume;
   int soundEffectsVolume;
 

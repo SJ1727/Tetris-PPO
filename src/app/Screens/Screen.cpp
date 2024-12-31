@@ -141,16 +141,16 @@ void Screen::Update() {
   m_CurrentTime = SDL_GetTicks();
 
   // Control the volume and playing of music
-  if (Mix_VolumeMusic(-1) != 0 && !m_Context->playMusic) {
+  if (!m_Context->playMusic || !m_Context->playMaster) {
     Mix_VolumeMusic(0);
   } else {
-    Mix_VolumeMusic(m_Context->musicVolume);
+    Mix_VolumeMusic(m_Context->musicVolume * m_Context->masterVolume);
   }
 
   // Control the volume and playing of sound effects
-  if (Mix_Volume(-1, -1) != 0 && !m_Context->playSoundEffects) {
+  if (!m_Context->playSoundEffects || !m_Context->playMaster) {
     Mix_Volume(-1, 0);
   } else {
-    Mix_Volume(-1, m_Context->soundEffectsVolume);
+    Mix_Volume(-1, m_Context->soundEffectsVolume * m_Context->masterVolume);
   }
 }
