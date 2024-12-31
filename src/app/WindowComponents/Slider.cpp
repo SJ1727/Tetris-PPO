@@ -28,6 +28,10 @@ Slider::Slider(int x, int y, int width, int height, SliderSettings settings)
   m_ThumbY = m_TrackY - m_ThumbRelativeSize;
   m_ThumbWidth = m_TrackHeight + 2 * m_ThumbRelativeSize;
   m_ThumbHeight = m_TrackHeight + 2 * m_ThumbRelativeSize;
+  
+  m_BackgroundSurface = CreateRoundedRectangleSurface(m_Width, m_Height, settings.backgroundCornerRadius, m_BackgroundColor);
+  m_TrackSurface = CreateRoundedRectangleSurface(m_TrackWidth, m_TrackHeight, settings.trackCornerRadius, m_TrackColor);
+  m_ThumbSurface = CreateRoundedRectangleSurface(m_ThumbWidth, m_ThumbHeight, settings.thumbCornerRadius, m_ThumbColor);
 }
 
 void Slider::Bind(std::function<void(float)> onValueChange) {
@@ -36,18 +40,21 @@ void Slider::Bind(std::function<void(float)> onValueChange) {
 }
 
 void Slider::Render(SDL_Renderer* renderer) {
-  m_ThumbX = m_TrackX - m_ThumbRelativeSize + m_ThumbPosition;
-  
-  SDL_FRect sliderRectangle = CreateFRect(m_X, m_Y, m_Width, m_Height);
+  SDL_FRect backgroundRectangle = CreateFRect(m_X, m_Y, m_Width, m_Height);
   SDL_FRect trackRectangle = CreateFRect(m_TrackX, m_TrackY, m_TrackWidth, m_TrackHeight);
   SDL_FRect thumbRectangle = CreateFRect(m_ThumbX, m_ThumbY, m_ThumbWidth, m_ThumbHeight);
-
-  SDL_SetRenderDrawColor(renderer, m_BackgroundColor.r, m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
-  SDL_RenderFillRect(renderer, &sliderRectangle);
-  SDL_SetRenderDrawColor(renderer, m_TrackColor.r, m_TrackColor.g, m_TrackColor.b, m_TrackColor.a);
-  SDL_RenderFillRect(renderer, &trackRectangle);
-  SDL_SetRenderDrawColor(renderer, m_ThumbColor.r, m_ThumbColor.g, m_ThumbColor.b, m_ThumbColor.a);
-  SDL_RenderFillRect(renderer, &thumbRectangle);
+  
+  SDL_Texture* backgroundTexture = SDL_CreateTextureFromSurface(renderer, m_BackgroundSurface); 
+  SDL_Texture* trackTexture = SDL_CreateTextureFromSurface(renderer, m_TrackSurface); 
+  SDL_Texture* thumbTexture = SDL_CreateTextureFromSurface(renderer, m_ThumbSurface); 
+ 
+  SDL_RenderTexture(renderer, backgroundTexture, nullptr, &backgroundRectangle);
+  SDL_RenderTexture(renderer, trackTexture, nullptr, &trackRectangle);
+  SDL_RenderTexture(renderer, thumbTexture, nullptr, &thumbRectangle);
+  
+  SDL_DestroyTexture(backgroundTexture);
+  SDL_DestroyTexture(trackTexture);
+  SDL_DestroyTexture(thumbTexture);
 }
 
 void Slider::HandleEvents(SDL_Event* event) {
@@ -70,6 +77,7 @@ void Slider::HandleEvents(SDL_Event* event) {
     m_ThumbPosition = mouseX - m_ClickStartPosition;
     m_ThumbPosition = std::max(0, m_ThumbPosition);
     m_ThumbPosition = std::min(m_MaxThumbPosition, m_ThumbPosition);
+    m_ThumbX = m_TrackX - m_ThumbRelativeSize + m_ThumbPosition;
 
     m_OnValueChange(GetValue());
   }

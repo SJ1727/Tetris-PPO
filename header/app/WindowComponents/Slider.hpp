@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <functional>
+#include <array>
 #include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 
@@ -16,6 +17,10 @@ typedef struct {
   int trackPaddingX;
   int trackPaddingY;
   int thumbRelativeSize; // Size of the thumb relative to the track
+
+  std::array<int, 4> backgroundCornerRadius = { 0, 0, 0, 0 };
+  std::array<int, 4> trackCornerRadius = { 0, 0, 0, 0 };
+  std::array<int, 4> thumbCornerRadius = { 0, 0, 0, 0 };
 } SliderSettings; 
 
 class Slider : public Component {
@@ -50,6 +55,10 @@ private:
   int m_ThumbY;
   int m_ThumbWidth;
   int m_ThumbHeight;
+
+  SDL_Surface* m_BackgroundSurface;
+  SDL_Surface* m_TrackSurface;
+  SDL_Surface* m_ThumbSurface;
 
   std::function<void(float)> m_OnValueChange;
 
