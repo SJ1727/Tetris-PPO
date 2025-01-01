@@ -57,9 +57,9 @@ public:
   ~Screen();
 
   virtual void Init(ScreenManager* screenManager) = 0;
-  void Update();
-  void Render(SDL_Renderer* renderer);
-  void HandleEvents(SDL_Event* event);
+  virtual void Update();
+  virtual void Render(SDL_Renderer* renderer);
+  virtual void HandleEvents(SDL_Event* event);
 
   inline void Link(Component* component)         { m_Components.emplace_back(component); }
   inline void AddAnimation(Animation* animation) { m_Animations.emplace_back(animation); }

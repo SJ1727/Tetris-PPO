@@ -1,12 +1,25 @@
 #include "app/Screens/VolumeSettings.hpp"
 
+auto resetVolume = [](std::shared_ptr<AppContext> context) {
+    context->masterVolume = DEFAULT_VOLUME;
+    context->musicVolume = DEFAULT_VOLUME;
+    context->soundEffectsVolume = DEFAULT_VOLUME;
+};
+
+void VolumeSettingsScreen::ChangeVolume(int* volume, int newVolume) {
+  *volume = newVolume;
+}
+
+void VolumeSettingsScreen::ChangeMuted(bool* volumeMuted) {
+  *volumeMuted = !(*volumeMuted);
+}
+
 void VolumeSettingsScreen::LoadResources() {
   m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
   m_ResourceManager.LoadFont("resources/font/ahronbd.ttf", 20, "Default font 25");
   m_ResourceManager.LoadImage("resources/images/return_icon.png", "Return Icon");
   m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
 }
-
 
 void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   LoadResources();
@@ -39,7 +52,7 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   baseVolumeLabelSettings.backgroundColor = { 51, 51, 51, 255 };
 
   ButtonSettings baseMuteButtonSettings;
-  baseMuteButtonSettings.text = "MUTE";
+  baseMuteButtonSettings.text = "Mute";
   baseMuteButtonSettings.font = normalFont;
   baseMuteButtonSettings.textColor = WHITE;
   baseMuteButtonSettings.cornerRadius = { 20, 0, 20, 0 };
@@ -55,6 +68,13 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
   returnButtonSettings.backgroundDefaultColor = { 76, 75, 75, 255 };
   returnButtonSettings.cornerRadius = { 20, 20, 0, 0 };
+
+  ButtonSettings resetButtonSettings;
+  resetButtonSettings.text = "Reset";
+  resetButtonSettings.font = normalFont;
+  resetButtonSettings.textColor = WHITE;
+  resetButtonSettings.backgroundDefaultColor = { 76, 75, 75, 255 };
+  resetButtonSettings.cornerRadius = { 0, 20, 0, 20 };
   
   SliderSettings masterVolumeSliderSettings = baseVolumeSliderSettings;
   masterVolumeSliderSettings.startingValue = m_Context->masterVolume;
@@ -66,18 +86,20 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   soundEffectsVolumeSliderSettings.startingValue = m_Context->soundEffectsVolume;
 
   LabelSettings masterVolumeLabelSettings = baseVolumeLabelSettings;
-  masterVolumeLabelSettings.text = "MASTER VOLUME";
+  masterVolumeLabelSettings.text = "Master Volume";
 
   LabelSettings musicVolumeLabelSettings = baseVolumeLabelSettings;
-  musicVolumeLabelSettings.text = "MUSIC VOLUME";
+  musicVolumeLabelSettings.text = "Music Volume";
   
   LabelSettings soundEffectsVolumeLabelSettings = baseVolumeLabelSettings;
-  soundEffectsVolumeLabelSettings.text = "SOUND FX VOLUME";
+  soundEffectsVolumeLabelSettings.text = "Sound FX Volume";
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
   
   Button* returnButton = new Button(640, 520, 80, 80, returnButtonSettings); 
+  
+  Button* resetButton = new Button(0, 520, 220, 50, resetButtonSettings); 
   
   Slider* masterVolumeSlider = new Slider(250, 140, 300, 60, masterVolumeSliderSettings); 
   Slider* musicVolumeSlider = new Slider(250, 270, 300, 60, musicVolumeSliderSettings); 
@@ -94,45 +116,26 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
 
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
   
-  muteMasterVolumeButton->BindClick(std::bind(
-    [](std::shared_ptr<AppContext> context) {
-      context->playMaster = !context->playMaster;
-    }, m_Context));
+  resetButton->BindClick(std::bind(resetVolume, m_Context));
   
-  muteMusicVolumeButton->BindClick(std::bind(
-    [](std::shared_ptr<AppContext> context) {
-      context->playMusic = !context->playMusic;
-    }, m_Context));
-  
-  muteSoundEffectsVolumeButton->BindClick(std::bind(
-    [](std::shared_ptr<AppContext> context) {
-      context->playSoundEffects = !context->playSoundEffects;
-    }, m_Context));
-
-  
-  masterVolumeSlider->Bind(std::bind(
-    [](std::shared_ptr<AppContext> context, float volume) { 
-      context->masterVolume = (int)volume;
-    }, m_Context, std::placeholders::_1));
-
-  musicVolumeSlider->Bind(std::bind(
-    [](std::shared_ptr<AppContext> context, float volume) { 
-      context->musicVolume = (int)volume;
-    }, m_Context, std::placeholders::_1));
-  
-  soundEffectsVolumeSlider->Bind(std::bind(
-    [](std::shared_ptr<AppContext> context, float volume) { 
-      context->soundEffectsVolume = (int)volume;
-    }, m_Context, std::placeholders::_1));
+  muteMasterVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMaster));
+  muteMusicVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMusic)); 
+  muteSoundEffectsVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playSoundEffects));
+ 
+  masterVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->masterVolume, std::placeholders::_1));
+  musicVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->musicVolume, std::placeholders::_1));
+  soundEffectsVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->soundEffectsVolume, std::placeholders::_1));
   
   /* Create Animations */
   Animation* returnButtonAnimation = AnimateButtonStretchUp(returnButton, 10, 300);
+  Animation* resetButtonAnimation = AnimateButtonStretchRight(resetButton, 15, 300);
   Animation* muteMasterVolumeButtonAnimation = AnimateButtonStretchLeft(muteMasterVolumeButton, 15, 300);
   Animation* muteMusicVolumeButtonAnimation = AnimateButtonStretchLeft(muteMusicVolumeButton, 15, 300);
   Animation* muteSoundEffectsVolumeButtonAnimation = AnimateButtonStretchLeft(muteSoundEffectsVolumeButton, 15, 300);
   
   /* Adding bindings to components */
   returnButton->AddHoverAnimation(returnButtonAnimation);
+  resetButton->AddHoverAnimation(resetButtonAnimation);
   muteMasterVolumeButton->AddHoverAnimation(muteMasterVolumeButtonAnimation);
   muteMusicVolumeButton->AddHoverAnimation(muteMusicVolumeButtonAnimation);
   muteSoundEffectsVolumeButton->AddHoverAnimation(muteSoundEffectsVolumeButtonAnimation);
@@ -140,6 +143,7 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   /* Linking the components to the screen */
   Link(titleText);
   Link(returnButton);
+  Link(resetButton);
   Link(masterVolumeSlider);
   Link(musicVolumeSlider);
   Link(soundEffectsVolumeSlider);
@@ -152,6 +156,7 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   
   /* Adding animations */
   AddAnimation(returnButtonAnimation);
+  AddAnimation(resetButtonAnimation);
   AddAnimation(muteMasterVolumeButtonAnimation);
   AddAnimation(muteMusicVolumeButtonAnimation);
   AddAnimation(muteSoundEffectsVolumeButtonAnimation);
