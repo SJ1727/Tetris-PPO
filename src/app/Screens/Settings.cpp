@@ -10,10 +10,6 @@ void SettingsScreen::LoadResources() {
 void SettingsScreen::Init(ScreenManager* screenManager) {
   LoadResources();
 
-  const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255 };
-  const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
-  const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
-
   TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
   TTF_Font* normalFont = m_ResourceManager.GetFont("Def 32");
   SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
@@ -22,43 +18,33 @@ void SettingsScreen::Init(ScreenManager* screenManager) {
   
   /* Defining components settings */
   LabelSettings titleTextSettings;
+  SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Settings";
   titleTextSettings.font = titleFont;
-  titleTextSettings.textColor = WHITE;
-  titleTextSettings.backgroundColor = TRANSPARENT;
   
   ButtonSettings returnButtonSettings;
+  SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
   returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
-  returnButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  returnButtonSettings.cornerRadius = { 20, 20, 0, 0 };
   
   ButtonSettings volumeButtonSettings;
+  SetButtonStyle(&volumeButtonSettings, RIGHT_CORNER_RADIUS(20));
   volumeButtonSettings.text = "Volume";
   volumeButtonSettings.font = normalFont;
-  volumeButtonSettings.textColor = WHITE;
-  volumeButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  volumeButtonSettings.cornerRadius = { 20, 0, 20, 0 };
   
   ButtonSettings controlButtonSettings;
+  SetButtonStyle(&controlButtonSettings, RIGHT_CORNER_RADIUS(20));
   controlButtonSettings.text = "Controls";
   controlButtonSettings.font = normalFont;
-  controlButtonSettings.textColor = WHITE;
-  controlButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  controlButtonSettings.cornerRadius = { 20, 0, 20, 0 };
   
   ButtonSettings aiButtonSettings;
+  SetButtonStyle(&aiButtonSettings, RIGHT_CORNER_RADIUS(20));
   aiButtonSettings.text = "AI Player";
   aiButtonSettings.font = normalFont;
-  aiButtonSettings.textColor = WHITE;
-  aiButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  aiButtonSettings.cornerRadius = { 20, 0, 20, 0 };
   
   ButtonSettings resetDataButtonSettings;
+  SetButtonStyle(&resetDataButtonSettings, LEFT_CORNER_RADIUS(20));
   resetDataButtonSettings.text = "Reset Data";
   resetDataButtonSettings.font = normalFont;
-  resetDataButtonSettings.textColor = WHITE;
-  resetDataButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  resetDataButtonSettings.cornerRadius = { 0, 20, 0, 20 };
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
@@ -86,6 +72,7 @@ void SettingsScreen::Init(ScreenManager* screenManager) {
 
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
   volumeButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, VOLUME_SETTINGS));
+  controlButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS));
   aiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, AI_SETTINGS));
   
   /* Linking the components to the screen */

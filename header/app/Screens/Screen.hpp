@@ -10,6 +10,7 @@
 #include "app/ResourceManager.hpp"
 #include "app/AppContext.hpp"
 #include "app/WindowComponents/WindowComponents.hpp"
+#include "app/Screens/ComponentBases.hpp"
 
 enum ScreenType {
   MAIN_MENU,

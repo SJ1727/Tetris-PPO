@@ -12,10 +12,6 @@ void MainMenuScreen::LoadResources() {
 void MainMenuScreen::Init(ScreenManager* screenManager) {
   LoadResources();
 
-  const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255 };
-  const SDL_Color BUTTON_COLOR = { 76, 75, 75, 255 };
-  const SDL_Color LABEL_COLOR = { 51, 51, 51, 255 };
-
   TTF_Font* normalFont = m_ResourceManager.GetFont("Def 32");
   TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
   SDL_Surface* settingsIcon = m_ResourceManager.GetImage("Settings Icon");
@@ -25,47 +21,37 @@ void MainMenuScreen::Init(ScreenManager* screenManager) {
 
   /* Defining components settings */
   LabelSettings titleTextSettings;
+  SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Tetris";
   titleTextSettings.font = titleFont;
-  titleTextSettings.textColor = WHITE;
-  titleTextSettings.backgroundColor = TRANSPARENT;
 
   ButtonSettings singlePlayerButtonSettings;
+  SetButtonStyle(&singlePlayerButtonSettings, RIGHT_CORNER_RADIUS(20));
   singlePlayerButtonSettings.text = "Single Player";
   singlePlayerButtonSettings.font = normalFont;
-  singlePlayerButtonSettings.textColor = WHITE;
-  singlePlayerButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  singlePlayerButtonSettings.cornerRadius = { 20, 0, 20, 0 };
   
   ButtonSettings localMultiButtonSettings;
+  SetButtonStyle(&localMultiButtonSettings, RIGHT_CORNER_RADIUS(20));
   localMultiButtonSettings.text = "Local Multiplayer";
   localMultiButtonSettings.font = normalFont;
-  localMultiButtonSettings.textColor = WHITE;
-  localMultiButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  localMultiButtonSettings.cornerRadius = { 20, 0, 20, 0 };
   
   ButtonSettings versusAiButtonSettings;
+  SetButtonStyle(&versusAiButtonSettings, RIGHT_CORNER_RADIUS(20));
   versusAiButtonSettings.text = "Player vs AI";
   versusAiButtonSettings.font = normalFont;
-  versusAiButtonSettings.textColor = WHITE;
-  versusAiButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  versusAiButtonSettings.cornerRadius = { 20, 0, 20, 0 };
 
   ButtonSettings settingsButtonSettings;
+  SetButtonStyle(&settingsButtonSettings, BOTTOM_CORNER_RADIUS(20));
   settingsButtonSettings.imageDefault = { settingsIcon, 40, 40 };
-  settingsButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  settingsButtonSettings.cornerRadius = { 20, 20, 0, 0 };
   settingsButtonSettings.onClickSound = buttonClick;
 
   ButtonSettings helpButtonSettings;
+  SetButtonStyle(&helpButtonSettings, BOTTOM_CORNER_RADIUS(20));
   helpButtonSettings.imageDefault = { helpIcon, 40, 40 };
-  helpButtonSettings.backgroundDefaultColor = BUTTON_COLOR;
-  helpButtonSettings.cornerRadius = { 20, 20, 0, 0 };
   helpButtonSettings.onClickSound = buttonClick;
 
   LabelSettings gameInfomationBackgroundSettings;
-  gameInfomationBackgroundSettings.backgroundColor = LABEL_COLOR;
-  gameInfomationBackgroundSettings.cornerRadius = { 0, 20, 0, 20 };
+  SetLabelStyle(&gameInfomationBackgroundSettings, LEFT_CORNER_RADIUS(20));
   
   LabelSettings highScoreLabelSettings;
   highScoreLabelSettings.text = "High Score";

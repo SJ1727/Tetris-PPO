@@ -10,7 +10,6 @@ void AISettingsScreen::LoadResources() {
 void AISettingsScreen::Init(ScreenManager* screenManager) {
   LoadResources();
   
-  const SDL_Color BACKGROUND_COLOR = {19, 19, 19, 255};
   TTF_Font* normalFont = m_ResourceManager.GetFont("Default font 25");
   TTF_Font* textFieldFont = m_ResourceManager.GetFont("Text field");
   SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
@@ -18,6 +17,7 @@ void AISettingsScreen::Init(ScreenManager* screenManager) {
   
   /* Defining components settings */
   ButtonSettings returnButtonSettings;
+  SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
   returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
   
   LabelSettings modelPathLabelSettings;

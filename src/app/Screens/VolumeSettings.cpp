@@ -24,75 +24,63 @@ void VolumeSettingsScreen::LoadResources() {
 void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   LoadResources();
   
-  const SDL_Color BACKGROUND_COLOR = { 22, 22, 22, 255};
-
   TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
   TTF_Font* normalFont = m_ResourceManager.GetFont("Default font 25");
   SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
   m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BACKGROUND_COLOR);
 
   /* Defining components settings */
-  SliderSettings baseVolumeSliderSettings;
-  baseVolumeSliderSettings.min = 0;
-  baseVolumeSliderSettings.max = APP_MAX_VOLUME;
-  baseVolumeSliderSettings.trackPaddingX = 20;
-  baseVolumeSliderSettings.trackPaddingY = 25;
-  baseVolumeSliderSettings.thumbRelativeSize = 8;
-  baseVolumeSliderSettings.backgroundColor = { 76, 75, 75, 255 };
-  baseVolumeSliderSettings.trackColor = { 217, 217, 217, 255 };
-  baseVolumeSliderSettings.thumbColor = BACKGROUND_COLOR;
-  baseVolumeSliderSettings.backgroundCornerRadius = { 20, 20, 20, 20 };
-  baseVolumeSliderSettings.trackCornerRadius = { 5, 5, 5, 5 };
-  baseVolumeSliderSettings.thumbCornerRadius = { 12, 12, 12, 12 };
-
-  LabelSettings baseVolumeLabelSettings;
-  baseVolumeLabelSettings.font = normalFont;
-  baseVolumeLabelSettings.textColor = WHITE;
-  baseVolumeLabelSettings.cornerRadius = { 0, 20, 0, 20 };
-  baseVolumeLabelSettings.backgroundColor = { 51, 51, 51, 255 };
-
-  ButtonSettings baseMuteButtonSettings;
-  baseMuteButtonSettings.text = "Mute";
-  baseMuteButtonSettings.font = normalFont;
-  baseMuteButtonSettings.textColor = WHITE;
-  baseMuteButtonSettings.cornerRadius = { 20, 0, 20, 0 };
-  baseMuteButtonSettings.backgroundDefaultColor = { 76, 75, 75, 255 };
-  
   LabelSettings titleTextSettings;
+  SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Volume";
   titleTextSettings.font = titleFont;
-  titleTextSettings.textColor = WHITE;
-  titleTextSettings.backgroundColor = TRANSPARENT;
+  
+  ButtonSettings muteButtonSettings;
+  SetButtonStyle(&muteButtonSettings, RIGHT_CORNER_RADIUS(20));
+  muteButtonSettings.text = "Mute";
+  muteButtonSettings.font = normalFont;
   
   ButtonSettings returnButtonSettings;
+  SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
   returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
-  returnButtonSettings.backgroundDefaultColor = { 76, 75, 75, 255 };
-  returnButtonSettings.cornerRadius = { 20, 20, 0, 0 };
 
   ButtonSettings resetButtonSettings;
+  SetButtonStyle(&resetButtonSettings, LEFT_CORNER_RADIUS(20));
   resetButtonSettings.text = "Reset";
   resetButtonSettings.font = normalFont;
-  resetButtonSettings.textColor = WHITE;
-  resetButtonSettings.backgroundDefaultColor = { 76, 75, 75, 255 };
-  resetButtonSettings.cornerRadius = { 0, 20, 0, 20 };
   
-  SliderSettings masterVolumeSliderSettings = baseVolumeSliderSettings;
+  SliderSettings masterVolumeSliderSettings;
+  SetSliderStyle(&masterVolumeSliderSettings);
+	masterVolumeSliderSettings.min = 0;
+	masterVolumeSliderSettings.max = APP_MAX_VOLUME;
   masterVolumeSliderSettings.startingValue = m_Context->masterVolume;
   
-  SliderSettings musicVolumeSliderSettings = baseVolumeSliderSettings;
+  SliderSettings musicVolumeSliderSettings;
+  SetSliderStyle(&musicVolumeSliderSettings);
+	musicVolumeSliderSettings.min = 0;
+	musicVolumeSliderSettings.max = APP_MAX_VOLUME;
   musicVolumeSliderSettings.startingValue = m_Context->musicVolume;
   
-  SliderSettings soundEffectsVolumeSliderSettings = baseVolumeSliderSettings;
+  SliderSettings soundEffectsVolumeSliderSettings;
+  SetSliderStyle(&soundEffectsVolumeSliderSettings);
+	soundEffectsVolumeSliderSettings.min = 0;
+	soundEffectsVolumeSliderSettings.max = APP_MAX_VOLUME;
   soundEffectsVolumeSliderSettings.startingValue = m_Context->soundEffectsVolume;
 
-  LabelSettings masterVolumeLabelSettings = baseVolumeLabelSettings;
+  LabelSettings masterVolumeLabelSettings;
+  SetLabelStyle(&masterVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   masterVolumeLabelSettings.text = "Master Volume";
+  masterVolumeLabelSettings.font = normalFont;
 
-  LabelSettings musicVolumeLabelSettings = baseVolumeLabelSettings;
+  LabelSettings musicVolumeLabelSettings;
+  SetLabelStyle(&musicVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   musicVolumeLabelSettings.text = "Music Volume";
+  musicVolumeLabelSettings.font = normalFont;
   
-  LabelSettings soundEffectsVolumeLabelSettings = baseVolumeLabelSettings;
+  LabelSettings soundEffectsVolumeLabelSettings;
+  SetLabelStyle(&soundEffectsVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   soundEffectsVolumeLabelSettings.text = "Sound FX Volume";
+  soundEffectsVolumeLabelSettings.font = normalFont;
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
@@ -109,9 +97,9 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   Label* musicVolumeLabel = new Label(0, 260, 220, 80, musicVolumeLabelSettings);
   Label* soundEffectsVolumeLabel = new Label(0, 390, 220, 80, soundEffectsVolumeLabelSettings);
 
-  Button* muteMasterVolumeButton = new Button(580, 130, 220, 80, baseMuteButtonSettings);
-  Button* muteMusicVolumeButton = new Button(580, 260, 220, 80, baseMuteButtonSettings);
-  Button* muteSoundEffectsVolumeButton = new Button(580, 390, 220, 80, baseMuteButtonSettings);
+  Button* muteMasterVolumeButton = new Button(580, 130, 220, 80, muteButtonSettings);
+  Button* muteMusicVolumeButton = new Button(580, 260, 220, 80, muteButtonSettings);
+  Button* muteSoundEffectsVolumeButton = new Button(580, 390, 220, 80, muteButtonSettings);
 
 
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));

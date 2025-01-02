@@ -1,6 +1,8 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include <SDL3/SDL.h>
+
 #define TRANSPARENT {0, 0, 0, 0}
 #define BLACK {0, 0, 0, 255}
 #define GRAY {128, 128, 128, 255}
