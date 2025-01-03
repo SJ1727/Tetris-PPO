@@ -1,86 +1,70 @@
 #include "app/Screens/MainMenu.hpp"
 
-void MainMenuScreen::LoadResources() {
-  m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 32, "Def 32");
-  m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
-  m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
-  m_ResourceManager.LoadImage("resources/images/settings_icon.png", "Settings Icon");
-  m_ResourceManager.LoadImage("resources/images/question_mark.png", "Question Mark");
-  m_ResourceManager.LoadSoundEffect("resources/sound/Click1.wav", "Button Click");
-}
-
-void MainMenuScreen::Init(ScreenManager* screenManager) {
-  LoadResources();
-
-  TTF_Font* normalFont = m_ResourceManager.GetFont("Def 32");
-  TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
-  SDL_Surface* settingsIcon = m_ResourceManager.GetImage("Settings Icon");
-  SDL_Surface* helpIcon = m_ResourceManager.GetImage("Question Mark");
-  Mix_Chunk* buttonClick = m_ResourceManager.GetSoundEffect("Button Click");
-  m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BACKGROUND_COLOR);
+void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+  SetBackgroundColor(BACKGROUND_COLOR);
 
   /* Defining components settings */
   LabelSettings titleTextSettings;
   SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Tetris";
-  titleTextSettings.font = titleFont;
+  titleTextSettings.font = resourceManager->GetFont("Font 70");
 
   ButtonSettings singlePlayerButtonSettings;
   SetButtonStyle(&singlePlayerButtonSettings, RIGHT_CORNER_RADIUS(20));
   singlePlayerButtonSettings.text = "Single Player";
-  singlePlayerButtonSettings.font = normalFont;
+  singlePlayerButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings localMultiButtonSettings;
   SetButtonStyle(&localMultiButtonSettings, RIGHT_CORNER_RADIUS(20));
   localMultiButtonSettings.text = "Local Multiplayer";
-  localMultiButtonSettings.font = normalFont;
+  localMultiButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings versusAiButtonSettings;
   SetButtonStyle(&versusAiButtonSettings, RIGHT_CORNER_RADIUS(20));
   versusAiButtonSettings.text = "Player vs AI";
-  versusAiButtonSettings.font = normalFont;
+  versusAiButtonSettings.font = resourceManager->GetFont("Font 32");
 
   ButtonSettings settingsButtonSettings;
   SetButtonStyle(&settingsButtonSettings, BOTTOM_CORNER_RADIUS(20));
-  settingsButtonSettings.imageDefault = { settingsIcon, 40, 40 };
-  settingsButtonSettings.onClickSound = buttonClick;
+  settingsButtonSettings.imageDefault = { resourceManager->GetImage("Settings Icon"), 40, 40 };
+  settingsButtonSettings.onClickSound = resourceManager->GetSoundEffect("Button Click");
 
   ButtonSettings helpButtonSettings;
   SetButtonStyle(&helpButtonSettings, BOTTOM_CORNER_RADIUS(20));
-  helpButtonSettings.imageDefault = { helpIcon, 40, 40 };
-  helpButtonSettings.onClickSound = buttonClick;
+  helpButtonSettings.imageDefault = { resourceManager->GetImage("Question Mark Icon"), 40, 40 };
+  helpButtonSettings.onClickSound = resourceManager->GetSoundEffect("Button Click");
 
   LabelSettings gameInfomationBackgroundSettings;
   SetLabelStyle(&gameInfomationBackgroundSettings, LEFT_CORNER_RADIUS(20));
   
   LabelSettings highScoreLabelSettings;
   highScoreLabelSettings.text = "High Score";
-  highScoreLabelSettings.font = normalFont;
+  highScoreLabelSettings.font = resourceManager->GetFont("Font 32");
   highScoreLabelSettings.textColor = WHITE;
   
   LabelSettings highScoreNumberLabelSettings;
   highScoreNumberLabelSettings.text = "xxx";
-  highScoreNumberLabelSettings.font = normalFont;
+  highScoreNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   highScoreNumberLabelSettings.textColor = WHITE;
   
   LabelSettings mostLinesLabelSettings;
   mostLinesLabelSettings.text = "Most Lines Cleared";
-  mostLinesLabelSettings.font = normalFont;
+  mostLinesLabelSettings.font = resourceManager->GetFont("Font 32");
   mostLinesLabelSettings.textColor = WHITE;
   
   LabelSettings mostLinesNumberLabelSettings;
   mostLinesNumberLabelSettings.text = "xxx";
-  mostLinesNumberLabelSettings.font = normalFont;
+  mostLinesNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   mostLinesNumberLabelSettings.textColor = WHITE;
   
   LabelSettings timePlayedLabelSettings;
   timePlayedLabelSettings.text = "Hours Played";
-  timePlayedLabelSettings.font = normalFont;
+  timePlayedLabelSettings.font = resourceManager->GetFont("Font 32");
   timePlayedLabelSettings.textColor = WHITE;
   
   LabelSettings timePlayedNumberLabelSettings;
   timePlayedNumberLabelSettings.text = "xxx";
-  timePlayedNumberLabelSettings.font = normalFont;
+  timePlayedNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   timePlayedNumberLabelSettings.textColor = WHITE;
 
   /* Create components */
@@ -145,7 +129,5 @@ void MainMenuScreen::Init(ScreenManager* screenManager) {
   AddAnimation(helpButtonAnimation);
 
   /* Starting Music */
-  Mix_Music* music = m_ResourceManager.GetMusic("Main Menu Music");
-  Mix_PlayMusic(music, -1);
+  Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }
-

@@ -42,13 +42,15 @@ App::App(int width, int height)
   context->musicVolume = APP_MAX_VOLUME;
   context->soundEffectsVolume = APP_MAX_VOLUME;
 
-  m_ScreenManager = new ScreenManager(m_Width, m_Height, context);
+  m_ResourceManager = std::make_shared<ResourceManager>();
+  m_ScreenManager = std::make_shared<ScreenManager>(m_Width, m_Height, context, m_ResourceManager);
+
+  LoadResources();
 }
 
 App::~App() {
   SDL_DestroyWindow(m_Window);
   SDL_DestroyRenderer(m_Renderer);
-  delete m_ScreenManager;
 
   Mix_Quit();
   IMG_Quit();
@@ -81,3 +83,18 @@ void App::Run() {
   }
 }
 
+void App::LoadResources() {
+  m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 25, "Font 25");
+  m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 32, "Font 32");
+  m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Font 70");
+  m_ResourceManager->LoadFont("resources/font/JetBrainsMonoNerdFont-Medium.ttf", 15, "Text Field Font 15");
+  
+  m_ResourceManager->LoadImage("resources/images/return_icon.png", "Return Icon");
+  m_ResourceManager->LoadImage("resources/images/settings_icon.png", "Settings Icon");
+  m_ResourceManager->LoadImage("resources/images/question_mark.png", "Question Mark Icon");
+  
+  m_ResourceManager->LoadSoundEffect("resources/sound/Click1.wav", "Button Click");
+  
+  m_ResourceManager->LoadMusic("resources/sound/MainMenu_piano.ogg", "Menu Music");
+  m_ResourceManager->LoadMusic("resources/sound/Korobeiniki_piano.ogg", "Game Music");
+}

@@ -8,6 +8,7 @@
 #include "app/Screens/Screen.hpp"
 #include "app/Screens/ScreenFactory.hpp"
 #include "app/AppContext.hpp"
+#include "app/ResourceManager.hpp"
 #include "log.hpp"
 
 class App {
@@ -18,9 +19,13 @@ public:
   void ChangeScreen(Screen* screen);
 
 private:
+  void LoadResources();
+
+private:
   int m_Width;
   int m_Height;
-  ScreenManager* m_ScreenManager;
+  std::shared_ptr<ScreenManager> m_ScreenManager;
+  std::shared_ptr<ResourceManager> m_ResourceManager;
   SDL_Window* m_Window;
   SDL_Renderer* m_Renderer;
 };

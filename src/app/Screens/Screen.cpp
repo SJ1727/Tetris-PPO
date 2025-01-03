@@ -71,7 +71,7 @@ void ScreenManager::SwitchScreen() {
 
   if (m_NextScreen != nullptr) {
     m_CurrentScreen = std::move(m_NextScreen);
-    m_CurrentScreen->Init(this);
+    m_CurrentScreen->Init(shared_from_this(), m_ResourceManager);
     m_NextScreen = nullptr;
   }
 }
@@ -131,10 +131,12 @@ void Screen::HandleEvents(SDL_Event* event) {
 }
 
 void Screen::Update() {
+  // Updating all the components on the screen
   for (auto& component : m_Components) {
     component->Update();
   }
 
+  // Plays the Animations
   for (auto& animation : m_Animations) {
     animation->Step(SDL_GetTicks() - m_CurrentTime);
   }

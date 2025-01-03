@@ -14,40 +14,28 @@ void VolumeSettingsScreen::ChangeMuted(bool* volumeMuted) {
   *volumeMuted = !(*volumeMuted);
 }
 
-void VolumeSettingsScreen::LoadResources() {
-  m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
-  m_ResourceManager.LoadFont("resources/font/ahronbd.ttf", 20, "Default font 25");
-  m_ResourceManager.LoadImage("resources/images/return_icon.png", "Return Icon");
-  m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
-}
-
-void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
-  LoadResources();
-  
-  TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
-  TTF_Font* normalFont = m_ResourceManager.GetFont("Default font 25");
-  SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
-  m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BACKGROUND_COLOR);
+void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+  SetBackgroundColor(BACKGROUND_COLOR);
 
   /* Defining components settings */
   LabelSettings titleTextSettings;
   SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Volume";
-  titleTextSettings.font = titleFont;
+  titleTextSettings.font = resourceManager->GetFont("Font 70");
   
   ButtonSettings muteButtonSettings;
   SetButtonStyle(&muteButtonSettings, RIGHT_CORNER_RADIUS(20));
   muteButtonSettings.text = "Mute";
-  muteButtonSettings.font = normalFont;
+  muteButtonSettings.font = resourceManager->GetFont("Font 25");
   
   ButtonSettings returnButtonSettings;
   SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
-  returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
+  returnButtonSettings.imageDefault = { resourceManager->GetImage("Return Icon"), 40, 40 };
 
   ButtonSettings resetButtonSettings;
   SetButtonStyle(&resetButtonSettings, LEFT_CORNER_RADIUS(20));
   resetButtonSettings.text = "Reset";
-  resetButtonSettings.font = normalFont;
+  resetButtonSettings.font = resourceManager->GetFont("Font 25");
   
   SliderSettings masterVolumeSliderSettings;
   SetSliderStyle(&masterVolumeSliderSettings);
@@ -70,17 +58,17 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   LabelSettings masterVolumeLabelSettings;
   SetLabelStyle(&masterVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   masterVolumeLabelSettings.text = "Master Volume";
-  masterVolumeLabelSettings.font = normalFont;
+  masterVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
 
   LabelSettings musicVolumeLabelSettings;
   SetLabelStyle(&musicVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   musicVolumeLabelSettings.text = "Music Volume";
-  musicVolumeLabelSettings.font = normalFont;
+  musicVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
   
   LabelSettings soundEffectsVolumeLabelSettings;
   SetLabelStyle(&soundEffectsVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   soundEffectsVolumeLabelSettings.text = "Sound FX Volume";
-  soundEffectsVolumeLabelSettings.font = normalFont;
+  soundEffectsVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
@@ -150,6 +138,5 @@ void VolumeSettingsScreen::Init(ScreenManager* screenManager) {
   AddAnimation(muteSoundEffectsVolumeButtonAnimation);
 
   /* Starting Music */
-  Mix_Music* music = m_ResourceManager.GetMusic("Main Menu Music");
-  Mix_PlayMusic(music, -1);
+  Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }

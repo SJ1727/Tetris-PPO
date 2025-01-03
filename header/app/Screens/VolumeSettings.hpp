@@ -5,14 +5,10 @@
 
 #define DEFAULT_VOLUME 16
 
-
 class VolumeSettingsScreen : public Screen {
 public:
   VolumeSettingsScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
-  void Init(ScreenManager* screenManager);
-
-protected:
-  void LoadResources() override;
+  void Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager);
 
 private:
   static void ChangeVolume(int* volume, int newVolume);

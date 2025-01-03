@@ -1,50 +1,37 @@
 #include "app/Screens/Settings.hpp"
 
-void SettingsScreen::LoadResources() {
-  m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 32, "Def 32");
-  m_ResourceManager.LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Def 70");
-  m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
-  m_ResourceManager.LoadImage("resources/images/return_icon.png", "Return Icon");
-}
-
-void SettingsScreen::Init(ScreenManager* screenManager) {
-  LoadResources();
-
-  TTF_Font* titleFont = m_ResourceManager.GetFont("Def 70");
-  TTF_Font* normalFont = m_ResourceManager.GetFont("Def 32");
-  SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
-  m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BACKGROUND_COLOR);
-
+void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+  SetBackgroundColor(BACKGROUND_COLOR);
   
   /* Defining components settings */
   LabelSettings titleTextSettings;
   SetTitleStyle(&titleTextSettings);
   titleTextSettings.text = "Settings";
-  titleTextSettings.font = titleFont;
+  titleTextSettings.font = resourceManager->GetFont("Font 70");
   
   ButtonSettings returnButtonSettings;
   SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
-  returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
+  returnButtonSettings.imageDefault = { resourceManager->GetImage("Return Icon"), 40, 40 };
   
   ButtonSettings volumeButtonSettings;
   SetButtonStyle(&volumeButtonSettings, RIGHT_CORNER_RADIUS(20));
   volumeButtonSettings.text = "Volume";
-  volumeButtonSettings.font = normalFont;
+  volumeButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings controlButtonSettings;
   SetButtonStyle(&controlButtonSettings, RIGHT_CORNER_RADIUS(20));
   controlButtonSettings.text = "Controls";
-  controlButtonSettings.font = normalFont;
+  controlButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings aiButtonSettings;
   SetButtonStyle(&aiButtonSettings, RIGHT_CORNER_RADIUS(20));
   aiButtonSettings.text = "AI Player";
-  aiButtonSettings.font = normalFont;
+  aiButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings resetDataButtonSettings;
   SetButtonStyle(&resetDataButtonSettings, LEFT_CORNER_RADIUS(20));
   resetDataButtonSettings.text = "Reset Data";
-  resetDataButtonSettings.font = normalFont;
+  resetDataButtonSettings.font = resourceManager->GetFont("Font 32");
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
@@ -91,6 +78,5 @@ void SettingsScreen::Init(ScreenManager* screenManager) {
   AddAnimation(resetDataButtonAnimation);
 
   /* Starting Music */
-  Mix_Music* music = m_ResourceManager.GetMusic("Main Menu Music");
-  Mix_PlayMusic(music, -1);
+  Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }

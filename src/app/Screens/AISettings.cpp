@@ -1,34 +1,22 @@
 #include "app/Screens/AISettings.hpp"
 
-void AISettingsScreen::LoadResources() {
-  m_ResourceManager.LoadFont("resources/font/ahronbd.ttf", 25, "Default font 25");
-  m_ResourceManager.LoadFont("resources/font/JetBrainsMonoNerdFont-Medium.ttf", 15, "Text field");
-  m_ResourceManager.LoadImage("resources/images/return_icon.png", "Return Icon");
-  m_ResourceManager.LoadMusic("resources/sound/MainMenu_piano.ogg", "Main Menu Music");
-}
+void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+  SetBackgroundColor(BACKGROUND_COLOR);
 
-void AISettingsScreen::Init(ScreenManager* screenManager) {
-  LoadResources();
-  
-  TTF_Font* normalFont = m_ResourceManager.GetFont("Default font 25");
-  TTF_Font* textFieldFont = m_ResourceManager.GetFont("Text field");
-  SDL_Surface* returnIcon = m_ResourceManager.GetImage("Return Icon");
-  m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, BACKGROUND_COLOR);
-  
   /* Defining components settings */
   ButtonSettings returnButtonSettings;
   SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
-  returnButtonSettings.imageDefault = { returnIcon, 40, 40 };
+  returnButtonSettings.imageDefault = { resourceManager->GetImage("Return Icon"), 40, 40 };
   
   LabelSettings modelPathLabelSettings;
   modelPathLabelSettings.text = "MODEL PATH";
-  modelPathLabelSettings.font = normalFont;
+  modelPathLabelSettings.font = resourceManager->GetFont("Font 25");
   modelPathLabelSettings.textColor = WHITE;
   modelPathLabelSettings.textCenteredX = false;
   
   TextFieldSettings modelPathFieldSettings;
   modelPathFieldSettings.initialText = "example/path/model.onnx";
-  modelPathFieldSettings.font = textFieldFont;
+  modelPathFieldSettings.font = resourceManager->GetFont("Text Field Font 15");
   
   /* Create components */
   Button* returnButton = new Button(20, 530, 50, 50, returnButtonSettings);
@@ -43,6 +31,5 @@ void AISettingsScreen::Init(ScreenManager* screenManager) {
   Link(modelPathField);
   
   /* Starting Music */
-  Mix_Music* music = m_ResourceManager.GetMusic("Main Menu Music");
-  Mix_PlayMusic(music, -1);
+  Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }

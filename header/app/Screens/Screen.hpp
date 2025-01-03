@@ -30,10 +30,10 @@ Animation* AnimateButtonStretchLeft(Button* button, int distance, int duration);
 Animation* AnimateButtonStretchRight(Button* button, int distance, int duration);
 Animation* AnimateButtonStretchUp(Button* button, int distance, int duration);
 
-class ScreenManager {
+class ScreenManager : public std::enable_shared_from_this<ScreenManager> {
 public:
-  ScreenManager(int width, int height, std::shared_ptr<AppContext> context)
-    : m_ScreenWidth(width), m_ScreenHeight(height), m_Context(context) {};
+  ScreenManager(int width, int height, std::shared_ptr<AppContext> context, std::shared_ptr<ResourceManager> resourceManager)
+    : m_ScreenWidth(width), m_ScreenHeight(height), m_Context(context), m_ResourceManager(resourceManager) {};
   ~ScreenManager() = default;
 
   void SetScreen(ScreenType screenType);
@@ -47,6 +47,7 @@ private:
 private:
   int m_ScreenWidth, m_ScreenHeight;
   std::shared_ptr<AppContext> m_Context;
+  std::shared_ptr<ResourceManager> m_ResourceManager;
   std::unique_ptr<Screen> m_NextScreen = nullptr;
   std::unique_ptr<Screen> m_CurrentScreen = nullptr;
 };
@@ -54,10 +55,10 @@ private:
 class Screen {
 public:
   Screen(int width, int height, std::shared_ptr<AppContext> context) 
-    : m_ResourceManager(), m_Width(width), m_Height(height), m_Context(context) {}
+    : m_Width(width), m_Height(height), m_Context(context) {}
   ~Screen();
 
-  virtual void Init(ScreenManager* screenManager) = 0;
+  virtual void Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) = 0;
   virtual void Update();
   virtual void Render(SDL_Renderer* renderer);
   virtual void HandleEvents(SDL_Event* event);
@@ -66,13 +67,11 @@ public:
   inline void AddAnimation(Animation* animation) { m_Animations.emplace_back(animation); }
 
 protected:
-  virtual void LoadResources() = 0;
+  inline void SetBackgroundColor(SDL_Color color) { m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, color); }
 
 protected:
   int m_Width, m_Height;
   std::shared_ptr<AppContext> m_Context;
-  ResourceManager m_ResourceManager;
-  ScreenManager* m_screenManager;
   std::vector<Component*> m_Components;
   std::vector<Animation*> m_Animations;
   int m_CurrentTime;
