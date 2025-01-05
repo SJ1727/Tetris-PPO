@@ -6,10 +6,6 @@ auto resetVolume = [](std::shared_ptr<AppContext> context) {
     context->soundEffectsVolume = DEFAULT_VOLUME;
 };
 
-void VolumeSettingsScreen::ChangeVolume(int* volume, int newVolume) {
-  *volume = newVolume;
-}
-
 void VolumeSettingsScreen::ChangeMuted(bool* volumeMuted) {
   *volumeMuted = !(*volumeMuted);
 }
@@ -26,7 +22,7 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   ButtonSettings muteButtonSettings;
   SetButtonStyle(&muteButtonSettings, RIGHT_CORNER_RADIUS(20));
   muteButtonSettings.text = "Mute";
-  muteButtonSettings.font = resourceManager->GetFont("Font 25");
+  muteButtonSettings.font = resourceManager->GetFont("Font 32");
   
   ButtonSettings returnButtonSettings;
   SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
@@ -35,40 +31,37 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   ButtonSettings resetButtonSettings;
   SetButtonStyle(&resetButtonSettings, LEFT_CORNER_RADIUS(20));
   resetButtonSettings.text = "Reset";
-  resetButtonSettings.font = resourceManager->GetFont("Font 25");
+  resetButtonSettings.font = resourceManager->GetFont("Font 32");
   
-  SliderSettings masterVolumeSliderSettings;
+  SliderSettings<int> masterVolumeSliderSettings;
   SetSliderStyle(&masterVolumeSliderSettings);
 	masterVolumeSliderSettings.min = 0;
 	masterVolumeSliderSettings.max = APP_MAX_VOLUME;
-  masterVolumeSliderSettings.startingValue = m_Context->masterVolume;
   
-  SliderSettings musicVolumeSliderSettings;
+  SliderSettings<int> musicVolumeSliderSettings;
   SetSliderStyle(&musicVolumeSliderSettings);
 	musicVolumeSliderSettings.min = 0;
 	musicVolumeSliderSettings.max = APP_MAX_VOLUME;
-  musicVolumeSliderSettings.startingValue = m_Context->musicVolume;
   
-  SliderSettings soundEffectsVolumeSliderSettings;
+  SliderSettings<int> soundEffectsVolumeSliderSettings;
   SetSliderStyle(&soundEffectsVolumeSliderSettings);
 	soundEffectsVolumeSliderSettings.min = 0;
 	soundEffectsVolumeSliderSettings.max = APP_MAX_VOLUME;
-  soundEffectsVolumeSliderSettings.startingValue = m_Context->soundEffectsVolume;
 
   LabelSettings masterVolumeLabelSettings;
   SetLabelStyle(&masterVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   masterVolumeLabelSettings.text = "Master Volume";
-  masterVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
+  masterVolumeLabelSettings.font = resourceManager->GetFont("Font 32");
 
   LabelSettings musicVolumeLabelSettings;
   SetLabelStyle(&musicVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   musicVolumeLabelSettings.text = "Music Volume";
-  musicVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
+  musicVolumeLabelSettings.font = resourceManager->GetFont("Font 32");
   
   LabelSettings soundEffectsVolumeLabelSettings;
   SetLabelStyle(&soundEffectsVolumeLabelSettings, LEFT_CORNER_RADIUS(20));
   soundEffectsVolumeLabelSettings.text = "Sound FX Volume";
-  soundEffectsVolumeLabelSettings.font = resourceManager->GetFont("Font 25");
+  soundEffectsVolumeLabelSettings.font = resourceManager->GetFont("Font 32");
   
   /* Create components */
   Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
@@ -77,9 +70,9 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   
   Button* resetButton = new Button(0, 520, 220, 50, resetButtonSettings); 
   
-  Slider* masterVolumeSlider = new Slider(250, 140, 300, 60, masterVolumeSliderSettings); 
-  Slider* musicVolumeSlider = new Slider(250, 270, 300, 60, musicVolumeSliderSettings); 
-  Slider* soundEffectsVolumeSlider = new Slider(250, 400, 300, 60, soundEffectsVolumeSliderSettings); 
+  Slider<int>* masterVolumeSlider = new Slider<int>(250, 140, 300, 60, &m_Context->masterVolume, masterVolumeSliderSettings); 
+  Slider<int>* musicVolumeSlider = new Slider<int>(250, 270, 300, 60, &m_Context->musicVolume, musicVolumeSliderSettings); 
+  Slider<int>* soundEffectsVolumeSlider = new Slider<int>(250, 400, 300, 60, &m_Context->soundEffectsVolume, soundEffectsVolumeSliderSettings); 
   
   Label* masterVolumeLabel = new Label(0, 130, 220, 80, masterVolumeLabelSettings);
   Label* musicVolumeLabel = new Label(0, 260, 220, 80, musicVolumeLabelSettings);
@@ -98,10 +91,6 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   muteMusicVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMusic)); 
   muteSoundEffectsVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playSoundEffects));
  
-  masterVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->masterVolume, std::placeholders::_1));
-  musicVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->musicVolume, std::placeholders::_1));
-  soundEffectsVolumeSlider->Bind(std::bind(VolumeSettingsScreen::ChangeVolume, &m_Context->soundEffectsVolume, std::placeholders::_1));
-  
   /* Create Animations */
   Animation* returnButtonAnimation = AnimateButtonStretchUp(returnButton, 10, 300);
   Animation* resetButtonAnimation = AnimateButtonStretchRight(resetButton, 15, 300);

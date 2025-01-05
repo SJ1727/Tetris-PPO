@@ -8,9 +8,9 @@
 #include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 
-typedef struct {
-  float min, max; // Min and Max value that the slider will return
-  float startingValue;
+template <typename T>
+struct SliderSettings {
+  T min, max; // Min and Max value that the slider will return
   SDL_Color backgroundColor = TRANSPARENT;
   SDL_Color trackColor = GRAY;
   SDL_Color thumbColor = WHITE;
@@ -21,18 +21,20 @@ typedef struct {
   std::array<int, 4> backgroundCornerRadius = { 0, 0, 0, 0 };
   std::array<int, 4> trackCornerRadius = { 0, 0, 0, 0 };
   std::array<int, 4> thumbCornerRadius = { 0, 0, 0, 0 };
-} SliderSettings; 
+}; 
 
+template <typename T>
 class Slider : public Component {
 public:
-  Slider(int x, int y, int width, int height, SliderSettings settings);
+  Slider(int x, int y, int width, int height, T* value, SliderSettings<T> settings);
   ~Slider() = default;
   void Render(SDL_Renderer* renderer) override;
   void HandleEvents(SDL_Event* event) override;
-  void Bind(std::function<void(float)> on_ValueChange);
+  void Update() override;
 
 private:
-  float GetValue();
+  T GetValue();
+  void UpdateThumbPosition();
 
 private:
   int m_X, m_Y;
@@ -60,7 +62,7 @@ private:
   SDL_Surface* m_TrackSurface;
   SDL_Surface* m_ThumbSurface;
 
-  std::function<void(float)> m_OnValueChange;
+  T* m_Value;
 
   bool m_Clicked = false;
   int m_ClickStartPosition;

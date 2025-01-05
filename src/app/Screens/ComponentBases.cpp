@@ -24,7 +24,8 @@ void SetTitleStyle(LabelSettings* settings) {
 
 
 
-void SetSliderStyle(SliderSettings* settings) {
+template <typename T>
+void SetSliderStyle(SliderSettings<T>* settings) {
 	settings->trackPaddingX = 20;
 	settings->trackPaddingY = 25;
 	settings->thumbRelativeSize = 8;
@@ -35,3 +36,6 @@ void SetSliderStyle(SliderSettings* settings) {
 	settings->trackCornerRadius = ALL_CORNER_RADIUS(5);
 	settings->thumbCornerRadius = ALL_CORNER_RADIUS(12);
 }
+
+template void SetSliderStyle<int>(SliderSettings<int>* settings);
+template void SetSliderStyle<float>(SliderSettings<float>* settings);

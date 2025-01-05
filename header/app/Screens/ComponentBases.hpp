@@ -17,8 +17,12 @@
 #include "app/WindowComponents/WindowComponents.hpp"
 
 void SetButtonStyle(ButtonSettings* settings, std::array<int, 4> cornerRadius);
+
 void SetLabelStyle(LabelSettings* settings, std::array<int, 4> cornerRadius);
+
 void SetTitleStyle(LabelSettings* settings);
-void SetSliderStyle(SliderSettings* settings);
+
+template <typename T>
+void SetSliderStyle(SliderSettings<T>* settings);
 
 #endif // !COMPONENT_BASES_H
