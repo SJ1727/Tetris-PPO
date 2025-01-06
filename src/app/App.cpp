@@ -60,6 +60,11 @@ App::~App() {
 
 void App::Run() {
   bool running = true;
+  
+  uint64_t lastTime = SDL_GetPerformanceCounter();
+  uint64_t currentTime = 0;
+  int frames = 0;
+  float fps = 0.0f;
 
   m_ScreenManager->SetScreen(MAIN_MENU);
 
@@ -80,6 +85,17 @@ void App::Run() {
 
     // Rendering
     SDL_RenderPresent(m_Renderer);
+
+    // Calculating and logging FPS
+    currentTime = SDL_GetPerformanceCounter();
+    frames++;
+
+    if ((currentTime - lastTime) >= SDL_GetPerformanceFrequency()) {
+      fps = frames * (float) SDL_GetPerformanceFrequency() / (currentTime - lastTime);
+      lastTime = currentTime;
+      frames = 0;
+      LOG_INFO("FPS " + std::to_string(fps));
+    }
   }
 }
 
