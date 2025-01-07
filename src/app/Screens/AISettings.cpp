@@ -19,16 +19,11 @@ void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::s
   modelPathFieldSettings.font = resourceManager->GetFont("Text Field Font 15");
   
   /* Create components */
-  Button* returnButton = new Button(20, 530, 50, 50, returnButtonSettings);
-  Label* modelPathLabel = new Label(20, 20, 200, 50, modelPathLabelSettings);
-  TextField* modelPathField = new TextField(190, 30, 400, 25, modelPathFieldSettings);
+  CREATE_BUTTON(returnButton, 20, 530, 50, 50, returnButtonSettings);
+  CREATE_LABEL(modelPathLabel, 20, 20, 200, 50, modelPathLabelSettings);
+  CREATE_TEXT_FIELD(modelPathField, 190, 30, 400, 25, modelPathFieldSettings);
   
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
-  
-  /* Linking the components to the screen */
-  Link(returnButton);
-  Link(modelPathLabel);
-  Link(modelPathField);
   
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

@@ -4,13 +4,24 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <map>
+
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_mixer/SDL_mixer.h>
+
 #include "app/ResourceManager.hpp"
 #include "app/AppContext.hpp"
 #include "app/WindowComponents/WindowComponents.hpp"
 #include "app/Screens/ComponentBases.hpp"
+
+#define CREATE_LABEL(name, ...)      Label* name = new Label(__VA_ARGS__); Link(name, #name)
+#define CREATE_BUTTON(name, ...)     Button* name = new Button(__VA_ARGS__); Link(name, #name)
+#define CREATE_SLIDER(name, T, ...)  Slider<T>* name = new Slider(__VA_ARGS__); Link(name, #name)
+#define CREATE_TEXT_FIELD(name, ...) TextField* name = new TextField(__VA_ARGS__); Link(name, #name)
+#define CREATE_LINE(name, ...)       Line* name = new Line(__VA_ARGS__); Link(name, #name)
+
+#define CREATE_ANIMATION(name, func, ...)  Animation* name = func(__VA_ARGS__); Link(name, #name) 
 
 enum ScreenType {
   MAIN_MENU,
@@ -63,17 +74,20 @@ public:
   virtual void Render(SDL_Renderer* renderer);
   virtual void HandleEvents(SDL_Event* event);
 
-  inline void Link(Component* component)         { m_Components.emplace_back(component); }
-  inline void AddAnimation(Animation* animation) { m_Animations.emplace_back(animation); }
-
 protected:
   inline void SetBackgroundColor(SDL_Color color) { m_BackgroundSurface = CreateSingleColorSurface(m_Width, m_Height, color); }
+  
+  void Link(Component* component, std::string alias);
+  void Link(Animation* animation, std::string alias);
+
+  Component* GetComponent(std::string alias);
+  Animation* GetAnimation(std::string alias);
 
 protected:
   int m_Width, m_Height;
   std::shared_ptr<AppContext> m_Context;
-  std::vector<Component*> m_Components;
-  std::vector<Animation*> m_Animations;
+  std::map<std::string, Component*> m_ComponentMap;
+  std::map<std::string, Animation*> m_AnimationMap;
   int m_CurrentTime;
   SDL_Surface* m_BackgroundSurface;
 };

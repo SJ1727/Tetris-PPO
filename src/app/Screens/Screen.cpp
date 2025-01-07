@@ -101,15 +101,14 @@ void ScreenManager::HandleEvents(SDL_Event* event) {
  */
 
 Screen::~Screen() {
-  for (auto& component : m_Components) {
-    delete component;
+  for (auto& pair : m_ComponentMap) {
+    delete pair.second;
   }
   
-  for (auto& animation : m_Animations) {
-    delete animation;
+  for (auto& pair : m_AnimationMap) {
+    delete pair.second;
   }
 
-  m_Components.clear();
   Mix_HaltMusic();
 }
 
@@ -119,26 +118,26 @@ void Screen::Render(SDL_Renderer* renderer) {
   SDL_RenderTexture(renderer, backgroundTexture, nullptr, &backgroundRectangle);
   SDL_DestroyTexture(backgroundTexture);
   
-  for (auto& component : m_Components) {
-    component->Render(renderer);
+  for (auto& pair : m_ComponentMap) {
+    pair.second->Render(renderer);
   }
 }
 
 void Screen::HandleEvents(SDL_Event* event) {
-  for (auto& component : m_Components) {
-    component->HandleEvents(event);
+  for (auto& pair : m_ComponentMap) {
+    pair.second->HandleEvents(event);
   }
 }
 
 void Screen::Update() {
   // Updating all the components on the screen
-  for (auto& component : m_Components) {
-    component->Update();
+  for (auto& pair : m_ComponentMap) {
+    pair.second->Update();
   }
 
   // Plays the Animations
-  for (auto& animation : m_Animations) {
-    animation->Step(SDL_GetTicks() - m_CurrentTime);
+  for (auto& pair : m_AnimationMap) {
+    pair.second->Step(SDL_GetTicks() - m_CurrentTime);
   }
   m_CurrentTime = SDL_GetTicks();
 
@@ -155,4 +154,41 @@ void Screen::Update() {
   } else {
     Mix_Volume(-1, m_Context->soundEffectsVolume * m_Context->masterVolume);
   }
+}
+  
+void Screen::Link(Component* component, std::string alias="") {
+  if (m_ComponentMap.find(alias) != m_ComponentMap.end()) {
+    LOG_WARN("Cannot link two components with the same alias of \"" + alias + "\"");
+    return;
+  }
+
+  m_ComponentMap[alias] = component;
+}
+
+void Screen::Link(Animation* animation, std::string alias="") {
+  if (m_AnimationMap.find(alias) != m_AnimationMap.end()) {
+    LOG_WARN("Cannot link two animations with the same alias of \"" + alias + "\"");
+    return;
+  }
+
+  m_AnimationMap[alias] = animation;
+}
+
+Component* Screen::GetComponent(std::string alias)  {
+  if (m_ComponentMap.find(alias) != m_ComponentMap.end()) {
+    return m_ComponentMap[alias];
+  }
+  
+  LOG_WARN("Component with alias \"" + alias + "\" has not been linked");
+  return nullptr;
+
+}
+
+Animation* Screen::GetAnimation(std::string alias) {
+  if (m_AnimationMap.find(alias) != m_AnimationMap.end()) {
+    return m_AnimationMap[alias];
+  }
+  
+  LOG_WARN("Animation with alias \"" + alias + "\" has not been linked");
+  return nullptr;
 }

@@ -68,31 +68,31 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   timePlayedNumberLabelSettings.textColor = WHITE;
 
   /* Create components */
-  Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
+  CREATE_LABEL(titleText, 528, 10, 100, 100, titleTextSettings);
 
-  Button* singlePlayerButton = new Button(440, 140, 360, 80, singlePlayerButtonSettings); 
-  Button* localMultiButton = new Button(440, 260, 360, 80, localMultiButtonSettings); 
-  Button* versusAiButton = new Button(440, 380, 360, 80, versusAiButtonSettings); 
+  CREATE_BUTTON(singlePlayerButton, 440, 140, 360, 80, singlePlayerButtonSettings); 
+  CREATE_BUTTON(localMultiButton, 440, 260, 360, 80, localMultiButtonSettings); 
+  CREATE_BUTTON(versusAiButton, 440, 380, 360, 80, versusAiButtonSettings); 
   
-  Button* settingsButton = new Button(480, 520, 80, 80, settingsButtonSettings); 
-  Button* helpButton = new Button(640, 520, 80, 80, helpButtonSettings); 
+  CREATE_BUTTON(settingsButton, 480, 520, 80, 80, settingsButtonSettings); 
+  CREATE_BUTTON(helpButton, 640, 520, 80, 80, helpButtonSettings); 
 
-  Label* gameInfomationBackground = new Label(0, 50, 280, 500, gameInfomationBackgroundSettings);
-  Line* gameInfomationLine1 = new Line(0, 206, 280, 206, BACKGROUND_COLOR);
-  Line* gameInfomationLine2 = new Line(0, 374, 280, 374, BACKGROUND_COLOR);
-  Label* highScoreLabel = new Label(68, 60, 122, 34, highScoreLabelSettings);
-  Label* highScoreNumberLabel = new Label(108, 124, 42, 34, highScoreNumberLabelSettings);
-  Label* mostLinesLabel = new Label(34, 216, 204, 34, mostLinesLabelSettings);
-  Label* mostLinesNumberLabel = new Label(108, 284, 42, 34, mostLinesNumberLabelSettings);
-  Label* timePlayedLabel = new Label(58, 384, 146, 34, timePlayedLabelSettings);
-  Label* timePlayedNumberLabel = new Label(108, 446, 42, 34, timePlayedNumberLabelSettings);
+  CREATE_LABEL(gameInfomationBackground, 0, 50, 280, 500, gameInfomationBackgroundSettings);
+  CREATE_LINE(gameInfomationLine1, 0, 206, 280, 206, BACKGROUND_COLOR);
+  CREATE_LINE(gameInfomationLine2, 0, 374, 280, 374, BACKGROUND_COLOR);
+  CREATE_LABEL(highScoreLabel, 68, 60, 122, 34, highScoreLabelSettings);
+  CREATE_LABEL(highScoreNumberLabel, 108, 124, 42, 34, highScoreNumberLabelSettings);
+  CREATE_LABEL(mostLinesLabel, 34, 216, 204, 34, mostLinesLabelSettings);
+  CREATE_LABEL(mostLinesNumberLabel, 108, 284, 42, 34, mostLinesNumberLabelSettings);
+  CREATE_LABEL(timePlayedLabel, 58, 384, 146, 34, timePlayedLabelSettings);
+  CREATE_LABEL(timePlayedNumberLabel, 108, 446, 42, 34, timePlayedNumberLabelSettings);
 
   /* Create Animations */
-  Animation* singlePlayerButtonAnimation = AnimateButtonStretchLeft(singlePlayerButton, 30, 300);
-  Animation* localMultiButtonAnimation = AnimateButtonStretchLeft(localMultiButton, 30, 300);
-  Animation* versusAiButtonAnimation = AnimateButtonStretchLeft(versusAiButton, 30, 300);
-  Animation* settingButtonAnimation = AnimateButtonStretchUp(settingsButton, 10, 300);
-  Animation* helpButtonAnimation = AnimateButtonStretchUp(helpButton, 10, 300);
+  CREATE_ANIMATION(singlePlayerButtonAnimation, AnimateButtonStretchLeft, singlePlayerButton, 30, 300);
+  CREATE_ANIMATION(localMultiButtonAnimation, AnimateButtonStretchLeft, localMultiButton, 30, 300);
+  CREATE_ANIMATION(versusAiButtonAnimation, AnimateButtonStretchLeft, versusAiButton, 30, 300);
+  CREATE_ANIMATION(settingButtonAnimation, AnimateButtonStretchUp, settingsButton, 10, 300);
+  CREATE_ANIMATION(helpButtonAnimation, AnimateButtonStretchUp, helpButton, 10, 300);
 
   /* Adding bindings to components */
   singlePlayerButton->AddHoverAnimation(singlePlayerButtonAnimation);
@@ -103,30 +103,6 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
 
   singlePlayerButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SINGLE_PLAYER_GAME));
   settingsButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
-
-  /* Linking the components to the screen */
-  Link(titleText);
-  Link(singlePlayerButton);
-  Link(localMultiButton);
-  Link(versusAiButton);
-  Link(settingsButton);
-  Link(helpButton);
-  Link(gameInfomationBackground);
-  Link(gameInfomationLine1);
-  Link(gameInfomationLine2);
-  Link(highScoreLabel);
-  Link(highScoreNumberLabel);
-  Link(mostLinesLabel);
-  Link(mostLinesNumberLabel);
-  Link(timePlayedLabel);
-  Link(timePlayedNumberLabel);
-  
-  /* Adding animations */
-  AddAnimation(singlePlayerButtonAnimation);
-  AddAnimation(localMultiButtonAnimation);
-  AddAnimation(versusAiButtonAnimation);
-  AddAnimation(settingButtonAnimation);
-  AddAnimation(helpButtonAnimation);
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

@@ -24,12 +24,10 @@ void ControlSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, s
   player2ButtonSettings.font = resourceManager->GetFont("Font 32");
   
   /* Create components */
-  Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
-  
-  Button* returnButton = new Button(640, 520, 80, 80, returnButtonSettings);
-
-  Button* player1Button = new Button(0, 140, 360, 80, player1ButtonSettings);
-  Button* player2Button = new Button(0, 380, 360, 80, player2ButtonSettings);
+  CREATE_LABEL(titleText, 528, 10, 100, 100, titleTextSettings);
+  CREATE_BUTTON(returnButton, 640, 520, 80, 80, returnButtonSettings);
+  CREATE_BUTTON(player1Button, 0, 140, 360, 80, player1ButtonSettings);
+  CREATE_BUTTON(player2Button, 0, 380, 360, 80, player2ButtonSettings);
 
 
   returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
@@ -38,25 +36,14 @@ void ControlSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, s
 
 
   /* Create Animations */
-  Animation* returnButtonAnimation = AnimateButtonStretchUp(returnButton, 10, 300);
-  Animation* player1ButtonAnimation = AnimateButtonStretchRight(player1Button, 30, 300);
-  Animation* player2ButtonAnimation = AnimateButtonStretchRight(player2Button, 30, 300);
+  CREATE_ANIMATION(returnButtonAnimation, AnimateButtonStretchUp, returnButton, 10, 300);
+  CREATE_ANIMATION(player1ButtonAnimation, AnimateButtonStretchRight, player1Button, 30, 300);
+  CREATE_ANIMATION(player2ButtonAnimation, AnimateButtonStretchRight, player2Button, 30, 300);
   
   /* Adding bindings to components */
   returnButton->AddHoverAnimation(returnButtonAnimation);
   player1Button->AddHoverAnimation(player1ButtonAnimation);
   player2Button->AddHoverAnimation(player2ButtonAnimation);
-  
-  /* Linking the components to the screen */
-  Link(titleText);
-  Link(returnButton);
-  Link(player1Button);
-  Link(player2Button);
-
-  /* Adding animations */
-  AddAnimation(returnButtonAnimation);
-  AddAnimation(player1ButtonAnimation);
-  AddAnimation(player2ButtonAnimation);
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

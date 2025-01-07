@@ -34,21 +34,21 @@ void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   resetDataButtonSettings.font = resourceManager->GetFont("Font 32");
   
   /* Create components */
-  Label* titleText = new Label(528, 10, 100, 100, titleTextSettings);
+  CREATE_LABEL(titleText, 528, 10, 100, 100, titleTextSettings);
   
-  Button* returnButton = new Button(640, 520, 80, 80, returnButtonSettings); 
+  CREATE_BUTTON(returnButton, 640, 520, 80, 80, returnButtonSettings); 
   
-  Button* volumeButton = new Button(440, 140, 360, 80, volumeButtonSettings); 
-  Button* controlButton = new Button(440, 260, 360, 80, controlButtonSettings); 
-  Button* aiButton = new Button(440, 380, 360, 80, aiButtonSettings); 
-  Button* resetDataButton = new Button(0, 140, 360, 80, resetDataButtonSettings); 
+  CREATE_BUTTON(volumeButton, 440, 140, 360, 80, volumeButtonSettings); 
+  CREATE_BUTTON(controlButton, 440, 260, 360, 80, controlButtonSettings); 
+  CREATE_BUTTON(aiButton, 440, 380, 360, 80, aiButtonSettings); 
+  CREATE_BUTTON(resetDataButton, 0, 140, 360, 80, resetDataButtonSettings); 
   
   /* Create Animations */
-  Animation* returnButtonAnimation = AnimateButtonStretchUp(returnButton, 10, 300);
-  Animation* volumeButtonAnimation = AnimateButtonStretchLeft(volumeButton, 30, 300);
-  Animation* controlButtonAnimation = AnimateButtonStretchLeft(controlButton, 30, 300);
-  Animation* aiButtonAnimation = AnimateButtonStretchLeft(aiButton, 30, 300);
-  Animation* resetDataButtonAnimation = AnimateButtonStretchRight(resetDataButton, 30, 300);
+  CREATE_ANIMATION(returnButtonAnimation, AnimateButtonStretchUp, returnButton, 10, 300);
+  CREATE_ANIMATION(volumeButtonAnimation, AnimateButtonStretchLeft, volumeButton, 30, 300);
+  CREATE_ANIMATION(controlButtonAnimation, AnimateButtonStretchLeft, controlButton, 30, 300);
+  CREATE_ANIMATION(aiButtonAnimation, AnimateButtonStretchLeft, aiButton, 30, 300);
+  CREATE_ANIMATION(resetDataButtonAnimation, AnimateButtonStretchRight, resetDataButton, 30, 300);
 
   /* Adding bindings to components */
   returnButton->AddHoverAnimation(returnButtonAnimation);
@@ -62,21 +62,6 @@ void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   controlButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS));
   aiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, AI_SETTINGS));
   
-  /* Linking the components to the screen */
-  Link(titleText);
-  Link(returnButton);
-  Link(volumeButton);
-  Link(controlButton);
-  Link(aiButton);
-  Link(resetDataButton);
-  
-  /* Adding animations */
-  AddAnimation(returnButtonAnimation);
-  AddAnimation(volumeButtonAnimation);
-  AddAnimation(controlButtonAnimation);
-  AddAnimation(aiButtonAnimation);
-  AddAnimation(resetDataButtonAnimation);
-
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }
