@@ -19,13 +19,17 @@ public:
   void ChangeScreen(Screen* screen);
 
 private:
+  void InitContext();
   void LoadResources();
 
 private:
   int m_Width;
   int m_Height;
+
+  std::shared_ptr<AppContext> m_Context;
   std::shared_ptr<ScreenManager> m_ScreenManager;
   std::shared_ptr<ResourceManager> m_ResourceManager;
+  
   SDL_Window* m_Window;
   SDL_Renderer* m_Renderer;
 };

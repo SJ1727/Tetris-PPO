@@ -14,8 +14,8 @@ typedef struct {
   int musicVolume;
   int soundEffectsVolume;
 
-  KeyBindings player1Keybindings;
-  KeyBindings player2Keybindings;
+  KeyBindings player1KeyBindings;
+  KeyBindings player2KeyBindings;
 
 } AppContext;
 

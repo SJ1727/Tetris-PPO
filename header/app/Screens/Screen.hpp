@@ -23,6 +23,9 @@
 
 #define CREATE_ANIMATION(name, func, ...)  Animation* name = func(__VA_ARGS__); Link(name, #name) 
 
+#define CHANGE_SCREEN(screenManager, screenType) std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS))
+#define SET_VALUE(var, value, type) std::bind([]( type& var, type value ) { var = value; }, var, value)
+
 enum ScreenType {
   MAIN_MENU,
   SETTINGS,
@@ -51,6 +54,10 @@ public:
   void Update();
   void Render(SDL_Renderer* renderer);
   void HandleEvents(SDL_Event* event);
+
+  void SetVolumeSettingsDefault();
+  void SetPlayer1KeyBindingsDefault();
+  void SetPlayer2KeyBindingsDefault();
 
 private:
   void SwitchScreen();

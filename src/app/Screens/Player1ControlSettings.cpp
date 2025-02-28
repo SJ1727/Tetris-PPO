@@ -1,5 +1,144 @@
 #include "app/Screens/Player1ControlSettings.hpp"
 
 void Player1ControlSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+  SetBackgroundColor(BACKGROUND_COLOR);
   
+  /* Defining components settings */
+  LabelSettings titleTextSettings;
+  SetTitleStyle(&titleTextSettings);
+  titleTextSettings.text = "Player 1 Controls";
+  titleTextSettings.font = resourceManager->GetFont("Font 70");
+  
+  ButtonSettings returnButtonSettings;
+  SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
+  returnButtonSettings.imageDefault = { resourceManager->GetImage("Return Icon"), 40, 40 };
+
+  LabelSettings holdLabelSettings;
+  SetLabelStyle(&holdLabelSettings, LEFT_CORNER_RADIUS(20));
+  holdLabelSettings.text = "Hold";
+  holdLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings downLabelSettings;
+  SetLabelStyle(&downLabelSettings, LEFT_CORNER_RADIUS(20));
+  downLabelSettings.text = "Move Down";
+  downLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings rightLabelSettings;
+  SetLabelStyle(&rightLabelSettings, LEFT_CORNER_RADIUS(20));
+  rightLabelSettings.text = "Move Right";
+  rightLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings leftLabelSettings;
+  SetLabelStyle(&leftLabelSettings, LEFT_CORNER_RADIUS(20));
+  leftLabelSettings.text = "Move Left";
+  leftLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings dropLabelSettings;
+  SetLabelStyle(&dropLabelSettings, LEFT_CORNER_RADIUS(20));
+  dropLabelSettings.text = "Drop";
+  dropLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings rotCWLabelSettings;
+  SetLabelStyle(&rotCWLabelSettings, LEFT_CORNER_RADIUS(20));
+  rotCWLabelSettings.text = "Rot. Clockwise";
+  rotCWLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings rotACWLabelSettings;
+  SetLabelStyle(&rotACWLabelSettings, LEFT_CORNER_RADIUS(20));
+  rotACWLabelSettings.text = "Rot. Anit Clockwise";
+  rotACWLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  ButtonSettings keybindButtonSettings;
+  SetButtonStyle(&keybindButtonSettings, ALL_CORNER_RADIUS(20));
+  keybindButtonSettings.font = resourceManager->GetFont("Font 32");
+
+  /* Create components */
+  CREATE_LABEL(titleText, 528, 10, 100, 100, titleTextSettings);
+  
+  CREATE_BUTTON(returnButton, 640, 520, 80, 80, returnButtonSettings); 
+
+  CREATE_LABEL(holdLabel, 0, 100, 220, 60, holdLabelSettings);
+  CREATE_LABEL(downLabel, 0, 170, 220, 60, downLabelSettings);
+  CREATE_LABEL(rightLabel, 0, 240, 220, 60, rightLabelSettings);
+  CREATE_LABEL(leftLabel, 0, 310, 220, 60, leftLabelSettings);
+  CREATE_LABEL(dropLabel, 0, 380, 220, 60, dropLabelSettings);
+  CREATE_LABEL(rotCWLabel, 0, 450, 220, 60, rotCWLabelSettings);
+  CREATE_LABEL(rotACWLabel, 0, 520, 220, 60, rotACWLabelSettings);
+  
+  CREATE_BUTTON(holdBindButton, 250, 100, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(downBindButton, 250, 170, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(rightBindButton, 250, 240, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(leftBindButton, 250, 310, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(dropBindButton, 250, 380, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(rotCWBindButton, 250, 450, 220, 60, keybindButtonSettings);
+  CREATE_BUTTON(rotACWBindButton, 250, 520, 220, 60, keybindButtonSettings);
+  
+  
+  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS));
+
+  holdBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, HOLD, KeyCommand));
+  downBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, DOWN, KeyCommand));
+  rightBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, RIGHT, KeyCommand));
+  leftBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, LEFT, KeyCommand));
+  dropBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, DROP, KeyCommand));
+  rotCWBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, ROTATE_RIGHT, KeyCommand));
+  rotACWBindButton->BindClick(SET_VALUE(m_CurrentCommandToSwitch, ROTATE_RIGHT, KeyCommand));
+
+  m_HoldBindButton = holdBindButton;
+  m_DownBindButton = downBindButton;
+  m_RightBindButton = rightBindButton;
+  m_LeftBindButton = leftBindButton;
+  m_DropBindButton = dropBindButton;
+  m_RotCWBindButton = rotCWBindButton;
+  m_RotACWBindButton = rotACWBindButton;
+  
+  /* Starting Music */
+  Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
+}
+
+void Player1ControlSettingsScreen::HandleEvents(SDL_Event* event) {
+  Screen::HandleEvents(event);
+
+  if (m_CurrentCommandToSwitch != NONE && event->type == SDL_EVENT_KEY_DOWN) {
+    LOG_TRACE("Current switch " + std::to_string((int) m_CurrentCommandToSwitch));
+    switch (m_CurrentCommandToSwitch) {
+      case HOLD:
+        m_Context->player1KeyBindings.hold = event->key.key;
+        break;
+      case DOWN:
+        m_Context->player1KeyBindings.down = event->key.key;
+        break;
+      case RIGHT:
+        m_Context->player1KeyBindings.right = event->key.key;
+        break;
+      case LEFT:
+        m_Context->player1KeyBindings.left = event->key.key;
+        break;
+      case DROP:
+        m_Context->player1KeyBindings.drop = event->key.key;
+        break;
+      case ROTATE_RIGHT:
+        m_Context->player1KeyBindings.rotateRight = event->key.key;
+        break;
+      case ROTATE_LEFT:
+        m_Context->player1KeyBindings.rotateLeft = event->key.key;
+        break;
+      default:
+        break;
+    }
+
+    m_CurrentCommandToSwitch = NONE;
+  }
+}
+
+void Player1ControlSettingsScreen::Update() {
+  Screen::Update();
+
+  m_HoldBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.hold));
+  m_DownBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.down));
+  m_RightBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.right));
+  m_LeftBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.left));
+  m_DropBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.drop));
+  m_RotCWBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.rotateRight));
+  m_RotACWBindButton->UpdateText(KeyCodeToString(m_Context->player1KeyBindings.rotateLeft));
 }

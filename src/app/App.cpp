@@ -34,16 +34,11 @@ App::App(int width, int height)
   // Allows for use of the alpha color channel
   SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 
-  std::shared_ptr<AppContext> context = std::make_shared<AppContext>();
-  context->playMaster = true;
-  context->playMusic = true;
-  context->playSoundEffects = true;
-  context->masterVolume = APP_MAX_VOLUME; 
-  context->musicVolume = APP_MAX_VOLUME;
-  context->soundEffectsVolume = APP_MAX_VOLUME;
+  m_Context = std::make_shared<AppContext>();
+  InitContext();
 
   m_ResourceManager = std::make_shared<ResourceManager>();
-  m_ScreenManager = std::make_shared<ScreenManager>(m_Width, m_Height, context, m_ResourceManager);
+  m_ScreenManager = std::make_shared<ScreenManager>(m_Width, m_Height, m_Context, m_ResourceManager);
 
   LoadResources();
 }
@@ -97,6 +92,33 @@ void App::Run() {
       LOG_INFO("FPS " + std::to_string(fps));
     }
   }
+}
+
+void App::InitContext() {
+  /* Sound Settings */
+  m_Context->playMaster         = true;
+  m_Context->playMusic          = true;
+  m_Context->playSoundEffects   = true;
+  m_Context->masterVolume       = APP_MAX_VOLUME; 
+  m_Context->musicVolume        = APP_MAX_VOLUME;
+  m_Context->soundEffectsVolume = APP_MAX_VOLUME;
+
+  /* KeyBindings */
+  m_Context->player1KeyBindings.hold        = SDLK_RSHIFT;
+  m_Context->player1KeyBindings.down        = SDLK_DOWN;
+  m_Context->player1KeyBindings.right       = SDLK_RIGHT;
+  m_Context->player1KeyBindings.left        = SDLK_LEFT;
+  m_Context->player1KeyBindings.drop        = SDLK_SPACE;
+  m_Context->player1KeyBindings.rotateRight = SDLK_UP;
+  m_Context->player1KeyBindings.rotateLeft  = SDLK_RETURN;
+  
+  m_Context->player2KeyBindings.hold        = SDLK_C;
+  m_Context->player2KeyBindings.down        = SDLK_S;
+  m_Context->player2KeyBindings.right       = SDLK_D;
+  m_Context->player2KeyBindings.left        = SDLK_A;
+  m_Context->player2KeyBindings.drop        = SDLK_Q;
+  m_Context->player2KeyBindings.rotateRight = SDLK_W;
+  m_Context->player2KeyBindings.rotateLeft  = SDLK_Z;
 }
 
 void App::LoadResources() {

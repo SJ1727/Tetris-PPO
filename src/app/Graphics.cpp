@@ -23,10 +23,13 @@ SDL_Texture* CreateTextTexture(SDL_Renderer* renderer, std::string text, TTF_Fon
 
 Uint32 SDLColorToUint(SDL_Color color) {
   Uint32 colorUint = 0;
+  
+  // Setting the bits into the format RRGGBBAA
   colorUint |= color.r << 24;
   colorUint |= color.g << 16;
   colorUint |= color.b << 8;
   colorUint |= color.a;
+
   return colorUint;
 }
 
@@ -82,7 +85,7 @@ SDL_Surface* CreateFilledCircle(int radius, SDL_Color color) {
 void FilledSurfaceCircle(SDL_Surface* surface, int x, int y, int radius, SDL_Color color) {
   int dx, dy;
 
-  // O(n^2) probs better way of doing it
+  // Fills in all pixels a set distances  away from a central point
   for (int w = 0; w < 2 * radius; w++) {
     for (int h = 0; h < 2 * radius; h++) {
       dx = radius - w;
