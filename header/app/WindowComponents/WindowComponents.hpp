@@ -9,5 +9,6 @@
 #include "app/WindowComponents/Line.hpp"
 #include "app/WindowComponents/Image.hpp"
 #include "app/WindowComponents/Animation.hpp"
+#include "app/WindowComponents/TetrisBoardDisplay.hpp"
 
 #endif // !WINDOW_COMPONENTS_H

@@ -44,6 +44,7 @@ public:
   std::string GetBoardAsString();
 
   std::array<TetrominoType, BOARD_SIZE> GetBoard();
+  inline TetrominoType GetBoardPositionType(int x, int y) { return m_Board[BoardPositionToIndex(x, y)]; }
   inline TetrominoType GetHeldTetrominoType() { return m_HeldTetrominoType; }
   inline int GetScore()                       { return m_Score; }
   inline int GetLevel()                       { return m_Level; }
@@ -55,7 +56,6 @@ private:
   TetrominoType GetNextTetrominoType();
   void SetCurrentTetrominoByType(TetrominoType type);
 
-  inline TetrominoType GetBoardPositionType(int x, int y)            { return m_Board[BoardPositionToIndex(x, y)]; }
   inline void SetBoardPositionType(int x, int y, TetrominoType type) { m_Board[BoardPositionToIndex(x, y)] = type; }
   void PlaceTetromino(Tetromino tetromino);
 

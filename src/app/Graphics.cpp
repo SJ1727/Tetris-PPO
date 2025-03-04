@@ -49,7 +49,8 @@ SDL_Surface* CreateSingleColorSurface(int width, int height, SDL_Color color) {
 SDL_Surface* CreateRoundedRectangleSurface(int width, int height, std::array<int, 4> radius, SDL_Color color) {
   SDL_Surface* surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
 
-   if ((radius[0] + radius[1]) > width || (radius[2] + radius[3]) > height) {
+  // Checks if the provideddimensions for the rounded rectangle are correct
+  if ((radius[0] + radius[1]) > width || (radius[2] + radius[3]) > height) {
     LOG_ERROR("Cannot create rounded rectanlge with width=" + std::to_string(width) +  "height=" + std::to_string(height));
     return surface;
   }
