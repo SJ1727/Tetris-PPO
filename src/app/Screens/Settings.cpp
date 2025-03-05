@@ -17,7 +17,7 @@ void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   SetButtonStyle(&volumeButtonSettings, RIGHT_CORNER_RADIUS(20));
   volumeButtonSettings.text = "Volume";
   volumeButtonSettings.font = resourceManager->GetFont("Font 32");
-  
+
   ButtonSettings controlButtonSettings;
   SetButtonStyle(&controlButtonSettings, RIGHT_CORNER_RADIUS(20));
   controlButtonSettings.text = "Controls";

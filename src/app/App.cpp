@@ -119,6 +119,12 @@ void App::InitContext() {
   m_Context->player2KeyBindings.drop        = SDLK_Q;
   m_Context->player2KeyBindings.rotateRight = SDLK_W;
   m_Context->player2KeyBindings.rotateLeft  = SDLK_Z;
+  
+  m_Context->singlePlayerEngine = new TetrisEngine();
+  m_Context->localPlayer1Engine = new TetrisEngine();
+  m_Context->localPlayer2Engine = new TetrisEngine();
+  m_Context->versusPlayerEngine = new TetrisEngine();
+  m_Context->aiPlayerEngine     = new TetrisEngine();
 }
 
 void App::LoadResources() {

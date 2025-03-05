@@ -2,12 +2,42 @@
 
 void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
   SetBackgroundColor(BACKGROUND_COLOR);
+  
+  /* Defining components settings */
+  ButtonSettings returnButtonSettings;
+  SetButtonStyle(&returnButtonSettings, BOTTOM_CORNER_RADIUS(20));
+  returnButtonSettings.imageDefault = { resourceManager->GetImage("Return Icon"), 40, 40 };
 
-  auto board = new TetrisBoardDisplay(20, 20, 100, 200, new TetrisEngine(), m_Context->player1KeyBindings);
+  LabelSettings heldTetrominoLabelSettings;
+  SetLabelStyle(&heldTetrominoLabelSettings, LEFT_CORNER_RADIUS(20));
+  heldTetrominoLabelSettings.imageDefault = nullptr;
+
+  /* Create components */
+  auto board = new TetrisBoardDisplay(270, 40, 260, 520, m_Context->singlePlayerEngine, m_Context->player1KeyBindings);
   Link(board, "Board");
+  
+  CREATE_BUTTON(returnButton, 640, 520, 80, 80, returnButtonSettings); 
+  CREATE_LABEL(heldTetrominoLabel, 0, 40, 230, 160, heldTetrominoLabelSettings);
 
-  auto board2 = new TetrisBoardDisplay(220, 20, 100, 200, new TetrisEngine(), m_Context->player2KeyBindings);
-  Link(board2, "Board2");
+  m_HeldTetrominoLabel = heldTetrominoLabel;
+  
+  /* Create Animations */
+  CREATE_ANIMATION(returnButtonAnimation, AnimateButtonStretchUp, returnButton, 10, 300);
+  
+  /* Adding bindings to components */
+  returnButton->AddHoverAnimation(returnButtonAnimation);
+  
+  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
+
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Game Music"), -1);
+}
+  
+void SinglePlayerGameScreen::UpdateHeldTetrominoLabel() {
+  TetrominoType heldTetrominoType = m_Context->singlePlayerEngine->GetHeldTetrominoType();
+
+  switch (heldTetrominoType) {
+    case O:
+      m_HeldTetrominoLabel->
+  }
 }

@@ -3,6 +3,9 @@
 #include "engine/TetrisEngine.hpp"
 #include "app/KeyBindings.hpp"
 
+#define FRAME_RATE 60
+#define FRAME_DELAY (1000 / FRAME_RATE)
+
 class TetrisBoardDisplay : public Component {
 public:
   TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine, KeyBindings controls);
@@ -24,6 +27,5 @@ private:
   TetrisEngine* m_TetrisEngine;
   KeyBindings m_Controls;
 
-  static constexpr int s_Columns = 10;
-  static constexpr int s_Rows = 20;
+  Uint32 m_FrameStart;
 };

@@ -2,7 +2,7 @@
 
 TetrisBoardDisplay::TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine, KeyBindings controls) :
   m_X(x), m_Y(y), m_Width(width), m_Height(height), m_TetrisEngine(tetrisEngine), m_Controls(controls) {
-
+  m_FrameStart = SDL_GetTicks();
 }
 
 void TetrisBoardDisplay::Render(SDL_Renderer* renderer) {
@@ -17,19 +17,19 @@ void TetrisBoardDisplay::Render(SDL_Renderer* renderer) {
 }
 
 void TetrisBoardDisplay::DrawGrid(SDL_Renderer* renderer) {
-  int cellWidth = m_Width / s_Columns;
-  int cellHeight = m_Height / s_Rows;
+  int cellWidth = m_Width / BOARD_WIDTH;
+  int cellHeight = m_Height / BOARD_HEIGHT;
 
   SDL_SetRenderDrawColor(renderer, 22, 22, 22, 255);
     
   // Draw vertical lines
-  for (int i = 0; i <= s_Columns; i++) {
+  for (int i = 0; i <= BOARD_WIDTH; i++) {
     int x = i * cellWidth;
     SDL_RenderLine(renderer, i * cellWidth + m_X, m_Y, i * cellWidth + m_X, m_Height + m_Y);
   }
     
   // Draw horizontal lines
-  for (int i = 0; i <= s_Rows; i++) {
+  for (int i = 0; i <= BOARD_HEIGHT; i++) {
     int y = i * cellHeight;
     SDL_RenderLine(renderer, m_X, i * cellHeight + m_Y, m_Width + m_X, i * cellHeight + m_Y);
   }
@@ -39,16 +39,17 @@ void TetrisBoardDisplay::DrawCells(SDL_Renderer* renderer) {
   SDL_FRect cellRect;
   SDL_Color cellColor;
   auto board = m_TetrisEngine->GetBoard(); 
-  int cellWidth = m_Width / s_Columns;
-  int cellHeight = m_Height / s_Rows;
+  int cellWidth = m_Width / BOARD_WIDTH;
+  int cellHeight = m_Height / BOARD_HEIGHT;
 
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-  for (int i = 0; i < s_Columns; i++) {
-    for (int j = 0; j < s_Rows; j++) {
-      cellColor = TetrominoTypeToColor(board[j * s_Columns + i]);
-      cellRect = CreateFRect(m_X + cellWidth * i, m_Y + cellHeight * j, cellWidth, cellHeight);
-      
+  for (int i = 0; i < BOARD_WIDTH; i++) {
+    for (int j = 0; j < BOARD_HEIGHT; j++) {
+      cellColor = TetrominoTypeToColor(board[j * BOARD_WIDTH + i]);
+      cellRect = CreateFRect(m_X + cellWidth * i + 1, m_Y + cellHeight * j + 1, cellWidth - 2, cellHeight - 2);
+     
+      // Draws cell with color
       SDL_SetRenderDrawColor(renderer, cellColor.r, cellColor.g, cellColor.b, cellColor.a);
       SDL_RenderFillRect(renderer, &cellRect);
     }
@@ -90,5 +91,12 @@ void TetrisBoardDisplay::HandleEvents(SDL_Event* event) {
 }
 
 void TetrisBoardDisplay::Update() {
+  Uint32 frameTime = SDL_GetTicks() - m_FrameStart;
+
+  if (FRAME_DELAY > frameTime) {
+    SDL_Delay(FRAME_DELAY - frameTime);
+  }
+ 
+  m_FrameStart = SDL_GetTicks();
   m_TetrisEngine->Update();
 }
