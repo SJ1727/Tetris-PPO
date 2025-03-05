@@ -17,6 +17,9 @@ private:
 private:
   Label* m_HeldTetrominoLabel;
   Label* m_NextTetrominoLabel;
+  Label* m_scoreLabel;
+  Label* m_linesClearedLabel;
+  Label* m_levelLabel;
 
   Image m_ITetromino;
   Image m_JTetromino;

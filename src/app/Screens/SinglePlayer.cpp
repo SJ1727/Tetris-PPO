@@ -20,7 +20,7 @@ void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, 
   SetLabelStyle(&heldTetrominoLabelSettings, LEFT_CORNER_RADIUS(20));
   
   LabelSettings heldTetrominoTextLabelSettings;
-  heldTetrominoTextLabelSettings.text = "HOLD";
+  heldTetrominoTextLabelSettings.text = "Hold";
   heldTetrominoTextLabelSettings.textColor = WHITE;
   heldTetrominoTextLabelSettings.font = resourceManager->GetFont("Font 32");
 
@@ -28,9 +28,43 @@ void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, 
   SetLabelStyle(&nextTetrominoLabelSettings, RIGHT_CORNER_RADIUS(20));
 
   LabelSettings nextTetrominoTextLabelSettings;
-  nextTetrominoTextLabelSettings.text = "NEXT";
+  nextTetrominoTextLabelSettings.text = "Next Tetromino";
   nextTetrominoTextLabelSettings.textColor = WHITE;
   nextTetrominoTextLabelSettings.font = resourceManager->GetFont("Font 32");
+
+  LabelSettings gameInfomationBackgroundSettings;
+  SetLabelStyle(&gameInfomationBackgroundSettings, LEFT_CORNER_RADIUS(20));
+
+  LabelSettings scoreLabelSettings;
+  scoreLabelSettings.text = "Score";
+  scoreLabelSettings.textColor = WHITE;
+  scoreLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings scoreNumberLabelSettings;
+  scoreNumberLabelSettings.text = "0";
+  scoreNumberLabelSettings.textColor = WHITE;
+  scoreNumberLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings linesClearedLabelSettings;
+  linesClearedLabelSettings.text = "Lines Cleared";
+  linesClearedLabelSettings.textColor = WHITE;
+  linesClearedLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings linesClearedNumberLabelSettings;
+  linesClearedNumberLabelSettings.text = "0";
+  linesClearedNumberLabelSettings.textColor = WHITE;
+  linesClearedNumberLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings levelLabelSettings;
+  levelLabelSettings.text = "Level";
+  levelLabelSettings.textColor = WHITE;
+  levelLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings levelNumberLabelSettings;
+  levelNumberLabelSettings.text = "0";
+  levelNumberLabelSettings.textColor = WHITE;
+  levelNumberLabelSettings.font = resourceManager->GetFont("Font 32");
+
 
   /* Create components */
   auto board = new TetrisBoardDisplay(270, 40, 260, 520, m_Context->singlePlayerEngine, m_Context->player1KeyBindings);
@@ -44,8 +78,24 @@ void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, 
   CREATE_LABEL(nextTetrominoLabel, 570, 40, 230, 160, nextTetrominoLabelSettings);
   CREATE_LABEL(nextTetrominoTextLabel, 570, 0, 230, 160, nextTetrominoTextLabelSettings);
 
+  CREATE_LABEL(gameInfomationBackground, 0, 240, 230, 330, gameInfomationBackgroundSettings);
+  CREATE_LINE(gameInfomationLine1, 0, 350, 240, 350, BACKGROUND_COLOR);
+  CREATE_LINE(gameInfomationLine2, 0, 460, 240, 460, BACKGROUND_COLOR);
+
+  CREATE_LABEL(scoreLabel, 0, 220, 230, 110, scoreLabelSettings);
+  CREATE_LABEL(scoreNumberLabel, 0, 260, 230, 110, scoreNumberLabelSettings);
+
+  CREATE_LABEL(linesClearedLabel, 0, 330, 230, 110, linesClearedLabelSettings);
+  CREATE_LABEL(linesClearedNumberLabel, 0, 370, 230, 110, linesClearedNumberLabelSettings);
+
+  CREATE_LABEL(levelLabel, 0, 440, 230, 110, levelLabelSettings);
+  CREATE_LABEL(levelNumberLabel, 0, 480, 230, 100, levelNumberLabelSettings);
+
   m_HeldTetrominoLabel = heldTetrominoLabel;
   m_NextTetrominoLabel = nextTetrominoLabel;
+  m_scoreLabel = scoreNumberLabel;
+  m_linesClearedLabel = linesClearedNumberLabel;
+  m_levelLabel = levelNumberLabel;
   
   /* Create Animations */
   CREATE_ANIMATION(returnButtonAnimation, AnimateButtonStretchUp, returnButton, 10, 300);
@@ -63,6 +113,16 @@ void SinglePlayerGameScreen::Update() {
   UpdateNextTetrominoLabel();
   
   UpdateHeldTetrominoLabel();
+
+  m_scoreLabel->UpdateText(
+    std::to_string(m_Context->singlePlayerEngine->GetScore())
+  );
+  m_linesClearedLabel->UpdateText(
+    std::to_string(m_Context->singlePlayerEngine->GetLinesCleared())
+  );
+  m_levelLabel->UpdateText(
+    std::to_string(m_Context->singlePlayerEngine->GetLevel())
+  );
 
   Screen::Update();
 }

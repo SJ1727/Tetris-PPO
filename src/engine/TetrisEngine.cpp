@@ -68,6 +68,8 @@ void TetrisEngine::Update() {
 
     ClearLines();
   }
+
+  m_Level = m_LinesCleared / LINES_PER_LEVEL; 
   
   m_TotalFrameCount++;
 }

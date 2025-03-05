@@ -19,6 +19,8 @@
 
 #define RELATIVE_TIME_UNTIL_LOCK 1
 
+#define LINES_PER_LEVEL 10
+
 #define LINE_CLEAR_BONUS 5
 #define LINE_HEIGHT_LIMIT 7
 #define LINE_HEIGHT_LIMIT_PENALTY 20
@@ -49,6 +51,7 @@ public:
   inline TetrominoType PeakNextTetrominoType() { return m_NextTetrominoBag.front(); }
   inline int GetScore()                        { return m_Score; }
   inline int GetLevel()                        { return m_Level; }
+  inline int GetLinesCleared()                 { return m_LinesCleared; }
 
   std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> GetGameState();
 
