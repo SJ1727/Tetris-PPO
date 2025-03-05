@@ -45,9 +45,10 @@ public:
 
   std::array<TetrominoType, BOARD_SIZE> GetBoard();
   inline TetrominoType GetBoardPositionType(int x, int y) { return m_Board[BoardPositionToIndex(x, y)]; }
-  inline TetrominoType GetHeldTetrominoType() { return m_HeldTetrominoType; }
-  inline int GetScore()                       { return m_Score; }
-  inline int GetLevel()                       { return m_Level; }
+  inline TetrominoType GetHeldTetrominoType()  { return m_HeldTetrominoType; }
+  inline TetrominoType PeakNextTetrominoType() { return m_NextTetrominoBag.front(); }
+  inline int GetScore()                        { return m_Score; }
+  inline int GetLevel()                        { return m_Level; }
 
   std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> GetGameState();
 

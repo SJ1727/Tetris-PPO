@@ -136,6 +136,14 @@ void App::LoadResources() {
   m_ResourceManager->LoadImage("resources/images/return_icon.png", "Return Icon");
   m_ResourceManager->LoadImage("resources/images/settings_icon.png", "Settings Icon");
   m_ResourceManager->LoadImage("resources/images/question_mark.png", "Question Mark Icon");
+
+  m_ResourceManager->LoadImage("resources/images/I_Tetromino.png", "I Tetromino");
+  m_ResourceManager->LoadImage("resources/images/J_Tetromino.png", "J Tetromino");
+  m_ResourceManager->LoadImage("resources/images/L_Tetromino.png", "L Tetromino");
+  m_ResourceManager->LoadImage("resources/images/O_Tetromino.png", "O Tetromino");
+  m_ResourceManager->LoadImage("resources/images/S_Tetromino.png", "S Tetromino");
+  m_ResourceManager->LoadImage("resources/images/T_Tetromino.png", "T Tetromino");
+  m_ResourceManager->LoadImage("resources/images/Z_Tetromino.png", "Z Tetromino");
   
   m_ResourceManager->LoadSoundEffect("resources/sound/Click1.wav", "Button Click");
   

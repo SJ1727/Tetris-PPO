@@ -31,6 +31,7 @@ public:
   void HandleEvents(SDL_Event* event) override;
   
   inline void UpdateText(std::string text) { m_DisplayText = text; }
+  inline void UpdateImage(Image image) { m_Image = image; }
   inline void UpdatePositionX(int x) { m_X = x; }
   inline void UpdatePositionY(int y) { m_Y = y; }
   inline void UpdateWidth(int width) { m_Width = width; }
