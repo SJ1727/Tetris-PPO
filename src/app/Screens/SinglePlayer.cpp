@@ -67,7 +67,7 @@ void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, 
 
 
   /* Create components */
-  auto board = new TetrisBoardDisplay(270, 40, 260, 520, m_Context->singlePlayerEngine, m_Context->player1KeyBindings);
+  auto board = new PlayerTetrisBoardDisplay(270, 40, 260, 520, m_Context->singlePlayerEngine, m_Context->player1KeyBindings);
   Link(board, "Board");
   
   CREATE_BUTTON(returnButton, 640, 520, 80, 80, returnButtonSettings); 

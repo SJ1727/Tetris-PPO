@@ -1,3 +1,6 @@
+#ifndef TETRIS_BOARD_DISPLAY_H 
+#define TETRIS_BOARD_DISPLAY_H
+
 #include "app/Graphics.hpp"
 #include "app/WindowComponents/Component.hpp"
 #include "engine/TetrisEngine.hpp"
@@ -8,12 +11,11 @@
 
 class TetrisBoardDisplay : public Component {
 public:
-  TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine, KeyBindings controls);
+  TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine);
   virtual ~TetrisBoardDisplay() = default;
 
   void Render(SDL_Renderer* renderer) override;
-  void HandleEvents(SDL_Event* event) override;
-  void Update() override;
+  virtual void Update() override;
 
 private:
   void DrawGrid(SDL_Renderer* renderer);
@@ -21,11 +23,14 @@ private:
 
   SDL_Color TetrominoTypeToColor(TetrominoType type);
 
+protected:
+  TetrisEngine* m_TetrisEngine;
+
 private:
   int m_X, m_Y;
   int m_Width, m_Height;
-  TetrisEngine* m_TetrisEngine;
-  KeyBindings m_Controls;
 
   Uint32 m_FrameStart;
 };
+
+#endif // !TETRIS_BOARD_DISPLAY_H

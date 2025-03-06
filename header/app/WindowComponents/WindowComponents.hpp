@@ -10,5 +10,7 @@
 #include "app/WindowComponents/Image.hpp"
 #include "app/WindowComponents/Animation.hpp"
 #include "app/WindowComponents/TetrisBoardDisplay.hpp"
+#include "app/WindowComponents/PlayerTetrisBoardDisplay.hpp"
+#include "app/WindowComponents/AITetrisBoardDisplay.hpp"
 
 #endif // !WINDOW_COMPONENTS_H

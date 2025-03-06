@@ -1,7 +1,7 @@
 #include "app/WindowComponents/TetrisBoardDisplay.hpp"
 
-TetrisBoardDisplay::TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine, KeyBindings controls) :
-  m_X(x), m_Y(y), m_Width(width), m_Height(height), m_TetrisEngine(tetrisEngine), m_Controls(controls) {
+TetrisBoardDisplay::TetrisBoardDisplay(int x, int y, int width, int height, TetrisEngine* tetrisEngine) :
+  m_X(x), m_Y(y), m_Width(width), m_Height(height), m_TetrisEngine(tetrisEngine) {
   m_FrameStart = SDL_GetTicks();
 }
 
@@ -75,19 +75,6 @@ SDL_Color TetrisBoardDisplay::TetrominoTypeToColor(TetrominoType type) {
     default:
       return { 0, 0, 0, 0 };
   }
-}
-
-void TetrisBoardDisplay::HandleEvents(SDL_Event* event) {
-  if (event->type != SDL_EVENT_KEY_DOWN) { return; }
-
-  // Maps the keyboard input to the corresponding move in the tetris game depending on  the keybindings
-  if (event->key.key == m_Controls.right)             { m_TetrisEngine->SetNextMove(RIGHT); }
-  else if (event->key.key == m_Controls.left)         { m_TetrisEngine->SetNextMove(LEFT); }
-  else if (event->key.key == m_Controls.down)         { m_TetrisEngine->SetNextMove(DOWN); }
-  else if (event->key.key == m_Controls.rotateRight)  { m_TetrisEngine->SetNextMove(ROTATE_RIGHT); }
-  else if (event->key.key == m_Controls.rotateLeft)   { m_TetrisEngine->SetNextMove(ROTATE_LEFT); }
-  else if (event->key.key == m_Controls.drop)         { m_TetrisEngine->SetNextMove(DROP); }
-  else if (event->key.key == m_Controls.hold)         { m_TetrisEngine->SetNextMove(HOLD); }
 }
 
 void TetrisBoardDisplay::Update() {

@@ -52,6 +52,7 @@ public:
   inline int GetScore()                        { return m_Score; }
   inline int GetLevel()                        { return m_Level; }
   inline int GetLinesCleared()                 { return m_LinesCleared; }
+  inline int HasToppedOut()                    { return m_ToppedOut; }
 
   std::tuple<std::array<int, BOARD_SIZE>, std::array<int, NUM_TETROMINO_TYPES + 1>, float, bool> GetGameState();
 
@@ -87,7 +88,7 @@ private:
   int m_LinesCleared;
   int m_Score;
   int m_ScoreThisFrame;
-  uint8_t m_Level;
+  int m_Level;
 
   int m_FramesSinceMoveDown;
   int m_FramesSinceFallen;

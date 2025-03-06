@@ -87,6 +87,7 @@ void App::Run() {
 
     if ((currentTime - lastTime) >= SDL_GetPerformanceFrequency()) {
       fps = frames * (float) SDL_GetPerformanceFrequency() / (currentTime - lastTime);
+      m_Context->timePlayedSeconds += (currentTime - lastTime) / (float) SDL_GetPerformanceFrequency();
       lastTime = currentTime;
       frames = 0;
       LOG_INFO("FPS " + std::to_string(fps));
@@ -125,6 +126,10 @@ void App::InitContext() {
   m_Context->localPlayer2Engine = new TetrisEngine();
   m_Context->versusPlayerEngine = new TetrisEngine();
   m_Context->aiPlayerEngine     = new TetrisEngine();
+
+  m_Context->highScore = 0;
+  m_Context->mostLinesCleared = 0;
+  m_Context->timePlayedSeconds = 0;
 }
 
 void App::LoadResources() {

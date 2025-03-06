@@ -15,6 +15,10 @@ typedef struct {
   int musicVolume;
   int soundEffectsVolume;
 
+  int highScore;
+  int mostLinesCleared;
+  float timePlayedSeconds;
+
   KeyBindings player1KeyBindings;
   KeyBindings player2KeyBindings;
 

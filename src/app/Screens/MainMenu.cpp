@@ -43,7 +43,7 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   highScoreLabelSettings.textColor = WHITE;
   
   LabelSettings highScoreNumberLabelSettings;
-  highScoreNumberLabelSettings.text = "xxx";
+  highScoreNumberLabelSettings.text = std::to_string(m_Context->highScore);
   highScoreNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   highScoreNumberLabelSettings.textColor = WHITE;
   
@@ -53,7 +53,7 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   mostLinesLabelSettings.textColor = WHITE;
   
   LabelSettings mostLinesNumberLabelSettings;
-  mostLinesNumberLabelSettings.text = "xxx";
+  mostLinesNumberLabelSettings.text = std::to_string(m_Context->mostLinesCleared);
   mostLinesNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   mostLinesNumberLabelSettings.textColor = WHITE;
   
@@ -63,7 +63,7 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   timePlayedLabelSettings.textColor = WHITE;
   
   LabelSettings timePlayedNumberLabelSettings;
-  timePlayedNumberLabelSettings.text = "xxx";
+  timePlayedNumberLabelSettings.text = std::to_string((double) m_Context->timePlayedSeconds / 3600.0);
   timePlayedNumberLabelSettings.font = resourceManager->GetFont("Font 32");
   timePlayedNumberLabelSettings.textColor = WHITE;
 
