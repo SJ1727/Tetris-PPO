@@ -102,6 +102,7 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   helpButton->AddHoverAnimation(helpButtonAnimation);
 
   singlePlayerButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SINGLE_PLAYER_GAME));
+  localMultiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, LOCAL_MULTI_PLAYER_GAME));
   settingsButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
 
   /* Starting Music */

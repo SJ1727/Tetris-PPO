@@ -34,6 +34,13 @@ App::App(int width, int height)
   // Allows for use of the alpha color channel
   SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 
+  // Opening file which contains game data
+  m_DataFile.open("game.dat", std::ios::binary);
+
+  if (!m_DataFile) {
+    LOG_ERROR("Could not load data file");
+  }
+
   m_Context = std::make_shared<AppContext>();
   InitContext();
 
@@ -51,6 +58,10 @@ App::~App() {
   IMG_Quit();
   TTF_Quit();
   SDL_Quit();
+
+  WriteGameData();
+
+  m_DataFile.close();
 }
 
 void App::Run() {
@@ -95,6 +106,12 @@ void App::Run() {
   }
 }
 
+void App::WriteGameData() {
+  m_DataFile.write(reinterpret_cast<char*>(&m_Context->highScore), sizeof(m_Context->highScore));
+  m_DataFile.write(reinterpret_cast<char*>(&m_Context->mostLinesCleared), sizeof(m_Context->mostLinesCleared));
+  m_DataFile.write(reinterpret_cast<char*>(&m_Context->timePlayedSeconds), sizeof(m_Context->timePlayedSeconds));
+}
+
 void App::InitContext() {
   /* Sound Settings */
   m_Context->playMaster         = true;
@@ -113,11 +130,11 @@ void App::InitContext() {
   m_Context->player1KeyBindings.rotateRight = SDLK_UP;
   m_Context->player1KeyBindings.rotateLeft  = SDLK_RETURN;
   
-  m_Context->player2KeyBindings.hold        = SDLK_C;
+  m_Context->player2KeyBindings.hold        = SDLK_LSHIFT;
   m_Context->player2KeyBindings.down        = SDLK_S;
   m_Context->player2KeyBindings.right       = SDLK_D;
   m_Context->player2KeyBindings.left        = SDLK_A;
-  m_Context->player2KeyBindings.drop        = SDLK_Q;
+  m_Context->player2KeyBindings.drop        = SDLK_C;
   m_Context->player2KeyBindings.rotateRight = SDLK_W;
   m_Context->player2KeyBindings.rotateLeft  = SDLK_Z;
   

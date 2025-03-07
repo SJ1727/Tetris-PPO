@@ -5,11 +5,15 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
+#include <fstream>
+#include <filesystem>
 #include "app/Screens/Screen.hpp"
 #include "app/Screens/ScreenFactory.hpp"
 #include "app/AppContext.hpp"
 #include "app/ResourceManager.hpp"
 #include "log.hpp"
+
+#define DATA_FILE "game.dat"
 
 class App {
 public:
@@ -21,10 +25,13 @@ public:
 private:
   void InitContext();
   void LoadResources();
+  void WriteGameData();
 
 private:
   int m_Width;
   int m_Height;
+
+  std::fstream m_DataFile;
 
   std::shared_ptr<AppContext> m_Context;
   std::shared_ptr<ScreenManager> m_ScreenManager;
