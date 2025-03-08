@@ -101,8 +101,8 @@ void LocalMultiPlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManag
   CREATE_LABEL(heldTetrominoLabel2, 290, 190, 100, 80, heldTetrominoLabelSettings);
   CREATE_LABEL(heldTetrominoTextLabel, 320, 140, 160, 50, heldTetrominoTextLabelSettings);
 
-  CREATE_LABEL(nextTetrominoLabel1, 290, 50, 100, 80, nextTetrominoLabelSettings);
-  CREATE_LABEL(nextTetrominoLabel2, 410, 50, 100, 80, nextTetrominoLabelSettings);
+  CREATE_LABEL(nextTetrominoLabel1, 410, 50, 100, 80, nextTetrominoLabelSettings);
+  CREATE_LABEL(nextTetrominoLabel2, 290, 50, 100, 80, nextTetrominoLabelSettings);
   CREATE_LABEL(nextTetrominoTextLabel, 320, 0, 160, 50, nextTetrominoTextLabelSettings);
 
   CREATE_LABEL(gameInfomationBackground, 280, 0, 240, 490, gameInfomationBackgroundSettings);

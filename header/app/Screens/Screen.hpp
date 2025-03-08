@@ -24,7 +24,7 @@
 #define CREATE_ANIMATION(name, func, ...)  Animation* name = func(__VA_ARGS__); Link(name, #name) 
 
 #define CHANGE_SCREEN(screenManager, screenType) std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS))
-#define SET_VALUE(var, value, type) std::bind([]( type& var, type value ) { var = value; }, var, value)
+#define SET_VALUE(var, value, type) std::bind([](type& var, type value) { var = value; }, std::ref(var), value)
 
 enum ScreenType {
   MAIN_MENU,
