@@ -27,9 +27,6 @@
 #define COVERED_TILE_PENALTY 3
 #define TOP_OUT_PENALTY 100
 
-// If the level is greater than 19, use the same speed as level 19
-constexpr std::array<int, 20> fallingSpeedLookupTable = { 36, 32, 29, 25, 22, 18, 15, 11, 7, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1 };
-
 class TetrisEngine {
 public:
   TetrisEngine();
@@ -46,7 +43,8 @@ public:
   std::string GetBoardAsString();
 
   std::array<TetrominoType, BOARD_SIZE> GetBoard();
-  inline TetrominoType GetBoardPositionType(int x, int y) { return m_Board[BoardPositionToIndex(x, y)]; }
+  inline TetrominoType GetBoardPositionType(int x, int y)       { return m_Board[BoardPositionToIndex(x, y)]; }
+  inline TetrominoType GetBoardPositionType(Position position)  { return m_Board[BoardPositionToIndex(position)]; }
   inline TetrominoType GetHeldTetrominoType()  { return m_HeldTetrominoType; }
   inline TetrominoType PeakNextTetrominoType() { return m_NextTetrominoBag.front(); }
   inline int GetScore()                        { return m_Score; }
@@ -68,6 +66,12 @@ private:
   bool CurrentTetrominoHasFallen();
   void AttemptMoveCurrentPiece(Move move);
 
+  int GetNumberTPeiceFrontFilled();
+  int GetNumberTPeiceBackFilled();
+  bool TSpinCheck(int srsCandidate);
+  bool MiniTSpinCheck(int srsCandidate);
+
+  bool PerfectClear();
   void ClearLines();
   int CalculateScore(int lines);
 
@@ -82,13 +86,17 @@ private:
 
   Tetromino m_CurrentTetromino;
   TetrominoType m_HeldTetrominoType;
-  Move m_NextMove = NO_MOVE;
+  Move m_NextMove;
 
   int m_TotalFrameCount;
   int m_LinesCleared;
   int m_Score;
   int m_ScoreThisFrame;
   int m_Level;
+  
+  bool m_LastMoveDifficult;
+  bool m_TSpinPerformed;
+  bool m_MiniTSpinPerformed;
 
   int m_FramesSinceMoveDown;
   int m_FramesSinceFallen;
@@ -102,5 +110,22 @@ private:
 
   std::mt19937 m_RandomNumberGen;
 };
+
+// If the level is greater than 19, use the same speed as level 19
+constexpr std::array<int, 20> fallingSpeedLookupTable = { 36, 32, 29, 25, 22, 18, 15, 11, 7, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1 };
+
+constexpr std::array<Position, 12> tPeiceBackOffsets = {{
+  {0, 2}, {1, 2}, {2, 2},
+  {0, 0}, {0, 1}, {0, 2},
+  {0, 0}, {1, 0}, {2, 0},
+  {2, 0}, {2, 1}, {2, 2}
+}};
+
+constexpr std::array<Position, 8> tPeiceFrontOffsets = {{
+  {0, 0}, {2, 0},
+  {2, 0}, {2, 2},
+  {0, 2}, {2, 2},
+  {0, 0}, {0, 2}
+}};
 
 #endif // !TETRIS_ENGINE_H

@@ -9,6 +9,8 @@ TetrisEngine::TetrisEngine() {
 void TetrisEngine::Init() {
   std::fill(m_Board.begin(), m_Board.end(), NONE);
 
+  m_NextMove = NO_MOVE;
+  m_LastMoveDifficult = false;
   m_TotalFrameCount = 0;
   m_LinesCleared = 0;
   m_Score = 0;
@@ -112,6 +114,11 @@ void TetrisEngine::AttemptMoveCurrentPiece(Move move) {
 
       if (TetrominoInValidPosition(candidateTetromino)) {
         m_CurrentTetromino = candidateTetromino;
+
+        // Checking for t spins
+        m_TSpinPerformed = TSpinCheck(test);
+        m_MiniTSpinPerformed = MiniTSpinCheck(test);
+
         return;
       }
     }
@@ -209,17 +216,122 @@ void TetrisEngine::ClearLines() {
 
 
 
+int TetrisEngine::GetNumberTPeiceFrontFilled() {
+  int frontFilled = 0;
+
+  // Counting the number of the front cells are filled
+  for (int i = 0; i < 2; i++) {
+    if (GetBoardPositionType(
+      Add(
+        m_CurrentTetromino.GetPosition(),
+        tPeiceFrontOffsets[static_cast<int>(m_CurrentTetromino.GetRotation()) * 2 + i]
+      )) == NONE) {
+      frontFilled += 1;
+    }
+  }
+
+  return frontFilled;
+}
+
+
+
+int TetrisEngine::GetNumberTPeiceBackFilled() {
+  int backFilled = 0;
+
+  // Counting the number of the back cells are filled
+  for (int i = 0; i < 3; i++) {
+    if (GetBoardPositionType(
+      Add(
+        m_CurrentTetromino.GetPosition(),
+        tPeiceBackOffsets[static_cast<int>(m_CurrentTetromino.GetRotation()) * 3 + i]
+      )) == NONE) {
+      backFilled += 1;
+    }
+  }
+
+  return backFilled;
+}
+
+
+
+bool TetrisEngine::TSpinCheck(int srsCandiate) {
+  if (m_CurrentTetromino.GetType() != T) { return false; }
+
+  if (MiniTSpinCheck(srsCandiate) && srsCandiate == 4) { return true; }
+
+  return (GetNumberTPeiceFrontFilled() == 2 && GetNumberTPeiceBackFilled() == 1);
+}
+
+
+
+bool TetrisEngine::MiniTSpinCheck(int srsCandiate) {
+  if (m_CurrentTetromino.GetType() != T) { return false; }
+
+  return (GetNumberTPeiceFrontFilled() == 1 && GetNumberTPeiceBackFilled() == 2 && srsCandiate != 4);
+}
+
+
+
+bool TetrisEngine::PerfectClear() {
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    if (m_Board[i] != NONE) { return false; }
+  }
+
+  return true;
+}
+
+
 int TetrisEngine::CalculateScore(int linesCleared) {
+  int perfectClearFactor = PerfectClear() ? 4 : 1;
+  float difficultMoveFactor = m_LastMoveDifficult ? 1.5 : 1;
+  
+  // Calculating score if a T-Spin was performed
+  if (m_TSpinPerformed) {
+    m_LastMoveDifficult = true;
+
+    switch (linesCleared) {
+      case 3:
+        return 1600 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
+      case 2:
+        return 1200 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
+      case 1:
+        return 800 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
+      default:
+        return 0;
+    }
+  }
+
+  // Calculating score if a mini T-Spin was performed
+  if (m_MiniTSpinPerformed) {
+    switch (linesCleared) {
+      case 2:
+        m_LastMoveDifficult = true;
+        return 400 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
+      case 1:
+        m_LastMoveDifficult = true;
+        return 200 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
+      default:
+        m_LastMoveDifficult = false;
+        return 0;
+    }
+  }
+
+  // Calculating score for default case
   switch (linesCleared) {
     case 4:
-      return 800 * (m_Level + 1);
+      m_LastMoveDifficult = true;
+      return 800 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
     case 3:
-      return 500 * (m_Level + 1);
+      m_LastMoveDifficult = false;
+      return 500 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
     case 2:
-      return 300 * (m_Level + 1);
+      m_LastMoveDifficult = false;
+      return 300 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
     case 1:
-      return 100 * (m_Level + 1);
+      m_LastMoveDifficult = false;
+      return 100 * (m_Level + 1) * perfectClearFactor * difficultMoveFactor;
     default:
+      m_LastMoveDifficult = false;
       return 0;
   }
 } 
@@ -365,7 +477,7 @@ void TetrisEngine::RefillBag() {
 void TetrisEngine::SetCurrentTetrominoByType(TetrominoType type) {
   m_FramesSinceFallen = 0;
   m_FramesSinceMoveDown = 0;
-  
+
   m_CurrentTetromino = { type, ROTATION_0, {BOARD_WIDTH / 2 - 2, 0} };
 
   if (!TetrominoInValidPosition(m_CurrentTetromino)) { m_ToppedOut = true; }
