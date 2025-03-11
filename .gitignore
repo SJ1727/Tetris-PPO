@@ -20,3 +20,5 @@ vendor/SDL_mixer
 vendor/SDL_ttf
 vendor/spdlog
 vendor/pybind11
+vendor/onnx
+vendor/onnx-install
