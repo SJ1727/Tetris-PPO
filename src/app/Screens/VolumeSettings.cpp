@@ -82,7 +82,7 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   CREATE_BUTTON(muteMusicVolumeButton, 580, 260, 220, 80, muteButtonSettings);
   CREATE_BUTTON(muteSoundEffectsVolumeButton, 580, 390, 220, 80, muteButtonSettings);
 
-
+  /* Adding bindings to components */
   returnButton->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
   
   resetButton->BindClick(std::bind(resetVolume, m_Context));

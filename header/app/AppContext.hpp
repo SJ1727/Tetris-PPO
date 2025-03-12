@@ -19,6 +19,8 @@ typedef struct {
   int mostLinesCleared;
   float timePlayedSeconds;
 
+  float aiTemperture;
+
   KeyBindings player1KeyBindings;
   KeyBindings player2KeyBindings;
 

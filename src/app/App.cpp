@@ -164,6 +164,8 @@ void App::InitContext() {
   m_Context->versusPlayerEngine = new TetrisEngine();
   m_Context->aiPlayerEngine     = new TetrisEngine();
 
+  m_Context->aiTemperture = 1;
+
   dataFile.close();
 }
 
@@ -171,7 +173,7 @@ void App::LoadResources() {
   m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 25, "Font 25");
   m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 32, "Font 32");
   m_ResourceManager->LoadFont("resources/font/Jersey10-Regular.ttf", 70, "Font 70");
-  m_ResourceManager->LoadFont("resources/font/JetBrainsMonoNerdFont-Medium.ttf", 15, "Text Field Font 15");
+  m_ResourceManager->LoadFont("resources/font/JetBrainsMonoNerdFont-Medium.ttf", 20, "Text Field Font 20");
   
   m_ResourceManager->LoadImage("resources/images/return_icon.png", "Return Icon");
   m_ResourceManager->LoadImage("resources/images/settings_icon.png", "Settings Icon");
