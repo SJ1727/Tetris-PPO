@@ -51,16 +51,17 @@ void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   CREATE_ANIMATION(resetDataButtonAnimation, AnimateButtonStretchRight, resetDataButton, 30, 300);
 
   /* Adding bindings to components */
-  returnButton->AddHoverAnimation(returnButtonAnimation);
-  volumeButton->AddHoverAnimation(volumeButtonAnimation);
-  controlButton->AddHoverAnimation(controlButtonAnimation);
-  aiButton->AddHoverAnimation(aiButtonAnimation);
-  resetDataButton->AddHoverAnimation(resetDataButtonAnimation);
+  returnButton    ->AddHoverAnimation(returnButtonAnimation);
+  volumeButton    ->AddHoverAnimation(volumeButtonAnimation);
+  controlButton   ->AddHoverAnimation(controlButtonAnimation);
+  aiButton        ->AddHoverAnimation(aiButtonAnimation);
+  resetDataButton ->AddHoverAnimation(resetDataButtonAnimation);
 
-  returnButton->BindClick(CHANGE_SCREEN(screenManager, MAIN_MENU));
-  volumeButton->BindClick(CHANGE_SCREEN(screenManager, VOLUME_SETTINGS));
-  controlButton->BindClick(CHANGE_SCREEN(screenManager, CONTROL_SETTINGS));
-  aiButton->BindClick(CHANGE_SCREEN(screenManager, AI_SETTINGS));
+  returnButton    ->BindClick(CHANGE_SCREEN(screenManager, MAIN_MENU));
+  volumeButton    ->BindClick(CHANGE_SCREEN(screenManager, VOLUME_SETTINGS));
+  controlButton   ->BindClick(CHANGE_SCREEN(screenManager, CONTROL_SETTINGS));
+  aiButton        ->BindClick(CHANGE_SCREEN(screenManager, AI_SETTINGS));
+  resetDataButton ->BindClick(CHANGE_SCREEN(screenManager, RESET_DATA));
   
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

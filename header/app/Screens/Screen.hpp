@@ -36,7 +36,8 @@ enum ScreenType {
   PLAYER_1_CONTROL_SETTINGS,
   PLAYER_2_CONTROL_SETTINGS,
   LOCAL_MULTI_PLAYER_GAME,
-  VERSUS_AI_GAME
+  VERSUS_AI_GAME,
+  RESET_DATA
 };
 
 class Screen;
@@ -56,10 +57,6 @@ public:
   void Update();
   void Render(SDL_Renderer* renderer);
   void HandleEvents(SDL_Event* event);
-
-  void SetVolumeSettingsDefault();
-  void SetPlayer1KeyBindingsDefault();
-  void SetPlayer2KeyBindingsDefault();
 
 private:
   void SwitchScreen();
