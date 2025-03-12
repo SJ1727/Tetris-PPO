@@ -164,6 +164,8 @@ void App::InitContext() {
   m_Context->versusPlayerEngine = new TetrisEngine();
   m_Context->aiPlayerEngine     = new TetrisEngine();
 
+  /* Model */
+  m_Context->aiModelPath = "base.onnx";
   m_Context->aiTemperture = 1;
 
   dataFile.close();

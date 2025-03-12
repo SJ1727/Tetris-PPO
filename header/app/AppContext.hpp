@@ -20,6 +20,7 @@ typedef struct {
   float timePlayedSeconds;
 
   float aiTemperture;
+  std::string aiModelPath;
 
   KeyBindings player1KeyBindings;
   KeyBindings player2KeyBindings;

@@ -20,13 +20,18 @@ void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::s
   
   TextFieldSettings modelPathFieldSettings;
   modelPathFieldSettings.cornerRadius = ALL_CORNER_RADIUS(20);
-  modelPathFieldSettings.initialText = "example/path/model.onnx";
+  modelPathFieldSettings.initialText = m_Context->aiModelPath;
   modelPathFieldSettings.font = resourceManager->GetFont("Text Field Font 20");
   
   LabelSettings tempertureLabelSettings;
   SetLabelStyle(&tempertureLabelSettings, LEFT_CORNER_RADIUS(20));
   tempertureLabelSettings.text = "Temperture";
   tempertureLabelSettings.font = resourceManager->GetFont("Font 32");
+  
+  LabelSettings tempertureValueLabelSettings;
+  SetLabelStyle(&tempertureValueLabelSettings, RIGHT_CORNER_RADIUS(20));
+  tempertureValueLabelSettings.text = "0.0";
+  tempertureValueLabelSettings.font = resourceManager->GetFont("Font 32");
   
   SliderSettings<float> tempertureSliderSettings;
   SetSliderStyle(&tempertureSliderSettings);
@@ -42,7 +47,11 @@ void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::s
   CREATE_TEXT_FIELD(modelPathField, 220, 160, 540, 60, modelPathFieldSettings);
   
   CREATE_LABEL(tempertureLabel, 0, 280, 200, 60, tempertureLabelSettings);
+  CREATE_LABEL(tempertureValueLabel, 620, 280, 180, 60, tempertureValueLabelSettings);
   CREATE_SLIDER(tempertureSlider, float, 220, 280, 380, 60, &m_Context->aiTemperture, tempertureSliderSettings); 
+
+  m_ModelPathField = modelPathField;
+  m_tempertureValueLabel = tempertureValueLabel;
   
   /* Adding bindings to components */
   returnButton->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
@@ -56,3 +65,12 @@ void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::s
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
 }
+
+void AISettingsScreen::Update() {
+  m_Context->aiModelPath = m_ModelPathField->GetText();
+  
+  m_tempertureValueLabel->UpdateText(std::to_string(m_Context->aiTemperture));
+
+  Screen::Update();
+}
+
