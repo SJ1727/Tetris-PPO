@@ -124,6 +124,9 @@ void SinglePlayerGameScreen::Update() {
     std::to_string(m_Context->singlePlayerEngine->GetLevel())
   );
 
+  m_Context->highScore        = std::max(m_Context->singlePlayerEngine->GetScore()       , m_Context->highScore);
+  m_Context->mostLinesCleared = std::max(m_Context->singlePlayerEngine->GetLinesCleared(), m_Context->mostLinesCleared);
+
   Screen::Update();
 }
 

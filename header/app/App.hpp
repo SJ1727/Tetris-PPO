@@ -15,6 +15,11 @@
 
 #define DATA_FILE "game.dat"
 
+#define GET_DATA(dataPointer, var, file)                  \
+  file.seekg(dataPointer, std::ios::beg);                 \
+  file.read(reinterpret_cast<char*>(&var), sizeof(var));  \
+  dataPointer += sizeof(var);
+
 class App {
 public:
   App(int width, int height);
@@ -30,8 +35,6 @@ private:
 private:
   int m_Width;
   int m_Height;
-
-  std::fstream m_DataFile;
 
   std::shared_ptr<AppContext> m_Context;
   std::shared_ptr<ScreenManager> m_ScreenManager;

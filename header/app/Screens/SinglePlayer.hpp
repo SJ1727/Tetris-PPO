@@ -2,6 +2,7 @@
 #define SINGLE_PLAYER_H
 
 #include "app/Screens/Screen.hpp"
+#include <algorithm>
 
 class SinglePlayerGameScreen : public Screen {
 public:

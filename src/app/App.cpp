@@ -34,12 +34,6 @@ App::App(int width, int height)
   // Allows for use of the alpha color channel
   SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 
-  // Opening file which contains game data
-  m_DataFile.open("game.dat", std::ios::binary);
-
-  if (!m_DataFile) {
-    LOG_ERROR("Could not load data file");
-  }
 
   m_Context = std::make_shared<AppContext>();
   InitContext();
@@ -60,8 +54,6 @@ App::~App() {
   SDL_Quit();
 
   WriteGameData();
-
-  m_DataFile.close();
 }
 
 void App::Run() {
@@ -99,20 +91,47 @@ void App::Run() {
     if ((currentTime - lastTime) >= SDL_GetPerformanceFrequency()) {
       fps = frames * (float) SDL_GetPerformanceFrequency() / (currentTime - lastTime);
       m_Context->timePlayedSeconds += (currentTime - lastTime) / (float) SDL_GetPerformanceFrequency();
+
       lastTime = currentTime;
       frames = 0;
+
       LOG_INFO("FPS " + std::to_string(fps));
     }
   }
 }
 
 void App::WriteGameData() {
-  m_DataFile.write(reinterpret_cast<char*>(&m_Context->highScore), sizeof(m_Context->highScore));
-  m_DataFile.write(reinterpret_cast<char*>(&m_Context->mostLinesCleared), sizeof(m_Context->mostLinesCleared));
-  m_DataFile.write(reinterpret_cast<char*>(&m_Context->timePlayedSeconds), sizeof(m_Context->timePlayedSeconds));
+  // Opening file which contains game data
+  std::fstream dataFile;
+  dataFile.open("game.dat", std::ios::trunc | std::ios::out | std::ios::binary);
+  
+  if (!dataFile) {
+    LOG_ERROR("Could not load data file");
+  }
+
+  dataFile.write(reinterpret_cast<char*>(&m_Context->highScore)         , sizeof(m_Context->highScore));
+  dataFile.write(reinterpret_cast<char*>(&m_Context->mostLinesCleared)  , sizeof(m_Context->mostLinesCleared));
+  dataFile.write(reinterpret_cast<char*>(&m_Context->timePlayedSeconds) , sizeof(m_Context->timePlayedSeconds));
+
+  dataFile.close();
 }
 
 void App::InitContext() {
+  // Opening file which contains game data
+  std::fstream dataFile;
+  dataFile.open("game.dat", std::ios::in | std::ios::binary);
+
+  if (!dataFile) {
+    LOG_ERROR("Could not load data file");
+  }
+
+  int dataPointer = 0;
+
+  /* PLayer statistics */
+  GET_DATA(dataPointer, m_Context->highScore        , dataFile);
+  GET_DATA(dataPointer, m_Context->mostLinesCleared , dataFile);
+  GET_DATA(dataPointer, m_Context->timePlayedSeconds, dataFile);
+  
   /* Sound Settings */
   m_Context->playMaster         = true;
   m_Context->playMusic          = true;
@@ -137,16 +156,15 @@ void App::InitContext() {
   m_Context->player2KeyBindings.drop        = SDLK_C;
   m_Context->player2KeyBindings.rotateRight = SDLK_W;
   m_Context->player2KeyBindings.rotateLeft  = SDLK_Z;
-  
+ 
+  /* Engines */
   m_Context->singlePlayerEngine = new TetrisEngine();
   m_Context->localPlayer1Engine = new TetrisEngine();
   m_Context->localPlayer2Engine = new TetrisEngine();
   m_Context->versusPlayerEngine = new TetrisEngine();
   m_Context->aiPlayerEngine     = new TetrisEngine();
 
-  m_Context->highScore = 0;
-  m_Context->mostLinesCleared = 0;
-  m_Context->timePlayedSeconds = 0;
+  dataFile.close();
 }
 
 void App::LoadResources() {
