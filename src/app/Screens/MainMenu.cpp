@@ -105,6 +105,7 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   localMultiButton  ->BindClick(CHANGE_SCREEN(screenManager, LOCAL_MULTI_PLAYER_GAME));
   versusAiButton    ->BindClick(CHANGE_SCREEN(screenManager, VERSUS_AI_GAME));
   settingsButton    ->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
+  helpButton        ->BindClick(CHANGE_SCREEN(screenManager, GAME_INFOMATION));
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

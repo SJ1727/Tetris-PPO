@@ -188,6 +188,9 @@ void App::LoadResources() {
   m_ResourceManager->LoadImage("resources/images/S_Tetromino.png", "S Tetromino");
   m_ResourceManager->LoadImage("resources/images/T_Tetromino.png", "T Tetromino");
   m_ResourceManager->LoadImage("resources/images/Z_Tetromino.png", "Z Tetromino");
+
+  m_ResourceManager->LoadImage("resources/images/ScoringInfo.png", "Scoring Infomation");
+  m_ResourceManager->LoadImage("resources/images/Goals.png", "Game Goals");
   
   m_ResourceManager->LoadSoundEffect("resources/sound/Click1.wav", "Button Click");
   
