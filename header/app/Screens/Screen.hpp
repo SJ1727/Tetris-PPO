@@ -23,7 +23,7 @@
 
 #define CREATE_ANIMATION(name, func, ...)  Animation* name = func(__VA_ARGS__); Link(name, #name) 
 
-#define CHANGE_SCREEN(screenManager, screenType) std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS))
+#define CHANGE_SCREEN(screenManager, screenType) std::bind(&ScreenManager::SetScreen, screenManager, screenType)
 #define SET_VALUE(var, value, type) std::bind([](type& var, type value) { var = value; }, std::ref(var), value)
 
 enum ScreenType {
@@ -35,7 +35,8 @@ enum ScreenType {
   CONTROL_SETTINGS,
   PLAYER_1_CONTROL_SETTINGS,
   PLAYER_2_CONTROL_SETTINGS,
-  LOCAL_MULTI_PLAYER_GAME
+  LOCAL_MULTI_PLAYER_GAME,
+  VERSUS_AI_GAME
 };
 
 class Screen;

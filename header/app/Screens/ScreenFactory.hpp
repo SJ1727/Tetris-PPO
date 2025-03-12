@@ -11,6 +11,7 @@
 #include "app/Screens/Player1ControlSettings.hpp"
 #include "app/Screens/Player2ControlSettings.hpp"
 #include "app/Screens/LocalMultiPlayer.hpp"
+#include "app/Screens/VersusAI.hpp"
 #include <memory>
 
 std::unique_ptr<Screen> CreateScreen(int width, int height, std::shared_ptr<AppContext> context, ScreenType screenType);

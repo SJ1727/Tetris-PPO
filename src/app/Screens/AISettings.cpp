@@ -23,7 +23,7 @@ void AISettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::s
   CREATE_LABEL(modelPathLabel, 20, 20, 200, 50, modelPathLabelSettings);
   CREATE_TEXT_FIELD(modelPathField, 190, 30, 400, 25, modelPathFieldSettings);
   
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
   
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

@@ -11,6 +11,9 @@ public:
   void Update() override;
 
 private:
+  void UpdateNextTetrominoLabel();
+  void UpdateHeldTetrominoLabel();
+  void UpdateGameStatisticsLabel();
   Image TetrominoTypeToImage(TetrominoType type);
 
 private:

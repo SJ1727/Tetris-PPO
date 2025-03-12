@@ -103,7 +103,7 @@ void SinglePlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, 
   /* Adding bindings to components */
   returnButton->AddHoverAnimation(returnButtonAnimation);
   
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, MAIN_MENU));
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Game Music"), -1);
@@ -114,15 +114,7 @@ void SinglePlayerGameScreen::Update() {
   
   UpdateHeldTetrominoLabel();
 
-  m_scoreLabel->UpdateText(
-    std::to_string(m_Context->singlePlayerEngine->GetScore())
-  );
-  m_linesClearedLabel->UpdateText(
-    std::to_string(m_Context->singlePlayerEngine->GetLinesCleared())
-  );
-  m_levelLabel->UpdateText(
-    std::to_string(m_Context->singlePlayerEngine->GetLevel())
-  );
+  UpdateGameStatisticsLabel();
 
   m_Context->highScore        = std::max(m_Context->singlePlayerEngine->GetScore()       , m_Context->highScore);
   m_Context->mostLinesCleared = std::max(m_Context->singlePlayerEngine->GetLinesCleared(), m_Context->mostLinesCleared);
@@ -133,61 +125,42 @@ void SinglePlayerGameScreen::Update() {
 void SinglePlayerGameScreen::UpdateNextTetrominoLabel() {
   TetrominoType nextTetrominoType = m_Context->singlePlayerEngine->PeakNextTetrominoType();
 
-  switch (nextTetrominoType) {
-    case I:
-      m_NextTetrominoLabel->UpdateImage(m_ITetromino);
-      break;
-    case J:
-      m_NextTetrominoLabel->UpdateImage(m_JTetromino);
-      break;
-    case L:
-      m_NextTetrominoLabel->UpdateImage(m_LTetromino);
-      break;
-    case O:
-      m_NextTetrominoLabel->UpdateImage(m_OTetromino);
-      break;
-    case S:
-      m_NextTetrominoLabel->UpdateImage(m_STetromino);
-      break;
-    case T:
-      m_NextTetrominoLabel->UpdateImage(m_TTetromino);
-      break;
-    case Z:
-      m_NextTetrominoLabel->UpdateImage(m_ZTetromino);
-      break;
-    default:
-      m_NextTetrominoLabel->UpdateImage({ nullptr, 0, 0});
-      break;
-  }
+  m_NextTetrominoLabel->UpdateImage(TetrominoTypeToImage(nextTetrominoType));
 }
   
 void SinglePlayerGameScreen::UpdateHeldTetrominoLabel() {
   TetrominoType heldTetrominoType = m_Context->singlePlayerEngine->GetHeldTetrominoType();
 
-  switch (heldTetrominoType) {
+  m_HeldTetrominoLabel->UpdateImage(TetrominoTypeToImage(heldTetrominoType));
+}
+
+void SinglePlayerGameScreen::UpdateGameStatisticsLabel() {
+  int score         = m_Context->singlePlayerEngine->GetScore();
+  int linesCleared  = m_Context->singlePlayerEngine->GetLinesCleared();
+  int level         = m_Context->singlePlayerEngine->GetLevel();
+
+  m_scoreLabel        ->UpdateText(std::to_string(score));
+  m_linesClearedLabel ->UpdateText(std::to_string(linesCleared));
+  m_levelLabel        ->UpdateText(std::to_string(level));
+}
+
+Image SinglePlayerGameScreen::TetrominoTypeToImage(TetrominoType type) {
+  switch (type) {
     case I:
-      m_HeldTetrominoLabel->UpdateImage(m_ITetromino);
-      break;
+      return m_ITetromino;
     case J:
-      m_HeldTetrominoLabel->UpdateImage(m_JTetromino);
-      break;
+      return m_JTetromino;
     case L:
-      m_HeldTetrominoLabel->UpdateImage(m_LTetromino);
-      break;
+      return m_LTetromino;
     case O:
-      m_HeldTetrominoLabel->UpdateImage(m_OTetromino);
-      break;
+      return m_OTetromino;
     case S:
-      m_HeldTetrominoLabel->UpdateImage(m_STetromino);
-      break;
+      return m_STetromino;
     case T:
-      m_HeldTetrominoLabel->UpdateImage(m_TTetromino);
-      break;
+      return m_TTetromino;
     case Z:
-      m_HeldTetrominoLabel->UpdateImage(m_ZTetromino);
-      break;
+      return m_ZTetromino;
     default:
-      m_HeldTetrominoLabel->UpdateImage({ nullptr, 0, 0});
-      break;
+      return { nullptr, 0, 0};
   }
 }

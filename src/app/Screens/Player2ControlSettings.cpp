@@ -107,7 +107,7 @@ void Player2ControlSettingsScreen::Init(std::shared_ptr<ScreenManager> screenMan
   CREATE_BUTTON(rotACWBindButton, 250, 520, 220, 60, rotACWKeybindButtonSettings);
   
   
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, CONTROL_SETTINGS));
 
   holdBindButton  ->BindClick(SET_VALUE(m_CurrentCommandToSwitch, HOLD         , KeyCommand));
   downBindButton  ->BindClick(SET_VALUE(m_CurrentCommandToSwitch, DOWN         , KeyCommand));

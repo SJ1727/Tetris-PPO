@@ -1,6 +1,6 @@
-#include "app/Screens/LocalMultiPlayer.hpp"
+#include "app/Screens/VersusAI.hpp"
 
-void LocalMultiPlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+void VersusAIGameScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
   SetBackgroundColor(BACKGROUND_COLOR);
   
   m_ITetromino = { resourceManager->GetImage("I Tetromino"), 102, 24 };
@@ -75,21 +75,21 @@ void LocalMultiPlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManag
 
   /* Board Titles */
   LabelSettings player1LabelSettings;
-  player1LabelSettings.text = "Player 1";
+  player1LabelSettings.text = "Player";
   player1LabelSettings.textColor = WHITE;
   player1LabelSettings.font = resourceManager->GetFont("Font 32");
   
   LabelSettings player2LabelSettings;
-  player2LabelSettings.text = "Player 2";
+  player2LabelSettings.text = "AI";
   player2LabelSettings.textColor = WHITE;
   player2LabelSettings.font = resourceManager->GetFont("Font 32");
 
 
   /* Create components */
-  auto board1 = new PlayerTetrisBoardDisplay(530, 50, 260, 520, m_Context->localPlayer1Engine, m_Context->player1KeyBindings);
+  auto board1 = new PlayerTetrisBoardDisplay(530, 50, 260, 520, m_Context->versusPlayerEngine, m_Context->player1KeyBindings);
   Link(board1, "Board1");
   
-  auto board2 = new PlayerTetrisBoardDisplay(10, 50, 260, 520, m_Context->localPlayer2Engine, m_Context->player2KeyBindings);
+  auto board2 = new PlayerTetrisBoardDisplay(10, 50, 260, 520, m_Context->aiPlayerEngine, m_Context->player2KeyBindings);
   Link(board2, "Board2");
   
   CREATE_BUTTON(returnButton, 360, 520, 80, 80, returnButtonSettings);
@@ -141,13 +141,13 @@ void LocalMultiPlayerGameScreen::Init(std::shared_ptr<ScreenManager> screenManag
   /* Adding bindings to components */
   returnButton->AddHoverAnimation(returnButtonAnimation);
   
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, MAIN_MENU));
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Game Music"), -1);
 }
 
-void LocalMultiPlayerGameScreen::Update() {
+void VersusAIGameScreen::Update() {
   UpdateNextTetrominoLabel();
 
   UpdateHeldTetrominoLabel();
@@ -157,30 +157,30 @@ void LocalMultiPlayerGameScreen::Update() {
   Screen::Update();
 }
 
-void LocalMultiPlayerGameScreen::UpdateNextTetrominoLabel() {
-  TetrominoType nextTetrominoType1 = m_Context->localPlayer1Engine->PeakNextTetrominoType();
-  TetrominoType nextTetrominoType2 = m_Context->localPlayer2Engine->PeakNextTetrominoType();
+void VersusAIGameScreen::UpdateNextTetrominoLabel() {
+  TetrominoType nextTetrominoType1 = m_Context->versusPlayerEngine->PeakNextTetrominoType();
+  TetrominoType nextTetrominoType2 = m_Context->aiPlayerEngine->PeakNextTetrominoType();
 
   m_NextTetrominoLabel1->UpdateImage(TetrominoTypeToImage(nextTetrominoType1));
   m_NextTetrominoLabel2->UpdateImage(TetrominoTypeToImage(nextTetrominoType2));
 
 }
 
-void LocalMultiPlayerGameScreen::UpdateHeldTetrominoLabel() {
-  TetrominoType heldTetrominoType1 = m_Context->localPlayer1Engine->GetHeldTetrominoType();
-  TetrominoType heldTetrominoType2 = m_Context->localPlayer2Engine->GetHeldTetrominoType();
+void VersusAIGameScreen::UpdateHeldTetrominoLabel() {
+  TetrominoType heldTetrominoType1 = m_Context->versusPlayerEngine->GetHeldTetrominoType();
+  TetrominoType heldTetrominoType2 = m_Context->aiPlayerEngine->GetHeldTetrominoType();
 
   m_HeldTetrominoLabel1->UpdateImage(TetrominoTypeToImage(heldTetrominoType1));
   m_HeldTetrominoLabel2->UpdateImage(TetrominoTypeToImage(heldTetrominoType2));
 }
 
-void LocalMultiPlayerGameScreen::UpdateGameStatisticsLabel() {
-  int score1         = m_Context->localPlayer1Engine->GetScore();
-  int score2         = m_Context->localPlayer2Engine->GetScore();
-  int linesCleared1  = m_Context->localPlayer1Engine->GetLinesCleared();
-  int linesCleared2  = m_Context->localPlayer2Engine->GetLinesCleared();
-  int level1         = m_Context->localPlayer1Engine->GetLevel();
-  int level2         = m_Context->localPlayer2Engine->GetLevel();
+void VersusAIGameScreen::UpdateGameStatisticsLabel() {
+  int score1         = m_Context->versusPlayerEngine->GetScore();
+  int score2         = m_Context->aiPlayerEngine->GetScore();
+  int linesCleared1  = m_Context->versusPlayerEngine->GetLinesCleared();
+  int linesCleared2  = m_Context->aiPlayerEngine->GetLinesCleared();
+  int level1         = m_Context->versusPlayerEngine->GetLevel();
+  int level2         = m_Context->aiPlayerEngine->GetLevel();
 
   m_scoreLabel1        ->UpdateText(std::to_string(score1));
   m_scoreLabel2        ->UpdateText(std::to_string(score2));
@@ -191,7 +191,7 @@ void LocalMultiPlayerGameScreen::UpdateGameStatisticsLabel() {
 }
 
 
-Image LocalMultiPlayerGameScreen::TetrominoTypeToImage(TetrominoType type) {
+Image VersusAIGameScreen::TetrominoTypeToImage(TetrominoType type) {
   switch (type) {
     case I:
       return m_ITetromino;

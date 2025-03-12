@@ -30,9 +30,9 @@ void ControlSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, s
   CREATE_BUTTON(player2Button, 0, 380, 360, 80, player2ButtonSettings);
 
 
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
-  player1Button->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, PLAYER_1_CONTROL_SETTINGS));
-  player2Button->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, PLAYER_2_CONTROL_SETTINGS));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
+  player1Button->BindClick(CHANGE_SCREEN(screenManager, PLAYER_1_CONTROL_SETTINGS));
+  player2Button->BindClick(CHANGE_SCREEN(screenManager, PLAYER_2_CONTROL_SETTINGS));
 
 
   /* Create Animations */

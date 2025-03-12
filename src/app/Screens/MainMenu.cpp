@@ -1,6 +1,6 @@
 #include "app/Screens/MainMenu.hpp"
 
-void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) {
+void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) { 
   SetBackgroundColor(BACKGROUND_COLOR);
 
   /* Defining components settings */
@@ -96,14 +96,15 @@ void MainMenuScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
 
   /* Adding bindings to components */
   singlePlayerButton->AddHoverAnimation(singlePlayerButtonAnimation);
-  localMultiButton->AddHoverAnimation(localMultiButtonAnimation);
-  versusAiButton->AddHoverAnimation(versusAiButtonAnimation);
-  settingsButton->AddHoverAnimation(settingButtonAnimation);
-  helpButton->AddHoverAnimation(helpButtonAnimation);
+  localMultiButton  ->AddHoverAnimation(localMultiButtonAnimation);
+  versusAiButton    ->AddHoverAnimation(versusAiButtonAnimation);
+  settingsButton    ->AddHoverAnimation(settingButtonAnimation);
+  helpButton        ->AddHoverAnimation(helpButtonAnimation);
 
-  singlePlayerButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SINGLE_PLAYER_GAME));
-  localMultiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, LOCAL_MULTI_PLAYER_GAME));
-  settingsButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
+  singlePlayerButton->BindClick(CHANGE_SCREEN(screenManager, SINGLE_PLAYER_GAME));
+  localMultiButton  ->BindClick(CHANGE_SCREEN(screenManager, LOCAL_MULTI_PLAYER_GAME));
+  versusAiButton    ->BindClick(CHANGE_SCREEN(screenManager, VERSUS_AI_GAME));
+  settingsButton    ->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
 
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);

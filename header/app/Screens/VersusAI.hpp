@@ -1,12 +1,11 @@
-#ifndef SINGLE_PLAYER_H
-#define SINGLE_PLAYER_H
+#ifndef VERSUS_AI_H
+#define VERSUS_AI_H
 
 #include "app/Screens/Screen.hpp"
-#include <algorithm>
 
-class SinglePlayerGameScreen : public Screen {
+class VersusAIGameScreen : public Screen {
 public:
-  SinglePlayerGameScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
+  VersusAIGameScreen(int width, int height, std::shared_ptr<AppContext> context) : Screen(width, height, context) {}
   void Init(std::shared_ptr<ScreenManager> screenManager, std::shared_ptr<ResourceManager> resourceManager) override;
   
   void Update() override;
@@ -18,11 +17,16 @@ private:
   Image TetrominoTypeToImage(TetrominoType type);
 
 private:
-  Label* m_HeldTetrominoLabel;
-  Label* m_NextTetrominoLabel;
-  Label* m_scoreLabel;
-  Label* m_linesClearedLabel;
-  Label* m_levelLabel;
+  Label* m_HeldTetrominoLabel1;
+  Label* m_HeldTetrominoLabel2;
+  Label* m_NextTetrominoLabel1;
+  Label* m_NextTetrominoLabel2;
+  Label* m_scoreLabel1;
+  Label* m_scoreLabel2;
+  Label* m_linesClearedLabel1;
+  Label* m_linesClearedLabel2;
+  Label* m_levelLabel1;
+  Label* m_levelLabel2;
 
   Image m_ITetromino;
   Image m_JTetromino;
@@ -33,4 +37,4 @@ private:
   Image m_ZTetromino;
 };
 
-#endif // !SINGLE_PLAYER_H
+#endif // !VERSUS_AI_H

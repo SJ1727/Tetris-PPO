@@ -83,12 +83,12 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   CREATE_BUTTON(muteSoundEffectsVolumeButton, 580, 390, 220, 80, muteButtonSettings);
 
 
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, SETTINGS));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, SETTINGS));
   
   resetButton->BindClick(std::bind(resetVolume, m_Context));
   
-  muteMasterVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMaster));
-  muteMusicVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMusic)); 
+  muteMasterVolumeButton      ->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMaster));
+  muteMusicVolumeButton       ->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playMusic)); 
   muteSoundEffectsVolumeButton->BindClick(std::bind(VolumeSettingsScreen::ChangeMuted, &m_Context->playSoundEffects));
  
   /* Create Animations */
@@ -99,10 +99,10 @@ void VolumeSettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, st
   CREATE_ANIMATION(muteSoundEffectsVolumeButtonAnimation, AnimateButtonStretchLeft, muteSoundEffectsVolumeButton, 15, 300);
   
   /* Adding bindings to components */
-  returnButton->AddHoverAnimation(returnButtonAnimation);
-  resetButton->AddHoverAnimation(resetButtonAnimation);
-  muteMasterVolumeButton->AddHoverAnimation(muteMasterVolumeButtonAnimation);
-  muteMusicVolumeButton->AddHoverAnimation(muteMusicVolumeButtonAnimation);
+  returnButton                ->AddHoverAnimation(returnButtonAnimation);
+  resetButton                 ->AddHoverAnimation(resetButtonAnimation);
+  muteMasterVolumeButton      ->AddHoverAnimation(muteMasterVolumeButtonAnimation);
+  muteMusicVolumeButton       ->AddHoverAnimation(muteMusicVolumeButtonAnimation);
   muteSoundEffectsVolumeButton->AddHoverAnimation(muteSoundEffectsVolumeButtonAnimation);
   
   /* Starting Music */

@@ -20,6 +20,8 @@ std::unique_ptr<Screen> CreateScreen(int width, int height, std::shared_ptr<AppC
       return std::make_unique<Player2ControlSettingsScreen>(width, height, context);
     case LOCAL_MULTI_PLAYER_GAME:
       return std::make_unique<LocalMultiPlayerGameScreen>(width, height, context);
+    case VERSUS_AI_GAME:
+      return std::make_unique<VersusAIGameScreen>(width, height, context);
   }
   return nullptr;
 }

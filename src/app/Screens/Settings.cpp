@@ -57,10 +57,10 @@ void SettingsScreen::Init(std::shared_ptr<ScreenManager> screenManager, std::sha
   aiButton->AddHoverAnimation(aiButtonAnimation);
   resetDataButton->AddHoverAnimation(resetDataButtonAnimation);
 
-  returnButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, MAIN_MENU));
-  volumeButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, VOLUME_SETTINGS));
-  controlButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, CONTROL_SETTINGS));
-  aiButton->BindClick(std::bind(&ScreenManager::SetScreen, screenManager, AI_SETTINGS));
+  returnButton->BindClick(CHANGE_SCREEN(screenManager, MAIN_MENU));
+  volumeButton->BindClick(CHANGE_SCREEN(screenManager, VOLUME_SETTINGS));
+  controlButton->BindClick(CHANGE_SCREEN(screenManager, CONTROL_SETTINGS));
+  aiButton->BindClick(CHANGE_SCREEN(screenManager, AI_SETTINGS));
   
   /* Starting Music */
   Mix_PlayMusic(resourceManager->GetMusic("Menu Music"), -1);
